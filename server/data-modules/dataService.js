@@ -1,7 +1,13 @@
+const { use } = require('chai');
+
 const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.uri;
 const client = (callBack)=> MongoClient.connect(uri,{ useUnifiedTopology: true }, callBack);
-
+const userSchema = {
+    "_id": 0,
+    "email": "",
+    "password": ""
+}
 module.exports = function(){
     return{
         testConnection: function(){ 
@@ -9,11 +15,13 @@ module.exports = function(){
                 function(err, db) {
                     if (err) throw err;
                     var dbo = db.db("peppermint-db");
-                    dbo.collection("users").findOne({}, function(err, result) {
-                        if (err) throw err;
-                        console.log(result.email);
+                    dbo.collection("users").find({}, userSchema)
+                    .toArray()
+                    .then(users=>{   
+                        console.log(users)
                         db.close();
                     })
+                    .catch(err=>console.error(`failed to find documents: ${err}`))
                 }
             )
             
@@ -23,24 +31,11 @@ module.exports = function(){
                 function(err, db){
                     if (err) throw err;
                     var dbo = db.db("peppermint-db");
-                    dbo.collection("users").insertOne(userObject, function(err, result){
-                        if(err) throw err;
-                        console.log("user added");
-                        db.close();
-                    })
+                    dbo.collection("users").insertOne(userObject)
+                    .then(result=> console.log(`Successfully added user: ${result.insertedId}`))
+                    .catch(err=> console.error(`Failed to add user: ${err}`))
                 }
             )
-        },
-        getUserById: function(id){
-            MongoClient.connect(uri, function(err, db){
-                if (err) throw err;
-                var dbo = db.db("peppermint-db");
-                dbo.collection("users").insertOne(userObject, function(err, result){
-                    if(err) throw err;
-                    console.log("user added");
-                    db.close();
-                })
-            })
         }
     }
 }
