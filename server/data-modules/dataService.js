@@ -1,41 +1,75 @@
 const { use } = require('chai');
+const { reset } = require('nodemon');
 
 const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 const uri = process.env.uri;
-const client = (callBack)=> MongoClient.connect(uri,{ useUnifiedTopology: true }, callBack);
-const userSchema = {
+const dbName = "peppermint-db";
+const userCollectionName = "users";
+const client = MongoClient.connect(uri,{ useUnifiedTopology: true });
+
+const userProjection = {
     "_id": 0,
     "email": "",
     "password": ""
 }
+
+
+
 module.exports = function(){
+    var dbo;
     return{
-        testConnection: function(){ 
-            client(
-                function(err, db) {
-                    if (err) throw err;
-                    var dbo = db.db("peppermint-db");
-                    dbo.collection("users").find({}, userSchema)
-                    .toArray()
-                    .then(users=>{   
-                        console.log(users)
-                        db.close();
-                    })
-                    .catch(err=>console.error(`failed to find documents: ${err}`))
-                }
-            )
-            
+        connectDB: function(){ 
+            client.then((db)=>{
+                console.log("Connected successfully to server");
+                dbo = db.db(dbName);                
+            }).catch((err)=>{console.error(err)});
         },
-        signUpUser: function(userObject){
-            client(
-                function(err, db){
-                    if (err) throw err;
-                    var dbo = db.db("peppermint-db");
-                    dbo.collection("users").insertOne(userObject)
-                    .then(result=> console.log(`Successfully added user: ${result.insertedId}`))
-                    .catch(err=> console.error(`Failed to add user: ${err}`))
-                }
-            )
+        createUser: function(userObject, callback){
+            client.then(()=>{
+                dbo.collection(userCollectionName).insertOne(userObject,
+                    function(err, res) {
+                        if (err) throw err;
+                        console.log("1 document inserted");
+                        callback(res);
+                    }
+                );
+            }).catch((err)=>{console.error(err)});
+        
+        },
+        getUserByEmail: function(userEmail, callback){
+            client.then(()=>{
+                dbo.collection(userCollectionName).findOne(
+                    {"email":userEmail},
+                    function(err,res){
+                        if(err) throw err;
+                        callback(res);
+                    }
+                );
+            }).catch((err)=>{console.error(err)});
+        },
+        deleteByEmail: function(userEmail,callback){
+            client.then(()=>{
+                dbo.collection(userCollectionName).deleteOne(
+                    {"email": userEmail},
+                    function(err,res){
+                        if(err) throw err;
+                        callback(res);
+                    }
+                );
+            }).catch((err)=>{console.error(err)});
+        },
+        updateUserFieldByEmail: function(userEmail, newUserData){
+            client.then(()=>{
+                dbo.collection(userCollectionName).updateOne(
+                    {"email": userEmail},
+                    {$set: newUserData},
+                    function(err,res){
+                        if(err) throw err;
+                        callback(res);
+                    }
+                )
+            }).catch((err)=>{console.error(err)});
         }
     }
 }
