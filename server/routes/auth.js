@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const User = require('../models/User');
+const User = require('../models/userSchema');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -32,7 +32,7 @@ router.post('/signup', async (req, res) => {
     //save user
     const savedUser = await user.save();
     //only send back the id, not the whole user object
-    res.send({user: user._id});
+    res.status(201).send({user: user._id});
   } catch(err) {
     res.status(400).send(err);
   }

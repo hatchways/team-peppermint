@@ -6,6 +6,14 @@ const logger = require("morgan");
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+//Import and Connect to dataService
+// const dataService = require('./data-modules/dataService');
+// dataService().connect();
+const dataService = require('./data-modules/dataService');
+const data = dataService();
+data.connect().then(()=> console.log('connected to DB')).catch((err)=>console.error(err));
+
+
 
 //Import Routes
 const indexRouter = require("./routes/index");
@@ -15,7 +23,9 @@ const authRouter = require('./routes/auth');
 dotenv.config();
 
 //Connect to DB
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log('connected to DB'))
+// mongoose.connect(process.env.TESTING_DATABASE_JESSE, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log('connected to DB'))
+
+
 
 const { json, urlencoded } = express;
 
@@ -47,6 +57,5 @@ app.use(function(err, req, res, next) {
   res.json({ error: err });
 });
 
-app.listen(3000, () => console.log('Server is up and running'));
 
 module.exports = app;

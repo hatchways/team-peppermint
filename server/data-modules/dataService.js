@@ -1,11 +1,11 @@
+const dotenv = require('dotenv')
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const uri = process.env.uri;
-<<<<<<< HEAD
-//const userSchema = require('../models/userSchema');
-=======
+
+dotenv.config();
+
+const uri = process.env.URI;
 const userSchema = require('../models/userSchema');
->>>>>>> dev
 
 
 
@@ -24,15 +24,9 @@ module.exports = function(){
                 });
             });
         },
-<<<<<<< HEAD
         createUser: function(userObject){
             return new Promise((resolve,reject)=>{
                 let newUser = new User(userObject);
-=======
-        createUser: function(userObject, callback){
-            return new Promise((resolve,reject)=>{
-                let newUser = new User(data);
->>>>>>> dev
                 newUser.save((err) => {
                     if(err) {
                         reject(err);
