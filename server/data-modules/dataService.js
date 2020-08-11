@@ -1,20 +1,43 @@
 const { use } = require('chai');
 const { reset } = require('nodemon');
+const mongoose = require('mongoose');
 
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const uri = process.env.uri;
+
 const dbName = "peppermint-db";
 const userCollectionName = "users";
 const client = MongoClient.connect(uri,{ useUnifiedTopology: true });
 
-const userProjection = {
+/*const userProjection = {
     "_id": 0,
     "email": "",
     "password": ""
-}
+}*/
 
 
+const client = (callBack)=> MongoClient.connect(uri,{ useUnifiedTopology: true }, callBack);
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    max: 255,
+    min: 6
+  },
+  email: {
+    type: String,
+    required: true,
+    max: 255,
+    min: 6
+  },
+  password: {
+    type: String,
+    required: true,
+    max: 255,
+    min: 6
+  }
+})
 
 module.exports = function(){
     var dbo;
