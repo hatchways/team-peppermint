@@ -1,96 +1,66 @@
-const { use } = require('chai');
-const { reset } = require('nodemon');
 const mongoose = require('mongoose');
-
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+mongoose.Promise = global.Promise;
 const uri = process.env.uri;
+const postSchema = require('../models/userSchema');
 
-const dbName = "peppermint-db";
-const userCollectionName = "users";
-const client = MongoClient.connect(uri,{ useUnifiedTopology: true });
 
-/*const userProjection = {
-    "_id": 0,
-    "email": "",
-    "password": ""
-}*/
-
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    max: 255,
-    min: 6
-  },
-  email: {
-    type: String,
-    required: true,
-    max: 255,
-    min: 6
-  },
-  password: {
-    type: String,
-    required: true,
-    max: 255,
-    min: 6
-  }
-})
 
 module.exports = function(){
-    var dbo;
+    var User;
     return{
-        connectDB: function(){ 
-            client.then((db)=>{
-                console.log("Connected successfully to server");
-                dbo = db.db(dbName);                
-            }).catch((err)=>{console.error(err)});
+        connect: function(){ 
+            return new Promise(function(resolve,reject){
+                let db = mongoose.createConnection(uri,{ useNewUrlParser: true, useUnifiedTopology: true }); 
+                db.on('error', (err)=>{
+                    reject(err);
+                });
+                db.once('open', ()=>{
+                    User = db.model("User", userSchema);
+                    resolve();
+                });
+            });
         },
         createUser: function(userObject, callback){
-            client.then(()=>{
-                dbo.collection(userCollectionName).insertOne(userObject,
-                    function(err, res) {
-                        if (err) throw err;
-                        console.log("1 document inserted");
-                        callback(res);
+            return new Promise((resolve,reject)=>{
+                let newUser = new User(data);
+                newUser.save((err) => {
+                    if(err) {
+                        reject(err);
+                    } else {
+                        resolve(`new user: ${newUser.email} successfully added`);
                     }
-                );
-            }).catch((err)=>{console.error(err)});
+                });
+            });
         
         },
-        getUserByEmail: function(userEmail, callback){
-            client.then(()=>{
-                dbo.collection(userCollectionName).findOne(
-                    {"email":userEmail},
-                    function(err,res){
-                        if(err) throw err;
-                        callback(res);
-                    }
-                );
-            }).catch((err)=>{console.error(err)});
+        getUserByEmail: function(userEmail){
+            return new Promise((resolve,reject)=>{
+                User.findOne({email: userEmail}).exec().then(user=>{
+                    resolve(user)
+                }).catch(err=>{
+                    reject(err);
+                });
+            });
         },
-        deleteByEmail: function(userEmail,callback){
-            client.then(()=>{
-                dbo.collection(userCollectionName).deleteOne(
-                    {"email": userEmail},
-                    function(err,res){
-                        if(err) throw err;
-                        callback(res);
-                    }
-                );
-            }).catch((err)=>{console.error(err)});
+        deleteByEmail: function(userEmail){
+            return new Promise((resolve,reject)=>{
+                User.deleteOne({email: userEmail}).exec().then(()=>{
+                    resolve(`user ${userEmail} successfully deleted`)
+                }).catch(err=>{
+                    reject(err);
+                });
+            });
         },
-        updateUserFieldByEmail: function(userEmail, newUserData){
-            client.then(()=>{
-                dbo.collection(userCollectionName).updateOne(
-                    {"email": userEmail},
-                    {$set: newUserData},
-                    function(err,res){
-                        if(err) throw err;
-                        callback(res);
-                    }
-                )
-            }).catch((err)=>{console.error(err)});
+        updateUserFieldByEmail: function(userEmail, newData){
+            return new Promise((resolve,reject)=>{
+                User.updateOne({email: userEmail}, {
+                    $set: newData
+                }).exec().then(()=>{
+                    resolve(`user ${userEmail} successfully updated`)
+                }).catch(err=>{
+                    reject(err);
+                });
+            });
         }
     }
 }
