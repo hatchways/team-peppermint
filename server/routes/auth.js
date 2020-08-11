@@ -3,6 +3,7 @@ const UserSchema = require('../models/userSchema');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+//Import dataService
 const dataService = require('../data-modules/dataService');
 const data = dataService();
 
@@ -11,13 +12,23 @@ const data = dataService();
 const {signupValidation, loginValidation} = require('../middleware/validation');
 
 
+router.get('/', async (req, res) => {
+  try {
+    res.status(200).send("get route works!")
+  } catch(err) {
+    console.log(err);
+  }
+})
+
 //signup route
 router.post('/signup', async (req, res) => {
   //Valiate the data before adding new user
   const { error } = signupValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
+  console.log(req.body.email)
   //Check if the user is already in the database
-  const emailExist = await UserSchema.findOne({email: req.body.email})
+  const emailExist = await UserSchema.findOne({email: req.body.email});
+
   if (emailExist) return res.status(400).send('Email already exists');
   //Hash the pass
   const salt = await bcrypt.genSalt(10);
@@ -32,7 +43,7 @@ router.post('/signup', async (req, res) => {
   try {
     //save user
     const savedUser = await user.save();
-    //only send back the id, not the whole user object
+
     res.status(201).send(savedUser);
   } catch(err) {
     res.status(400).send(err);

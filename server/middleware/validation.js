@@ -1,4 +1,5 @@
 const Joi = require('@hapi/joi');
+const jwt = require('jsonwebtoken');
 
 //Signup validation
 const signupValidation = (data) => {
@@ -23,5 +24,20 @@ const loginValidation = (data) => {
   return schema.validate(data);
 }
 
+const generateToken = (res, id) => {
+  const expiration = process.env.DB_ENV === "testing" ? 100 : 60480000;
+  const token = jwt.sign({ id}, process.env.TOKEN_SECRET, {
+    expiresIn: process.env.DB_ENV === "testing" ? '1d' : '7d',
+  });
+  return res.cookie('token', token, {
+    expires: new Date(Date.now() + expiration),
+    secure: false,
+    httpOnly: true,
+  });
+};
+
+
+
 module.exports.signupValidation = signupValidation;
 module.exports.loginValidation = loginValidation;
+module.exports.generateToken = generateToken;

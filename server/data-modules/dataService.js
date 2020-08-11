@@ -6,7 +6,6 @@ dotenv.config();
 
 const uri = process.env.TESTING_DATABASE_JESSE;
 const UserSchema = require('../models/userSchema');
-const app = require('../app');
 
 
 
@@ -14,16 +13,17 @@ module.exports = function(){
     var User;
     return{
         connect: function(){ 
-            return new Promise(function(resolve,reject){
-                let db = mongoose.createConnection(uri,{ useNewUrlParser: true, useUnifiedTopology: true }); 
-                db.on('error', (err)=>{
-                    reject(err);
-                });
-                db.once('open', ()=>{
-                    User = new UserSchema;
-                    resolve();
-                });
-            });
+            return mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true });
+            // return new Promise(function(resolve,reject){
+            //     let db = mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true }); 
+                // db.on('error', (err)=>{
+                //     reject(err);
+                // });
+                // db.once('open', ()=>{
+                //     // User = new UserSchema;
+                //     resolve();
+            //     // });
+            // });
         },
         createUser: function(userObject){
             return new Promise((resolve,reject)=>{
