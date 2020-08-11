@@ -35,10 +35,7 @@ const ChatNavBar = () => {
           name="checked"
           inputProps={{ "aria-label": "secondary checkbox" }}
         />
-        <ButtonBase
-          // variant="contained"
-          // color="#f5f5f5"
-          // href="#contained-buttons"
+        <ButtonBase         
           onClick={() => console.log("Clicked")}
           style={{ marginLeft: 20 }}
         >

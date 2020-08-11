@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Box } from "@material-ui/core";
-import { shadows } from '@material-ui/system';
+import React from "react";
 import { useStyles } from "./style";
 import Sidebar from "../Sidebar";
 import MainContentField from "../MainContentField";

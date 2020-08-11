@@ -10,7 +10,7 @@ const pingRouter = require("./routes/ping");
 const { json, urlencoded } = express;
 
 var app = express();
-
+  
 app.use(logger("dev"));
 app.use(json());
 app.use(urlencoded({ extended: false }));
