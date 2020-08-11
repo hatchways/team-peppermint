@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const uri = process.env.uri;
+<<<<<<< HEAD
+//const userSchema = require('../models/userSchema');
+=======
 const userSchema = require('../models/userSchema');
+>>>>>>> dev
 
 
 
@@ -20,9 +24,15 @@ module.exports = function(){
                 });
             });
         },
+<<<<<<< HEAD
+        createUser: function(userObject){
+            return new Promise((resolve,reject)=>{
+                let newUser = new User(userObject);
+=======
         createUser: function(userObject, callback){
             return new Promise((resolve,reject)=>{
                 let newUser = new User(data);
+>>>>>>> dev
                 newUser.save((err) => {
                     if(err) {
                         reject(err);
