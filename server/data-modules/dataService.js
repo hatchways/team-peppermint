@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const uri = process.env.uri;
-const postSchema = require('../models/userSchema');
+const userSchema = require('../models/userSchema');
 
 
 
