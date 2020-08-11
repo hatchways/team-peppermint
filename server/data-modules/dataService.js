@@ -4,8 +4,9 @@ mongoose.Promise = global.Promise;
 
 dotenv.config();
 
-const uri = process.env.URI;
-const userSchema = require('../models/userSchema');
+const uri = process.env.TESTING_DATABASE_JESSE;
+const UserSchema = require('../models/userSchema');
+const app = require('../app');
 
 
 
@@ -19,7 +20,7 @@ module.exports = function(){
                     reject(err);
                 });
                 db.once('open', ()=>{
-                    User = db.model("User", userSchema);
+                    User = new UserSchema;
                     resolve();
                 });
             });

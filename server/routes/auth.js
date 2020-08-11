@@ -1,7 +1,11 @@
 const router = require('express').Router();
-const User = require('../models/userSchema');
+const UserSchema = require('../models/userSchema');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
+const dataService = require('../data-modules/dataService');
+const data = dataService();
+
 
 //middleware validation
 const {signupValidation, loginValidation} = require('../middleware/validation');
@@ -12,17 +16,14 @@ router.post('/signup', async (req, res) => {
   //Valiate the data before adding new user
   const { error } = signupValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-
   //Check if the user is already in the database
-  const emailExist = await User.findOne({email: req.body.email})
+  const emailExist = await UserSchema.findOne({email: req.body.email})
   if (emailExist) return res.status(400).send('Email already exists');
-
   //Hash the pass
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(req.body.password, salt);
-
-  //create a new user
-  const user = new User({
+  // create a new user
+  const user = new UserSchema({
     name: req.body.name,
     email: req.body.email,
     password: hashPassword,
@@ -32,7 +33,7 @@ router.post('/signup', async (req, res) => {
     //save user
     const savedUser = await user.save();
     //only send back the id, not the whole user object
-    res.status(201).send({user: user._id});
+    res.status(201).send(savedUser);
   } catch(err) {
     res.status(400).send(err);
   }
@@ -45,7 +46,7 @@ router.post('/login', async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   //check if the user is already in the database
-  const user = await User.findOne({email: req.body.email});
+  const user = await UserSchema.findOne({email: req.body.email});
   if (!user) return res.status(400).send('Email not found');
 
   //checking password is correct
