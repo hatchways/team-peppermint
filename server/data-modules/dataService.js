@@ -16,8 +16,6 @@ const client = MongoClient.connect(uri,{ useUnifiedTopology: true });
     "password": ""
 }*/
 
-
-const client = (callBack)=> MongoClient.connect(uri,{ useUnifiedTopology: true }, callBack);
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
