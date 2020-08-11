@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const invitationSchema = new mongoose.Schema({
+const conversationSchema = new mongoose.Schema({
     users:{
         type : Array[User],
         required: true
