@@ -1,17 +1,10 @@
-const dotenv = require('dotenv')
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-
-dotenv.config();
-
-const uri = process.env.TESTING_DATABASE_JESSE;
+const uri = process.env.uri;
 const UserSchema = require('../models/userSchema');
-const app = require('../app');
-
-
-
+var User;
 module.exports = function(){
-    var User;
+    
     return{
         connect: function(){ 
             return new Promise(function(resolve,reject){
@@ -20,12 +13,14 @@ module.exports = function(){
                     reject(err);
                 });
                 db.once('open', ()=>{
-                    User = new UserSchema;
+                    console.log("connected to db");
+                    User = db.model("User", UserSchema);
                     resolve();
                 });
             });
         },
         createUser: function(userObject){
+
             return new Promise((resolve,reject)=>{
                 let newUser = new User(userObject);
                 newUser.save((err) => {

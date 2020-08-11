@@ -6,13 +6,6 @@ const logger = require("morgan");
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-//Import and Connect to dataService
-const dataService = require('./data-modules/dataService');
-const data = dataService();
-data.connect().then(()=> console.log('Connected to DB')).catch((err)=>console.error(err));
-
-
-
 //Import Routes
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");

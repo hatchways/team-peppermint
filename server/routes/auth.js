@@ -13,29 +13,38 @@ const {signupValidation, loginValidation} = require('../middleware/validation');
 
 //signup route
 router.post('/signup', async (req, res) => {
+  let userExists;
   //Valiate the data before adding new user
   const { error } = signupValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  //Check if the user is already in the database
-  const emailExist = await UserSchema.findOne({email: req.body.email})
-  if (emailExist) return res.status(400).send('Email already exists');
-  //Hash the pass
-  const salt = await bcrypt.genSalt(10);
-  const hashPassword = await bcrypt.hash(req.body.password, salt);
-  // create a new user
-  const user = new UserSchema({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashPassword,
-  });
 
-  try {
-    //save user
-    const savedUser = await user.save();
-    //only send back the id, not the whole user object
-    res.status(201).send(savedUser);
-  } catch(err) {
-    res.status(400).send(err);
+  //Check if the user is already in the database
+  data.getUserByEmail(req.body.email)
+  .then((user)=>{
+    if(user) userExists =true; 
+  })
+
+  if(userExists){
+    res.status(400).send("User already exists");
+  }
+  else{
+    //Hash the pass
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    // create a new user
+    const user = {
+      name: req.body.name,
+      email: req.body.email,
+      password: hashPassword,
+    };  
+    data.createUser(user)
+    .then((msg)=>{
+      res.status(201).send(msg);
+    })
+    .catch((err)=>{
+      console.error(err);
+      res.status(400).send("error"+err);
+    })
   }
 })
 
