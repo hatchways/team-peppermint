@@ -16,13 +16,8 @@ dotenv.config();
 
 const { json, urlencoded } = express;
 
-<<<<<<< HEAD
 const app = express();
 
-=======
-var app = express();
-  
->>>>>>> dev
 app.use(logger("dev"));
 app.use(json());
 app.use(urlencoded({ extended: false }));
