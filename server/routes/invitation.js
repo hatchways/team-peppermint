@@ -3,7 +3,7 @@ const data = require('../data-modules/dataService')();
 
 //contacts route
 router.post("/:email/invite", async (req, res) => {
-    let invitationExist = await data.getInvitationsByEmail(req.body.to_user);
+    let invitationExist = await data.getSentInvites(req.params.email);
     if(invitationExist.length >0)
         res.send("You already sent invite"); 
     else{
@@ -22,7 +22,7 @@ router.post("/:email/invite", async (req, res) => {
 router.get("/:email/invitations", async (req, res) => {
     try {
       //get all invitatitions by user id
-      const invitations = await data.getInvitationsByEmail(req.params.email);
+      const invitations = await data.getIncomingInvites(req.params.email);
       //send response with invitations
       res.json(invitations);
     } catch (err) {

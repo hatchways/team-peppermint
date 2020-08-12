@@ -72,16 +72,25 @@ module.exports = function(){
                 })
             })
         },
-        getInvitationsByEmail: function(userEmail) {
+        getIncomingInvites: function(userEmail, accepted=false, canceled =false ) {
             return new Promise((resolve, reject)=>{
                 Invitation.find({
-                    approved: false,
-                    rejected: false,
+                    approved: accepted,
+                    rejected: canceled,
                     to_user: userEmail
                 }).exec()
                 .then(invites=>resolve(invites))
                 .catch(err=>reject(err));
             })
+        },
+        getSentInvites: function(userEmail){
+            return new Promise((resolve, reject)=>{
+                Invitation.find({
+                    from_user: userEmail
+                }).exec()
+                .then(invites=>resolve(invites))
+                .catch(err=>reject(err));
+            })   
         },
         getConversations: function(userEmail) {
             return new Promise((resolve, reject)=>{
@@ -90,7 +99,11 @@ module.exports = function(){
                 .catch(err=>reject(err))
             })
             
+        },
+        getContacts: function(userEmail){
+            return `${userEmail}: contacts`;
         }
+
     }
 }
 
