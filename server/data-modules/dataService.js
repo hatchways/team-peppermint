@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const uri = process.env.uri;
-const userSchema = require('../models/userSchema');
-
-
-
+const UserSchema = require('../models/userSchema');
+var User;
 module.exports = function(){
-    var User;
+    
     return{
         connect: function(){ 
             return new Promise(function(resolve,reject){
@@ -15,12 +13,14 @@ module.exports = function(){
                     reject(err);
                 });
                 db.once('open', ()=>{
-                    User = db.model("User", userSchema);
+                    console.log("connected to db");
+                    User = db.model("User", UserSchema);
                     resolve();
                 });
             });
         },
         createUser: function(userObject){
+
             return new Promise((resolve,reject)=>{
                 let newUser = new User(userObject);
                 newUser.save((err) => {
