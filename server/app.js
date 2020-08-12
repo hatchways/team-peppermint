@@ -16,6 +16,8 @@ dotenv.config();
 
 
 
+const conversationsRouter = require("./routes/conversations");
+
 const { json, urlencoded } = express;
 
 const app = express();
@@ -33,6 +35,8 @@ app.use('/api/user', authRouter);
 
 app.use(cookieParser());
 
+
+app.use("/user/:id/conversations", conversationsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
