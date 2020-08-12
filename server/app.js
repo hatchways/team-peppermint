@@ -15,6 +15,9 @@ const inviteRouter = require('./routes/invitation');
 dotenv.config();
 
 
+
+const invitationsRouter = require("./routes/invitations");
+
 const { json, urlencoded } = express;
 
 const app = express();
@@ -31,6 +34,9 @@ app.use("/user", inviteRouter);
 app.use('/api/user', authRouter);
 
 app.use(cookieParser());
+
+
+app.use("/user/:id/invitations", invitationsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
