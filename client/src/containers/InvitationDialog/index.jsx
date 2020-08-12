@@ -7,31 +7,33 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
 const InvitationDialog = (props) =>{
     const classes = useStyles();
 
     return (
-        <div className={classes.root} >
             <Dialog 
-                className={classes.dialogWindow}
+                fullWidth={true}
                 open={props.open} 
                 onClose ={props.onClose} 
                 aria-labelledby="invitation-dialog-title"
-                fullWidth
-            >
-                <DialogTitle id="invitation-dialog-title">
-                    <Typography variant="h6" style={{ fontWeight: 600, marginLeft:20, marginRight:20 }}>
-                        Invite friends to messenger
-                    </Typography>                    
                 
-                </DialogTitle>
-                <DialogContent className={classes.dialogWindowContent}>
-                    <DialogContentText>
+            >
+ 
+                <DialogContent 
+                    style={{margin: "10%"}}
+                >
+                    <DialogTitle id="invitation-dialog-title">
+                        <Typography variant="h6" style={{ fontWeight: 600 }}>
+                            Invite friends to messenger
+                        </Typography>                    
+                    
+                    </DialogTitle>
+                    <DialogContentText mx="auto" >
                         Send your friends an invite email 
                     </DialogContentText>
                     <TextField
                         autoFocus
-                        margin="dense"
                         id="emailToInvite"
                         label="Email Address"
                         type="email"
@@ -43,11 +45,12 @@ const InvitationDialog = (props) =>{
                     </DialogContentText>
                     <TextField
                         disabled 
-                        margin="dense"
+                        
                         id="linkToInvite"
                         variant="outlined"
                         defaultValue="invite.link"
                         fullWidth 
+                        
                         InputProps={{
                             endAdornment:
                             (<InputAdornment position="end">
@@ -57,14 +60,14 @@ const InvitationDialog = (props) =>{
                         }}                 
 
                     />
+                    <DialogActions>
+                        <Button  color="primary">
+                            Send Invite
+                        </Button>
+                    </DialogActions>
                 </DialogContent>
-                <DialogActions>
-                    <Button  color="primary">
-                        Send Invite
-                    </Button>
-                </DialogActions>
+
             </Dialog>
-        </div>    
         );
 }
 export default InvitationDialog;
