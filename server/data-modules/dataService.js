@@ -69,6 +69,17 @@ module.exports = function(){
                     else resolve("Invitation Created");
                 })
             })
+        },
+        getInvitationsByEmail: function(userEmail) {
+            return new Promise((resolve, reject)=>{
+                Invite.find({
+                    approved: false,
+                    rejected: false,
+                    to_user: userEmail
+                }).exec()
+                .then(invites=>resolve(invites))
+                .catch(err=>reject(err));
+            })
         }
     }
 }
