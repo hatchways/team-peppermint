@@ -1,13 +1,12 @@
 const router = require("express").Router();
-const Conversation = require("../models/Conversation");
+const data = require("../data-modules/dataService")();
 
 //conversation route
-router.get("/user/:id/conversations", async (req, res) => {
+router.get("/:email/conversations", async (req, res) => {
   try {
-    //save user
-    const conversations = await Conversation.find({ userId: req.body.userId });
-    //only send back the id, not the whole user object
-    res.json(conversations);
+    const conversations = await data.getConversations(req.params.email);
+    if(conversations.length===0) res.send("You do not have conversations"); 
+    else res.json(conversations);
   } catch (err) {
     res.status(400).json(err);
   }

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const ConversationSchema = new mongoose.Schema({
-    users:{
-        type : Array[User],
+    usersEmail: {
+        type : Array,
         required: true
     },
-    messages:{
-        type : Array[Message]
+    messages: {
+        type : Array
     }
   }) 
   module.exports = ConversationSchema;

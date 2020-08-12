@@ -11,12 +11,12 @@ const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
 const authRouter = require('./routes/auth');
 const invitationsRouter = require('./routes/invitation');
-
+const conversationsRouter = require("./routes/conversations");
 dotenv.config();
 
 
 
-const conversationsRouter = require("./routes/conversations");
+
 
 const { json, urlencoded } = express;
 
@@ -30,13 +30,13 @@ app.use(express.static(join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);
-app.use("/user", invitationsRouter);
+app.use("/user", invitationsRouter,conversationsRouter);
 app.use('/api/user', authRouter);
 
 app.use(cookieParser());
 
 
-app.use("/user/:id/conversations", conversationsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

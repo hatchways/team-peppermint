@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const uri = process.env.uri;
 const UserSchema = require('../models/userSchema');
-const Invitation = require("../models/invitationSchema");
-var User, Invite;
+const InvitationSchema = require("../models/invitationSchema");
+const ConversationSchema = require("../models/conversationSchema");
+var User, Invitation, Conversation;
 module.exports = function(){
     
     return{
@@ -16,7 +17,8 @@ module.exports = function(){
                 db.once('open', ()=>{
                     console.log("connected to db");
                     User = db.model("users", UserSchema);
-                    Invite = db.model("invitations", Invitation);
+                    Invitation = db.model("invitations", InvitationSchema);
+                    Conversation = db.model("conversations", ConversationSchema);
                     resolve();
                 });
             });
@@ -63,7 +65,7 @@ module.exports = function(){
         },
         createInvitation: function(inviteObject){
             return new Promise((resolve, reject)=>{
-                let newInvite = new Invite(inviteObject);
+                let newInvite = new Invitation(inviteObject);
                 newInvite.save((err)=>{
                     if(err) reject(err);
                     else resolve("Invitation Created");
@@ -72,7 +74,7 @@ module.exports = function(){
         },
         getInvitationsByEmail: function(userEmail) {
             return new Promise((resolve, reject)=>{
-                Invite.find({
+                Invitation.find({
                     approved: false,
                     rejected: false,
                     to_user: userEmail
@@ -80,6 +82,14 @@ module.exports = function(){
                 .then(invites=>resolve(invites))
                 .catch(err=>reject(err));
             })
+        },
+        getConversations: function(userEmail) {
+            return new Promise((resolve, reject)=>{
+                Conversation.find({usersEmail: {$in: userEmail}}).exec()
+                .then(conversations => resolve(conversations))
+                .catch(err=>reject(err))
+            })
+            
         }
     }
 }
