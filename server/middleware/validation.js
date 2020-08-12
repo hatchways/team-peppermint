@@ -17,7 +17,7 @@ const signupValidation = (data) => {
 const loginValidation = (data) => {
   //login data
   const schema = Joi.object({
-    email: Joi.string().min(6).required().email(),
+    email: Joi.string().required().email(),
     password: Joi.string().min(6).required()
   });
   //Validate data before logging in

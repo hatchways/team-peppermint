@@ -1,31 +1,26 @@
-const dotenv = require('dotenv')
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-
-dotenv.config();
-
-const uri = process.env.TESTING_DATABASE_JESSE;
+const uri = process.env.uri;
 const UserSchema = require('../models/userSchema');
-
-
-
+var User;
 module.exports = function(){
-    var User;
+    
     return{
         connect: function(){ 
-            return mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true });
-            // return new Promise(function(resolve,reject){
-            //     let db = mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true }); 
-                // db.on('error', (err)=>{
-                //     reject(err);
-                // });
-                // db.once('open', ()=>{
-                //     // User = new UserSchema;
-                //     resolve();
-            //     // });
-            // });
+            return new Promise(function(resolve,reject){
+                let db = mongoose.createConnection(uri,{ useNewUrlParser: true, useUnifiedTopology: true }); 
+                db.on('error', (err)=>{
+                    reject(err);
+                });
+                db.once('open', ()=>{
+                    console.log("connected to db");
+                    User = db.model("User", UserSchema);
+                    resolve();
+                });
+            });
         },
         createUser: function(userObject){
+
             return new Promise((resolve,reject)=>{
                 let newUser = new User(userObject);
                 newUser.save((err) => {
