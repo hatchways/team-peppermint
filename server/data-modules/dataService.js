@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const uri = process.env.uri;
 const UserSchema = require('../models/userSchema');
-var User;
+const Invitation = require("../models/invitationSchema");
+var User, Invite;
 module.exports = function(){
     
     return{
@@ -14,7 +15,8 @@ module.exports = function(){
                 });
                 db.once('open', ()=>{
                     console.log("connected to db");
-                    User = db.model("User", UserSchema);
+                    User = db.model("users", UserSchema);
+                    Invite = db.model("invitations", Invitation);
                     resolve();
                 });
             });
@@ -24,11 +26,8 @@ module.exports = function(){
             return new Promise((resolve,reject)=>{
                 let newUser = new User(userObject);
                 newUser.save((err) => {
-                    if(err) {
-                        reject(err);
-                    } else {
-                        resolve(`new user: ${newUser.email} successfully added`);
-                    }
+                    if(err) reject(err);
+                    else resolve(`new user: ${newUser.email} successfully added`);                    
                 });
             });
         
@@ -61,6 +60,15 @@ module.exports = function(){
                     reject(err);
                 });
             });
+        },
+        createInvitation: function(inviteObject){
+            return new Promise((resolve, reject)=>{
+                let newInvite = new Invite(inviteObject);
+                newInvite.save((err)=>{
+                    if(err) reject(err);
+                    else resolve("Invitation Created");
+                })
+            })
         }
     }
 }
