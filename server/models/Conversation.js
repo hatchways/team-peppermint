@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const conversationSchema = new mongoose.Schema({
+const ConversationSchema = new mongoose.Schema({
     users:{
         type : Array[User],
         required: true
@@ -8,3 +8,4 @@ const conversationSchema = new mongoose.Schema({
         type : Array[Message]
     }
   }) 
+  module.exports = ConversationSchema;
