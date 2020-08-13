@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
   },
   avatar: {
     width: theme.spacing(5.5),
