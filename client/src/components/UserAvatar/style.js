@@ -19,7 +19,8 @@ export const StyledBadge = withStyles((theme) => ({
       height: "100%",
       borderRadius: "50%",
       animation: "$ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",      
+      border: "1px solid currentColor",
+      content: '""',
     },
   },
   "@keyframes ripple": {
@@ -39,6 +40,7 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     "& > *": {
       margin: theme.spacing(1),
+      marginRight: theme.spacing(3),
     },
   },
   avatar: {
