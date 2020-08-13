@@ -1,6 +1,6 @@
 import React from "react";
 import { useStyles } from "./style";
-import ChatNavBar from "../ChatNavBar";
+import MainContentFieldNavBar from "../MainContentFieldNavBar";
 import MessageField from "../MessageField";
 
 const MainContentField = () => {
@@ -8,7 +8,7 @@ const MainContentField = () => {
 
   return (
     <section className={classes.root}>
-      <ChatNavBar /> 
+      <MainContentFieldNavBar /> 
       <MessageField/>
     </section>
   );
