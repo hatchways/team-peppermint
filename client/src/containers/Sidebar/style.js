@@ -7,7 +7,11 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: theme.spacing(2.5),
     width: "35%",
+    minWidth: 410,
     height: "100%",
     backgroundColor: "#f5f7fb",
+    [`@media (max-width:820px)`]: {
+      width: "100%",
+    },
   },
 }));
