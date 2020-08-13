@@ -79,43 +79,71 @@ export default function UserAuthForm({headerText}) {
 
   const handleEmail = (event) => {
     setEmail(event.target.value);
+    if (validateEmail()) {
+      setEmailHelperText('')
+    }
   };
 
   const handlePassword = (event) => {
     setPassword(event.target.value);
+    if (validatePass()) {
+      setPasswordHelperText('');
+    } 
   };
+
+  console.log(`email: ${email} password: ${password} language: ${language}`)
 
   const errors = validateInput(email, password);
   const isDisabled = Object.keys(errors).some(x => errors[x]);
 
-  const shouldMarkError = field => {
-    const hasError = errors[field];
-    const shouldShow = touched[field];
+  // const shouldMarkError = field => {
+  //   const hasError = errors[field];
+  //   const shouldShow = touched[field];
 
-    return hasError ? shouldShow : false;
-  };
+  //   return hasError ? shouldShow : false;
+  // };
 
-
-  const emailError = shouldMarkError('email') ? setEmailHelperText("Email invalid") : '';
-  const passError = shouldMarkError('password') ? setPasswordHelperText("Password required") : '';
-  function isFormValid() {
+  function validateEmail() {
     let regex = /^[^@]+@[^@]+\.[^@]+$/
     if (regex.test(email) === false) {
       setEmailHelperText("That is not an email");
       return false;
-    } else if (password.length < 6) {
+    } else {
+      return true;
+    }
+  }
+
+  function validatePass() {
+    if (password.length < 6) {
       setPasswordHelperText("Password needs to be at least 6 characters");
       return false;
     } else {
-      return true
+      return true;
     }
   }
+
+  function isFormValid() {
+    //check individual
+    if (validateEmail()) {
+      setEmailHelperText('')
+    } else if (validatePass()) {
+      setPasswordHelperText('');
+    } 
+    //check entire form
+    if (validateEmail() && validatePass()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   const handleSubmit = (event) => {
-    event.preventDefault();
+    if (event) event.preventDefault();
     if (isFormValid()){
       alert(`Signed up with email: ${email}, password: ${password}, language: ${language}`);
       setIsAlert(true);
     }
+    return;
   }
 
   const handleClose = () => {
@@ -135,7 +163,7 @@ export default function UserAuthForm({headerText}) {
           className={classes.formField}
           name="email" 
           required
-          type="email"
+          type="text"
           onChange={handleEmail}
           value={email}
           onBlur={handleBlur('email')}
