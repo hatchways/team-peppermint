@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useStyles } from "./style";
 import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
@@ -40,4 +40,4 @@ const ChatItem = (props) => {
   );
 };
 
-export default ChatItem;
+export default memo(ChatItem);

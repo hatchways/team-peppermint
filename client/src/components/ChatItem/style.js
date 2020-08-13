@@ -13,10 +13,9 @@ export const useStyles = makeStyles((theme) => ({
     boxShadow: "0 0 1px 0 grey",
   },
   avatarNameContainer: {
-    display: "flex",
-    justifyContent: "space-between",
+    display: "flex",    
     alignItems: "center",
-    width: "60%",
+    width: "75%",
     height: "100%",
   },
   nameContainer: {

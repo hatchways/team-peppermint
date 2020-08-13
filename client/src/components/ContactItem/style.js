@@ -15,7 +15,6 @@ export const useStyles = makeStyles((theme) => ({
   },
   avatarNameContainer: {
     display: "flex",
-    // justifyContent: "space-between",
     alignItems: "center",
     width: "50%",
     height: "100%",

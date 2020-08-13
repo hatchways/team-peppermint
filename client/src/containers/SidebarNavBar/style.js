@@ -22,8 +22,6 @@ export const useStyles = makeStyles((theme) => ({
   },
   badge: { top: 63, right: 5 },
   typography: {
-    fontWeight: 600,
-    marginLeft: 20,
-    marginRight: 20,
+    fontWeight: 600,    
   },
 }));
