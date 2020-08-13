@@ -91,17 +91,8 @@ export default function UserAuthForm({headerText}) {
     } 
   };
 
-  console.log(`email: ${email} password: ${password} language: ${language}`)
-
   const errors = validateInput(email, password);
   const isDisabled = Object.keys(errors).some(x => errors[x]);
-
-  // const shouldMarkError = field => {
-  //   const hasError = errors[field];
-  //   const shouldShow = touched[field];
-
-  //   return hasError ? shouldShow : false;
-  // };
 
   function validateEmail() {
     let regex = /^[^@]+@[^@]+\.[^@]+$/
@@ -131,6 +122,7 @@ export default function UserAuthForm({headerText}) {
     } 
     //check entire form
     if (validateEmail() && validatePass()) {
+      setOpen(true)
       return true;
     } else {
       return false;
@@ -214,18 +206,20 @@ export default function UserAuthForm({headerText}) {
       </form>
 
       {/* Welcome Message */}
-      <Snackbar
-        open={isAlert}
-        autoHideDuration={2000}
-        onClose={handleClose}
-      >
-        <Alert
+      {open ? 
+        <Snackbar
+          open={isAlert}
+          autoHideDuration={6000}
           onClose={handleClose}
-          severeity="success"
         >
-          {headerText === 'Create an account.' ? 'Welcome!' : 'Welcome Back'}
-        </Alert>
-      </Snackbar>
+          <Alert
+            open={handleOpen}
+            onClose={handleClose}
+          >
+            {headerText === 'Create an account.' ? 'Welcome!' : 'Welcome Back'}
+          </Alert>
+        </Snackbar> : 
+        null}
     </>
   )
 }
