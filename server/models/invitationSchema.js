@@ -5,6 +5,10 @@ const InvitationSchema = new mongoose.Schema({
       type: Boolean,
       required: true,
     },
+    rejected: {
+      type: Boolean,
+      required: true,
+    },
     from_user: {
       type: String,
       required: true,
