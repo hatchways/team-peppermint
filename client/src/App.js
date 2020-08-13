@@ -17,6 +17,7 @@ function App() {
         <Container maxWidth="lg" style={{ margin: "auto" }}>
           <Switch>
             <Route exact path="/" component={MainPage} />
+            {/* right now this breaks the styling of the auth routes due to container element, will need to refactor */}
             <Route path="/login" component={LoginPage} />
             <Route path="/signup" component={SignupPage} />
           </Switch>

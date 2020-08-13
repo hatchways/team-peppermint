@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 //Import Routes
 const indexRouter = require("./routes/index");
@@ -23,6 +24,7 @@ const { json, urlencoded } = express;
 const app = express();
 
 app.use(logger("dev"));
+app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());

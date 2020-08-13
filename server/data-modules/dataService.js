@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
+
 mongoose.Promise = global.Promise;
-const uri = process.env.uri;
+// Real database
+// const uri = process.env.uri;
+// Testing dataBase
+const uri = process.env.TESTING_DATABASE_JESSE;
+
 const UserSchema = require('../models/userSchema');
 const InvitationSchema = require("../models/invitationSchema");
 const ConversationSchema = require("../models/conversationSchema");

@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
+import axios from 'axios';
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
 }
@@ -54,6 +56,7 @@ function validateInput(email, password) {
 
 export default function UserAuthForm({headerText}) {
   const classes = useStyles();
+  const [name, setName] = useState('testfromFE');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [language, setLanguage] = useState('');
@@ -129,11 +132,44 @@ export default function UserAuthForm({headerText}) {
     }
   }
 
+  function resetInputs() {
+    setEmail('');
+    setPassword('');
+    setLanguage('');
+  }
+
   const handleSubmit = (event) => {
     if (event) event.preventDefault();
+    //make sure that form is valid
     if (isFormValid()){
-      alert(`Signed up with email: ${email}, password: ${password}, language: ${language}`);
-      setIsAlert(true);
+      if (headerText === 'Create an account.') { //Signup route
+        //UI response
+        setIsAlert(true);
+        //set newUser to register and then post to backend, then reset fields
+        const newUser = {
+          name: name,
+          email: email,
+          password: password
+        }
+        axios
+          .post('http://localhost:3001/api/user/signup', newUser)
+          .then(res => console.log(res.data))
+          .catch(err => console.log(err))
+        resetInputs();
+      } else { //login route
+        //UI response
+        setIsAlert(true);
+        //set user to login and then post to backend, then reset fields
+        const user = {
+          email: email,
+          password: password,
+        }
+        axios
+          .post('http://localhost:3001/api/user/login', user)
+          .then(res => console.log(res.data))
+          .catch(err => console.log(err))
+        resetInputs();
+      }
     }
     return;
   }
@@ -209,7 +245,7 @@ export default function UserAuthForm({headerText}) {
       {open ? 
         <Snackbar
           open={isAlert}
-          autoHideDuration={6000}
+          autoHideDuration={5000}
           onClose={handleClose}
         >
           <Alert
