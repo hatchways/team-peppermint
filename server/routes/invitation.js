@@ -23,6 +23,7 @@ router.get("/:email/invitations", async (req, res) => {
     try {
       //get all invitatitions by user id
       const invitations = await data.getIncomingInvites(req.params.email);
+      if(invitations.length===0) res.send("You do not have invitations");
       //send response with invitations
       res.json(invitations);
     } catch (err) {
