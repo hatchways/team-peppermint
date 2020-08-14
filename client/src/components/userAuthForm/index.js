@@ -45,15 +45,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-//
-function validateInput(name, email, password) {
-  // true means invalid, so our conditions got reversed
-  return {
-    name: name.length === 0,
-    email: email.length === 0,
-    password: password.length === 0
-  };
-}
+
 
 export default function UserAuthForm({headerText}) {
   const classes = useStyles();
@@ -73,6 +65,22 @@ export default function UserAuthForm({headerText}) {
   const [emailHelperText, setEmailHelperText] = useState('');
   const [passwordHelperText, setPasswordHelperText] = useState('');
 
+  function validateInput(name, email, password) {
+    // true means invalid, so our conditions got reversed
+    if (headerText === 'Create an account.') { 
+      return {
+        name: name.length === 0,
+        email: email.length === 0,
+        password: password.length === 0
+      }
+    } else {
+      return {
+        email: email.length === 0,
+        password: password.length === 0
+      }
+    }
+  }
+
   const handleBlur = (field) => (evt) => {
     evt.preventDefault();
     setTouched({...touched, [field]: true})
@@ -83,19 +91,19 @@ export default function UserAuthForm({headerText}) {
   };
   const handleName = (event) => {
     setName(event.target.value);
-    if (validateName()) {
+    if (validateName(event.target.value)) {
       setNameHelperText('')
     }
   };
   const handleEmail = (event) => {
     setEmail(event.target.value);
-    if (validateEmail()) {
+    if (validateEmail(event.target.value)) {
       setEmailHelperText('')
     }
   };
   const handlePassword = (event) => {
     setPassword(event.target.value);
-    if (validatePass()) {
+    if (validatePass(event.target.value)) {
       setPasswordHelperText('');
     } 
   };
@@ -103,7 +111,7 @@ export default function UserAuthForm({headerText}) {
   const errors = validateInput(name, email, password);
   const isDisabled = Object.keys(errors).some(x => errors[x]);
 
-  function validateEmail() {
+  function validateEmail(email) {
     let regex = /^[^@]+@[^@]+\.[^@]+$/
     if (regex.test(email) === false) {
       setEmailHelperText("That is not an email");
@@ -112,7 +120,7 @@ export default function UserAuthForm({headerText}) {
       return true;
     }
   }
-  function validateName() {
+  function validateName(name) {
     if (name.length === 0) {
       setNameHelperText('Name is required');
       return false;
@@ -120,29 +128,40 @@ export default function UserAuthForm({headerText}) {
       return true;
     }
   }
-  function validatePass() {
-    if (password.length < 6) {
+  function validatePass(password) {
+    if (password.length >= 6) {
+      return true;
+    } else {
       setPasswordHelperText("Password needs to be at least 6 characters");
       return false;
-    } else {
-      return true;
     }
   }
 
   function isFormValid() {
     //check individual
-    if (validateEmail()) {
-      setEmailHelperText('')
-    } else if (validatePass()) {
+    if (validateEmail(email)) {
+      setEmailHelperText('');
+    } else if (validatePass(password)) {
       setPasswordHelperText('');
-    } else if (validateName()) {
-      setEmailHelperText('')
+    } else if (headerText === 'Create an account.') {
+      if (validateName(name)) {
+        setNameHelperText('');
+      }
     }
-    //check entire form
-    if (validateEmail() && validatePass() && validateName()) {
-      return true;
-    } else {
-      return false;
+    //check entire form - signup
+    if (headerText === 'Create an account.') {
+      //check entire form
+      if (validateEmail(email) && validatePass(password) && validateName(name)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else { //check entire form - login
+      if (validateEmail(email) && validatePass(password)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -167,10 +186,9 @@ export default function UserAuthForm({headerText}) {
           password: password,
           language: language
         }
-        console.log(newUser);
         axios
           .post('http://localhost:3001/api/user/signup', newUser)
-          .then(res => console.log(res.data))
+          .then(res => console.log(res))
           .catch(err => console.log(err))
         resetInputs();
       } else { //login route
@@ -181,9 +199,10 @@ export default function UserAuthForm({headerText}) {
           email: email,
           password: password,
         }
+        
         axios
           .post('http://localhost:3001/api/user/login', user)
-          .then(res => console.log(res.data))
+          .then(res => console.log(res))
           .catch(err => console.log(err))
         resetInputs();
       }
@@ -206,18 +225,19 @@ export default function UserAuthForm({headerText}) {
     <>
       <h2 className={classes.header}>{headerText}</h2>
       <form onSubmit={handleSubmit} className={classes.root}>
-      <TextField
-          label="Choose your display name" 
-          className={classes.formField}
-          name="name" 
-          required
-          type="text"
-          onChange={handleName}
-          value={name}
-          onBlur={handleBlur('name')}
-          helperText={nameHelperText}
-          error={nameHelperText ? true : false}
-        />
+      {headerText === 'Create an account.' ? 
+        <TextField
+            label="Choose your display name" 
+            className={classes.formField}
+            name="name" 
+            required
+            type="text"
+            onChange={handleName}
+            value={name}
+            onBlur={handleBlur('name')}
+            helperText={nameHelperText}
+            error={nameHelperText ? true : false}
+          /> : null }
         <TextField
           label="E-mail address" 
           className={classes.formField}
@@ -235,7 +255,7 @@ export default function UserAuthForm({headerText}) {
           className={classes.formField}
           required
           type="password"
-          name="password" 
+          name="password"
           onChange={handlePassword}
           value={password}
           onBlur={handleBlur('password')}
