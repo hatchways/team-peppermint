@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
-const invitationSchema = new mongoose.Schema({
+const InvitationSchema = new mongoose.Schema({
     approved: {
+      type: Boolean,
+      required: true,
+    },
+    rejected: {
       type: Boolean,
       required: true,
     },
@@ -24,3 +28,4 @@ const invitationSchema = new mongoose.Schema({
       min: 6
     }
   })
+  module.exports = InvitationSchema;

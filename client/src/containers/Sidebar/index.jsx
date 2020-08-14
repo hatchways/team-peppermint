@@ -1,25 +1,18 @@
 import React, { useState }  from "react";
 import { useStyles } from "./style";
-import  InvitationDialog  from "../InvitationDialog";
-import {Button} from '@material-ui/core';
+import SidebarNavBar from "../SidebarNavBar";
+import SidebarInfo from "../SidebarInfo";
+
 const Sidebar = () => {
   const classes = useStyles();
-  const [inviteDiaolog, showInviteDialog]= useState(false);
-  const openInviteDialog=()=>{
-    showInviteDialog(true);
-  }
-  const closeInviteDialog=()=>{
-    showInviteDialog(false);
-  }
+
 
   return (
     <section className={classes.root}>
-        SIDEBAR
-        <div>
-          <Button variant="contained" onClick={() => openInviteDialog()}>Invite</Button>
-          <InvitationDialog open ={inviteDiaolog} onClose = {closeInviteDialog}/>
-        </div>
-    </section>);
+      <SidebarNavBar />
+      <SidebarInfo />
+    </section>
+  );
 };
 
 export default Sidebar;

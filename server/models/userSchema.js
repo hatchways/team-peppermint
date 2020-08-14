@@ -18,6 +18,9 @@ const UserSchema = new mongoose.Schema({
     required: true,
     max: 255,
     min: 6
+  },
+  contacts: {
+    type: Array
   }
 })
 

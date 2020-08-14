@@ -1,25 +1,27 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) => ({
-  root: {    
+  root: {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",   
+    alignItems: "center",
     width: "100%",
     height: "10vh",
-    backgroundColor: "#fff",    
-    boxShadow: " 0 15px 15px #f5f7fb",
+    backgroundColor: "transparent",
   },
   leftRightSideStyle: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: theme.spacing(2),
   },
-  onOfflineStyle: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: 60,
+  avatar: {
+    width: theme.spacing(5.5),
+    height: theme.spacing(5.5),
+    border: `2px solid ${theme.palette.background.paper}`,
+  },
+  badge: { top: 63, right: 5 },
+  typography: {
+    fontWeight: 600,    
   },
 }));
