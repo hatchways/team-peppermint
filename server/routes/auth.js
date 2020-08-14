@@ -36,7 +36,19 @@ router.post('/signup', async (req, res) => {
   data.createUser(newUser)
     .then((msg)=>{
       res.status(201).send(msg);
-      generateToken(res, user_.id);
+      //set payload
+      const payload = {
+        name: req.body.name
+      }
+      //create and assign a token
+      const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+      //create httpOnly cookie
+      res.cookie('auth_token', token, {
+        maxAge: 3600, // sets 1 hour in length
+        httpOnly: true,
+        // secure: true -> uncomment in production?
+      });
+      res.status(200).end();
     })
     .catch((err)=>{
       console.error(err);
@@ -80,7 +92,7 @@ router.get("/", checkAuth, (req, res, next) => {
       title: 'my first post',
       description: "only see if you're authenticated"
     }
-  });
+  })
 });
 
 module.exports = router;
