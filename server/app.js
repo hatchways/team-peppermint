@@ -24,7 +24,10 @@ const { json, urlencoded } = express;
 const app = express();
 
 app.use(logger("dev"));
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:/3000',
+  credentials: true
+}));
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());

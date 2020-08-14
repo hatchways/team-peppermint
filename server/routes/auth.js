@@ -1,21 +1,14 @@
 const router = require('express').Router();
-const UserSchema = require('../models/userSchema');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dataService = require('../data-modules/dataService');
 const data = dataService();
 
+//middleware to authenticate routes
+const checkAuth = require('../middleware/checkAuth');
+
 //middleware validation
-const {signupValidation, loginValidation} = require('../middleware/validation');
-
-
-router.get('/', async (req, res) => {
-  try {
-    res.status(200).send("get route works!")
-  } catch(err) {
-    console.log(err);
-  }
-})
+const {signupValidation, loginValidation, generateToken} = require('../middleware/validation');
 
 //signup route
 router.post('/signup', async (req, res) => {
@@ -31,6 +24,7 @@ router.post('/signup', async (req, res) => {
   //Hash the pass
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(req.body.password, salt);
+  //set default language to english if none provided
   const prefLanguage = req.body.language ? req.body.language : 'english';
   // create a new user
   const newUser = {
@@ -40,14 +34,14 @@ router.post('/signup', async (req, res) => {
     language: prefLanguage
   };  
   data.createUser(newUser)
-  .then((msg)=>{
-    res.status(201).send(msg);
-  })
-  .catch((err)=>{
-    console.error(err);
-    res.status(400).send("error"+err);
-  })
-  
+    .then((msg)=>{
+      res.status(201).send(msg);
+      generateToken(res, user_.id);
+    })
+    .catch((err)=>{
+      console.error(err);
+      res.status(400).send("error"+err);
+    })
 })
 
 //login route
@@ -59,20 +53,34 @@ router.post('/login', async (req, res) => {
 
   //check if the user is already in the database
   const user = await data.getUserByEmail(req.body.email);
-  if (!user) return res.status(400).send('Email not found');
+  if (!user) return res.status(400).send('Auth Failed');
 
   //checking password is correct
-  const validPass = await bcrypt.compare(req.body.password, user.password)
-  if (!validPass) return res.status(400).send('Invalid password');
+  const validPass = await bcrypt.compare(req.body.password, user.password);
+  if (!validPass) return res.status(400).send('Auth Failed');
 
-  //create and assign a token
-  try {
-    const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
-    res.header('auth-token', token).send(token);
-    console.log("logged");
-  } catch (err) {
-    console.log(err)
+  //set payload
+  const payload = {
+    name: req.body.name
   }
+  //create and assign a token
+  const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+  //create httpOnly cookie
+  res.cookie('auth_token', token, {
+    maxAge: 3600, // sets 1 hour in length
+    httpOnly: true,
+    // secure: true -> uncomment in production?
+  });
+  res.status(200).end();
+});
+
+router.get("/", checkAuth, (req, res, next) => {
+  res.json({
+    posts: {
+      title: 'my first post',
+      description: "only see if you're authenticated"
+    }
+  });
 });
 
 module.exports = router;

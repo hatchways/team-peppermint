@@ -30,11 +30,12 @@ const generateToken = (res, id) => {
   const token = jwt.sign({ id}, process.env.TOKEN_SECRET, {
     expiresIn: process.env.DB_ENV === "testing" ? '1d' : '7d',
   });
-  return res.cookie('token', token, {
+  res.cookie('token', token, {
     expires: new Date(Date.now() + expiration),
     secure: false,
     httpOnly: true,
-  });
+  })
+  res.status(201).send(token);
 };
 
 
