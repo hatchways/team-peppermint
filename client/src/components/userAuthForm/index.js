@@ -46,9 +46,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //
-function validateInput(email, password) {
+function validateInput(name, email, password) {
   // true means invalid, so our conditions got reversed
   return {
+    name: name.length === 0,
     email: email.length === 0,
     password: password.length === 0
   };
@@ -56,7 +57,7 @@ function validateInput(email, password) {
 
 export default function UserAuthForm({headerText}) {
   const classes = useStyles();
-  const [name, setName] = useState('testfromFE');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [language, setLanguage] = useState('');
@@ -64,12 +65,13 @@ export default function UserAuthForm({headerText}) {
   const [isAlert, setIsAlert] = useState(false);
 
   const [touched, setTouched] = useState({
+    name: false,
     email: false,
     password: false
   });
-
-  const [emailHelperText, setEmailHelperText] = useState('')
-  const [passwordHelperText, setPasswordHelperText] = useState('')
+  const [nameHelperText, setNameHelperText] = useState('');
+  const [emailHelperText, setEmailHelperText] = useState('');
+  const [passwordHelperText, setPasswordHelperText] = useState('');
 
   const handleBlur = (field) => (evt) => {
     evt.preventDefault();
@@ -79,14 +81,18 @@ export default function UserAuthForm({headerText}) {
   const handleLanguage = (event) => {
     setLanguage(event.target.value);
   };
-
+  const handleName = (event) => {
+    setName(event.target.value);
+    if (validateName()) {
+      setNameHelperText('')
+    }
+  };
   const handleEmail = (event) => {
     setEmail(event.target.value);
     if (validateEmail()) {
       setEmailHelperText('')
     }
   };
-
   const handlePassword = (event) => {
     setPassword(event.target.value);
     if (validatePass()) {
@@ -94,7 +100,7 @@ export default function UserAuthForm({headerText}) {
     } 
   };
 
-  const errors = validateInput(email, password);
+  const errors = validateInput(name, email, password);
   const isDisabled = Object.keys(errors).some(x => errors[x]);
 
   function validateEmail() {
@@ -106,7 +112,14 @@ export default function UserAuthForm({headerText}) {
       return true;
     }
   }
-
+  function validateName() {
+    if (name.length === 0) {
+      setNameHelperText('Name is required');
+      return false;
+    } else {
+      return true;
+    }
+  }
   function validatePass() {
     if (password.length < 6) {
       setPasswordHelperText("Password needs to be at least 6 characters");
@@ -122,10 +135,11 @@ export default function UserAuthForm({headerText}) {
       setEmailHelperText('')
     } else if (validatePass()) {
       setPasswordHelperText('');
-    } 
+    } else if (validateName()) {
+      setEmailHelperText('')
+    }
     //check entire form
-    if (validateEmail() && validatePass()) {
-      setOpen(true)
+    if (validateEmail() && validatePass() && validateName()) {
       return true;
     } else {
       return false;
@@ -133,6 +147,7 @@ export default function UserAuthForm({headerText}) {
   }
 
   function resetInputs() {
+    setName('');
     setEmail('');
     setPassword('');
     setLanguage('');
@@ -177,6 +192,9 @@ export default function UserAuthForm({headerText}) {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleAlertClose = () => {
+    setIsAlert(false);
+  }
 
   const handleOpen = () => {
     setOpen(true);
@@ -186,6 +204,18 @@ export default function UserAuthForm({headerText}) {
     <>
       <h2 className={classes.header}>{headerText}</h2>
       <form onSubmit={handleSubmit} className={classes.root}>
+      <TextField
+          label="Choose your display name" 
+          className={classes.formField}
+          name="name" 
+          required
+          type="text"
+          onChange={handleName}
+          value={name}
+          onBlur={handleBlur('name')}
+          helperText={nameHelperText}
+          error={nameHelperText ? true : false}
+        />
         <TextField
           label="E-mail address" 
           className={classes.formField}
@@ -242,20 +272,19 @@ export default function UserAuthForm({headerText}) {
       </form>
 
       {/* Welcome Message */}
-      {open ? 
-        <Snackbar
+      
+      <Snackbar
+        open={isAlert}
+        autoHideDuration={5000}
+        onClose={handleAlertClose}
+      >
+        <Alert
           open={isAlert}
-          autoHideDuration={5000}
-          onClose={handleClose}
+          onClose={handleAlertClose}
         >
-          <Alert
-            open={handleOpen}
-            onClose={handleClose}
-          >
-            {headerText === 'Create an account.' ? 'Welcome!' : 'Welcome Back'}
-          </Alert>
-        </Snackbar> : 
-        null}
+          {headerText === 'Create an account.' ? 'Welcome!' : 'Welcome Back'}
+        </Alert>
+      </Snackbar>
     </>
   )
 }
