@@ -7,7 +7,8 @@ const signupValidation = (data) => {
   const schema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required().email(),
-    password: Joi.string().min(6).required()
+    password: Joi.string().min(6).required(),
+    language: Joi.any()
   });
   //validate data before making a user
   return schema.validate(data);

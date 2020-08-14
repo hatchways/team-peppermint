@@ -31,12 +31,13 @@ router.post('/signup', async (req, res) => {
   //Hash the pass
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(req.body.password, salt);
-
+  const prefLanguage = req.body.language ? req.body.language : 'english';
   // create a new user
   const newUser = {
     name: req.body.name,
     email: req.body.email,
     password: hashPassword,
+    language: prefLanguage
   };  
   data.createUser(newUser)
   .then((msg)=>{

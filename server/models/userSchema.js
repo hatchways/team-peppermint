@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema({
   },
   contacts: {
     type: Array
+  },
+  language: {
+    type: String,
+    required: false
   }
 })
 

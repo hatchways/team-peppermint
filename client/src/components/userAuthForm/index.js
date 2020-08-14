@@ -164,8 +164,10 @@ export default function UserAuthForm({headerText}) {
         const newUser = {
           name: name,
           email: email,
-          password: password
+          password: password,
+          language: language
         }
+        console.log(newUser);
         axios
           .post('http://localhost:3001/api/user/signup', newUser)
           .then(res => console.log(res.data))
@@ -254,10 +256,10 @@ export default function UserAuthForm({headerText}) {
               className={classes.formField}
               label="Select primary language"
             >
-              <MenuItem value="en" default>English</MenuItem>
-              <MenuItem value="ch">Chinese (Mandarin)</MenuItem>
-              <MenuItem value="sp">Spanish</MenuItem>
-              <MenuItem value="fr">French</MenuItem>
+              <MenuItem value="english" default>English</MenuItem>
+              <MenuItem value="chinese">Chinese (Mandarin)</MenuItem>
+              <MenuItem value="spanish">Spanish</MenuItem>
+              <MenuItem value="french">French</MenuItem>
             </Select>
           </>
           : null}
