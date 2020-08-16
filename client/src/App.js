@@ -4,6 +4,8 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { theme } from "./themes/theme";
 import MainPage from "./containers/MainPage";
 import "./App.css";
+const dotenv = require('dotenv');
+dotenv.config();
 
 function App() {
   return (
