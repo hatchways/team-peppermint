@@ -59,7 +59,7 @@ const InvitationDialog = (props) =>{
                                 
                                 <CopyToClipboard text={linkToCopy}
                                     onCopy={() =>setCopied(true)}>
-                                    <Button variant="contained" color="primary" disabled={copied}>{copied?"Copied":"Copy"}</Button>
+                                    <Button variant="contained" color="primary">Copy</Button>
                                 </CopyToClipboard>
                             </InputAdornment>)
                             
