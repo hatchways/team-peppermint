@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
+
 // Real database
 // const uri = process.env.uri;
+
 // Testing dataBase
 const uri = process.env.TESTING_DATABASE_JESSE;
 
@@ -15,7 +17,7 @@ module.exports = function(){
     return{
         connect: function(){ 
             return new Promise(function(resolve,reject){
-                let db = mongoose.createConnection(uri,{ useNewUrlParser: true, useUnifiedTopology: true }); 
+                let db = mongoose.createConnection(uri,{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }); 
                 db.on('error', (err)=>{
                     reject(err);
                 });
@@ -37,7 +39,6 @@ module.exports = function(){
                     else resolve(`new user: ${newUser.email} successfully added`);                    
                 });
             });
-        
         },
         getUserByEmail: function(userEmail){
             return new Promise((resolve,reject)=>{

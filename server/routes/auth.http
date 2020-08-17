@@ -12,4 +12,12 @@ GET http://localhost:3001/api/user/
 ###
 #get with valid cookie
 GET http://localhost:3001/api/user/
-Cookie: auth_token=j%3A%7B%22token%22%3A%22eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTc0MzA4MjV9.2bEwEgWD4xgahs_3bH1WZgOy8jiFfUdB4RLpSnlPHyc%22%7D; Max-Age=3; Path=/; Expires=Fri, 14 Aug 2020 18:47:09 GMT; HttpOnly
+Cookie: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNvb2tpZW1vbnN0ZXI5QGdtYWlsLmNvbSIsImlhdCI6MTU5NzY0ODkwMn0.jy3Un8pGR5R1Uwxz1vsNddRp8iDpVLTbOJd2blUKpCU; Max-Age=3; Path=/; Expires=Mon, 17 Aug 2020 07:21:45 GMT; HttpOnly
+
+###
+##delete with invalid cookie
+DELETE http://localhost:3001/api/user/delete
+###
+## delete with valid cookie
+DELETE http://localhost:3001/api/user/delete
+Cookie: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNvb2tpZW1vbnN0ZXI5QGdtYWlsLmNvbSIsImlhdCI6MTU5NzY0ODkwMn0.jy3Un8pGR5R1Uwxz1vsNddRp8iDpVLTbOJd2blUKpCU; Max-Age=3; Path=/; Expires=Mon, 17 Aug 2020 07:21:45 GMT; HttpOnly

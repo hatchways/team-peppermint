@@ -4,7 +4,7 @@ const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+require('dotenv').config();
 const cors = require('cors');
 
 //Import Routes
@@ -14,7 +14,7 @@ const pingRouter = require("./routes/ping");
 const authRouter = require('./routes/auth');
 const invitationsRouter = require('./routes/invitation');
 const conversationsRouter = require("./routes/conversations");
-dotenv.config();
+
 
 const contactRouter = require("./routes/contacts");
 
@@ -24,9 +24,7 @@ const { json, urlencoded } = express;
 const app = express();
 
 app.use(logger("dev"));
-app.use(cors({
-  credentials: true
-}));
+app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
