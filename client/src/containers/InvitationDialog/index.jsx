@@ -1,5 +1,4 @@
-import React from "react";
-import { useStyles } from "./style";
+import React, { useState} from "react";
 import { TextField , Button, Typography } from "@material-ui/core";
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,10 +6,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 const InvitationDialog = (props) =>{
-    const classes = useStyles();
-
+    
+    const [linkToCopy, setlinkToCopy] = useState('share.link');
+    const [copied, setCopied] = useState(false);
     return (
             <Dialog 
                 fullWidth={true}
@@ -21,10 +22,12 @@ const InvitationDialog = (props) =>{
             >
  
                 <DialogContent 
-                    style={{margin: "10%"}}
+                    style={{
+                        margin: "10%"
+                    }}
                 >
                     <DialogTitle id="invitation-dialog-title">
-                        <Typography variant="h6" style={{ fontWeight: 600 }}>
+                        <Typography style={{ fontWeight: 600 }}>
                             Invite friends to messenger
                         </Typography>                    
                     
@@ -48,16 +51,20 @@ const InvitationDialog = (props) =>{
                         
                         id="linkToInvite"
                         variant="outlined"
-                        defaultValue="invite.link"
+                        value={linkToCopy}
                         fullWidth 
-                        
                         InputProps={{
                             endAdornment:
                             (<InputAdornment position="end">
-                                <Button variant="contained" color="primary">Copy</Button>
+                                
+                                <CopyToClipboard text={linkToCopy}
+                                    onCopy={() =>setCopied(true)}>
+                                    <Button variant="contained" color="primary" disabled={copied}>{copied?"Copied":"Copy"}</Button>
+                                </CopyToClipboard>
                             </InputAdornment>)
                             
-                        }}                 
+                        }}   
+                        
 
                     />
                     <DialogActions>
