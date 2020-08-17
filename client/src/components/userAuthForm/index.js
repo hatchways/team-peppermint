@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import {Redirect} from 'react-router-dom';
 
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -9,7 +10,11 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
-import axios from 'axios';
+import { useHistory } from "react-router";
+
+import Axios from 'axios';
+
+import UserContext from '../../Context/UserContext';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -55,6 +60,11 @@ export default function UserAuthForm({headerText}) {
   const [language, setLanguage] = useState('');
   const [open, setOpen] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
+
+  const { setUserData } = useContext(UserContext);
+
+  const history = useHistory();
+
 
   const [touched, setTouched] = useState({
     name: false,
@@ -172,7 +182,7 @@ export default function UserAuthForm({headerText}) {
     setLanguage('');
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     if (event) event.preventDefault();
     //make sure that form is valid
     if (isFormValid()){
@@ -186,11 +196,18 @@ export default function UserAuthForm({headerText}) {
           password: password,
           language: language
         }
-        axios
-          .post('http://localhost:3001/api/user/signup', newUser)
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
+        await Axios.post('http://localhost:3001/api/user/signup', newUser);
+        const loginRes = await Axios.post("http://localhost:3001/api/user/login", {
+          email,
+          password
+        });
+        setUserData({
+          token: loginRes.data.token,
+          user: loginRes.data.user
+        });
+        localStorage.setItem("auth-token", loginRes.data.token);
         resetInputs();
+        history.push("/");
       } else { //login route
         //UI response
         setIsAlert(true);
@@ -200,7 +217,7 @@ export default function UserAuthForm({headerText}) {
           password: password,
         }
         
-        axios
+        const loginRes = await Axios
           .post('http://localhost:3001/api/user/login', user)
           .then(res => console.log(res))
           .catch(err => console.log(err))
