@@ -92,8 +92,7 @@ router.post('/login', async (req, res) => {
       token,
       user: {
         id: user._id,
-        name: user.name,
-        email: user.name
+        name: user.name
       }
     });
   } catch (err) {
@@ -119,7 +118,7 @@ router.get("/", checkAuth, (req, res, next) => {
   })
 });
 
-router.post("/tokenIsValid", async (req, res) => {
+router.get('/getCookie', async (req, res) => {
   try {
     const token = req.cookies.auth_token;
     if (!token) return res.json(false);
@@ -130,10 +129,55 @@ router.post("/tokenIsValid", async (req, res) => {
     const user = await data.getUserByEmail(verified.id);
     if (!user) return res.json(false);
 
-    return res.json(true);
+    //create httpOnly cookie
+    res.cookie('auth_token', token, {
+      maxAge: 3600, // sets 1 hour in length
+      httpOnly: true,
+      // secure: true -> uncomment in production?
+    });
   } catch {
     res.status(500).json({ error: err.message })
   }
+})
+
+router.post("/tokenIsValid", async (req, res) => {
+  // try {
+  //   const token = req.cookies.auth_token;
+  //   if (!token) return res.json(false);
+
+  //   const verified = jwt.verify(token, process.env.TOKEN_SECRET)
+  //   if (!verified) return res.json(false);
+
+  //   const user = await data.getUserByEmail(verified.id);
+  //   if (!user) return res.json(false);
+
+  //   return res.json(true);
+  // } catch {
+  //   res.status(500).json({ error: err.message })
+  // }
+  try {
+    const token = req.header("x-auth-token");
+    if (!token) return res.json(false);
+    console.log("token: " + token);
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    console.log("verified: " + verified);
+    if (!verified) return res.json(false);
+
+    const user = await data.getUserByEmail(verified.id);
+    if (!user) return res.json(false);
+    console.log("user: " + user);
+    return res.json(true);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/", checkAuth, async (req, res) => {
+  const user = data.getUserByEmail(req.user);
+  res.json({
+    name: user.name,
+    id: user._id
+  });
 })
 
 module.exports = router;
