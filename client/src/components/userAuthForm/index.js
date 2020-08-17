@@ -60,6 +60,7 @@ export default function UserAuthForm({headerText}) {
   const [language, setLanguage] = useState('');
   const [open, setOpen] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
+  const [error, setError] = useState();
 
   const { setUserData } = useContext(UserContext);
 
@@ -184,47 +185,54 @@ export default function UserAuthForm({headerText}) {
 
   const handleSubmit = async (event) => {
     if (event) event.preventDefault();
-    //make sure that form is valid
-    if (isFormValid()){
-      if (headerText === 'Create an account.') { //Signup route
-        //UI response
-        setIsAlert(true);
-        //set newUser to register and then post to backend, then reset fields
-        const newUser = {
-          name: name,
-          email: email,
-          password: password,
-          language: language
+    setError();
+    try {
+      //make sure that form is valid
+      if (isFormValid()){
+        if (headerText === 'Create an account.') { //Signup route
+          //UI response
+          setIsAlert(true);
+          //set newUser to register and then post to backend, then reset fields
+          const newUser = {
+            name: name,
+            email: email,
+            password: password,
+            language: language
+          }
+          await Axios.post('http://localhost:3001/api/user/signup', newUser);
+          const loginRes = await Axios.post("http://localhost:3001/api/user/login", {
+            email,
+            password
+          });
+          setUserData({
+            token: loginRes.data.token,
+            user: loginRes.data.user
+          });
+          localStorage.setItem("auth-token", loginRes.data.token);
+          resetInputs();
+          history.push("/");
+        } else { //login route
+          //UI response
+          setIsAlert(true);
+          //set user to login and then post to backend, then reset fields
+          const user = {
+            email: email,
+            password: password,
+          }
+          const loginRes = await Axios.post("http://localhost:3001/api/user/login", user);
+          setUserData({
+            token: loginRes.data.token,
+            user: loginRes.data.user
+          });
+          localStorage.setItem("auth-token", loginRes.data.token);
+          resetInputs();
+          history.push("/");
         }
-        await Axios.post('http://localhost:3001/api/user/signup', newUser);
-        const loginRes = await Axios.post("http://localhost:3001/api/user/login", {
-          email,
-          password
-        });
-        setUserData({
-          token: loginRes.data.token,
-          user: loginRes.data.user
-        });
-        localStorage.setItem("auth-token", loginRes.data.token);
-        resetInputs();
-        history.push("/");
-      } else { //login route
-        //UI response
-        setIsAlert(true);
-        //set user to login and then post to backend, then reset fields
-        const user = {
-          email: email,
-          password: password,
-        }
-        
-        const loginRes = await Axios
-          .post('http://localhost:3001/api/user/login', user)
-          .then(res => console.log(res))
-          .catch(err => console.log(err))
-        resetInputs();
       }
     }
-    return;
+    catch (err) {
+      err.response.data.msg && setError(err.response.data.msg);
+    }
   }
 
   const handleClose = () => {
@@ -316,13 +324,22 @@ export default function UserAuthForm({headerText}) {
         open={isAlert}
         autoHideDuration={5000}
         onClose={handleAlertClose}
-      >
-        <Alert
-          open={isAlert}
-          onClose={handleAlertClose}
-        >
-          {headerText === 'Create an account.' ? 'Welcome!' : 'Welcome Back'}
-        </Alert>
+      > 
+        {error ?  
+          <Alert
+            open={isAlert}
+            onClose={handleAlertClose}
+            severity="error"
+          >{error}</Alert>
+          :
+          <Alert
+            open={isAlert}
+            onClose={handleAlertClose}
+          >
+            {
+            headerText === 'Create an account.' ? 'Welcome!' : 'Welcome Back'}
+          </Alert>
+        }
       </Snackbar>
     </>
   )
