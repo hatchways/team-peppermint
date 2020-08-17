@@ -23,4 +23,14 @@ export const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
+  buttonBase: {
+    marginLeft: 20,
+    marginRight: 20,
+    padding: 10,
+    borderRadius: "50%",
+  },
+  contactName: {
+    marginBottom: 0,
+    fontWeight: 600,
+  },
 }));

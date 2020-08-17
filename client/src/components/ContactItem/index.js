@@ -11,46 +11,18 @@ import {
 } from "@material-ui/core";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { MoreHoriz } from "@material-ui/icons";
-import { uploadFile } from "react-s3";
 import uploadUserImage from "../../services/uploadUserImage";
 
 const ContactItem = (props) => {
   const [open, setOpen] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [error, setError] = useState(null);
+
   const classes = useStyles();
-  const { name, index } = props;
+  const { imageUrl, name, index } = props;
 
-  const config = {
-    bucketName: process.env.REACT_APP_BUCKET_NAME,
-    dirName: "photos" /* optional */,
-    region: "us-west-2",
-    accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
-    secretAccessKey: process.env.REACT_APP_SECRET_KEY_ID,
-  };
-
-  const handleSave = async (files) => {
-    // add user email to make user avatar unique
-    Object.defineProperties(files[0], {
-      name: {
-        value: "ya@ya.ru" + files[0].name,
-        writable: true,
-      },
-    });
-
-    console.log("new file ", files[0]);
-    uploadFile(files[0], config)
-      .then((data) => {
-        console.log("URL FROM AWS ", data);
-        const imageUrl =
-          "https://peppermint-12345-resized.s3.amazonaws.com/" + data.key;
-        console.log("SPLIT DATA ", imageUrl);
-        setImageUrl(data.location);
-      })
-      .catch((err) => setError(err.message));
-
-    // uploadUserImage(files[0]);
+  const handleSave = (files) => {
+    uploadUserImage(files[0]);
+    setAnchorEl(null);
     setOpen(false);
   };
 
@@ -68,7 +40,7 @@ const ContactItem = (props) => {
         <UserAvatar imageUrl={imageUrl} />
         <Typography
           variant="body1"
-          style={{ marginBottom: 0, fontWeight: 600 }}
+          className={classes.contactName}
           gutterBottom
         >
           {name}
@@ -78,12 +50,7 @@ const ContactItem = (props) => {
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
-        style={{
-          marginLeft: 20,
-          marginRight: 20,
-          padding: 10,
-          borderRadius: "50%",
-        }}
+        className={classes.buttonBase}
       >
         <MoreHoriz />
       </ButtonBase>
