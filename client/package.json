@@ -17,11 +17,9 @@
     "react-scripts": "^3.4.3",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "ajv": "^6.8.1",
-    "axios": "^0.19.2",    
     "react-copy-to-clipboard": "^5.0.2",
-    "react-cookie": "^4.0.3",    
+    "react-cookie": "^4.0.3",
     "socket.io-client": "^2.3.0"
-
   },
   "scripts": {
     "start": "react-scripts start",
