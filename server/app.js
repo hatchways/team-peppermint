@@ -4,8 +4,12 @@ const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require('mongoose');
+<<<<<<< HEAD
 require('dotenv').config();
 const cors = require('cors');
+=======
+const dotenv = require('dotenv');
+>>>>>>> dev
 
 //Import Routes
 const indexRouter = require("./routes/index");
@@ -14,7 +18,11 @@ const pingRouter = require("./routes/ping");
 const authRouter = require('./routes/auth');
 const invitationsRouter = require('./routes/invitation');
 const conversationsRouter = require("./routes/conversations");
+<<<<<<< HEAD
 
+=======
+dotenv.config();
+>>>>>>> dev
 
 const contactRouter = require("./routes/contacts");
 
