@@ -63,13 +63,12 @@ const MessageField = () => {
       
       <TextField
                 className={classes.messageInput}
-                id="outlined-secondary"
                 variant="outlined"
-                color="secondary"
                 placeholder="message..."
                 value={message}
                 onChange={(e)=>setMessage(e.target.value)}
                 onKeyPress={e => (e.key === 'Enter' ? sendMessage(e) : null)}
+                autoComplete='off'
                 fullWidth
             />
     </div>
