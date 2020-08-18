@@ -3,24 +3,24 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    max: 255,
-    min: 6
+    required: true
   },
   email: {
     type: String,
     required: true,
-    max: 255,
-    min: 6
+    unique: true
   },
   password: {
     type: String,
     required: true,
-    max: 255,
     min: 6
   },
   contacts: {
     type: Array
+  },
+  language: {
+    type: String,
+    required: false
   }
 })
 
