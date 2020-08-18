@@ -10,7 +10,7 @@ const ChatItem = (props) => {
 
   return (
     <ListItem button className={classes.root}>
-      <div className={classes.avatarNameContainer}>
+      <div className={classes.avatarNameContainer} >
         <UserAvatar />
         <div className={classes.nameContainer}>
           <Typography

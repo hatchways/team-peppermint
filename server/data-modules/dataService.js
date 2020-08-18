@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const uri = process.env.uri;
-
-
+const uri = process.env.URI;
 const UserSchema = require('../models/userSchema');
 const ConversationSchema = require("../models/conversationSchema");
 var User, Invitation, Conversation;
