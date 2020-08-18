@@ -61,9 +61,11 @@ export default function UserAuthForm({headerText}) {
   const [open, setOpen] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
   const [error, setError] = useState();
+  let validEmail;
+  let validPassword;
+  let validName;
 
   const { setUserData } = useContext(UserContext);
-
   const history = useHistory();
 
 
@@ -124,56 +126,38 @@ export default function UserAuthForm({headerText}) {
 
   function validateEmail(email) {
     let regex = /^[^@]+@[^@]+\.[^@]+$/
-    if (regex.test(email) === false) {
-      setEmailHelperText("That is not an email");
-      return false;
-    } else {
-      return true;
-    }
+    validEmail=regex.test(email);
+    if (!validEmail)setEmailHelperText("That is not an email");
+    return validEmail;
   }
   function validateName(name) {
-    if (name.length === 0) {
-      setNameHelperText('Name is required');
-      return false;
-    } else {
-      return true;
-    }
+    if (name.length === 0) setNameHelperText('Name is required');
+    return name.length>0;  
+    
   }
   function validatePass(password) {
-    if (password.length >= 6) {
-      return true;
-    } else {
-      setPasswordHelperText("Password needs to be at least 6 characters");
-      return false;
-    }
+    validPassword = password.length >= 6;
+    if (!validPassword) setPasswordHelperText("Password needs to be at least 6 characters");
+    return validPassword;
   }
 
   function isFormValid() {
     //check individual
-    if (validateEmail(email)) {
-      setEmailHelperText('');
-    } else if (validatePass(password)) {
-      setPasswordHelperText('');
-    } else if (headerText === 'Create an account.') {
-      if (validateName(name)) {
-        setNameHelperText('');
-      }
-    }
-    //check entire form - signup
-    if (headerText === 'Create an account.') {
-      //check entire form
-      if (validateEmail(email) && validatePass(password) && validateName(name)) {
-        return true;
-      } else {
-        return false;
-      }
-    } else { //check entire form - login
-      if (validateEmail(email) && validatePass(password)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
+    //check individual
+    validEmail = validateEmail();
+    validPassword = validPassword();
+    
+    if (validEmail) setEmailHelperText('');
+    if (validPassword) setPasswordHelperText('');
+    if(headerText === 'Create an account.') {
+      validName = validateName();
+      if (validName) setNameHelperText('');
+    }    
+    //check entire form
+    return (validName==undefined? true: validName) && validEmail && validPassword; 
+
+  
+    
   }
 
   function resetInputs() {
