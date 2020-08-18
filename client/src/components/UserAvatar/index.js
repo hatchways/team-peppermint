@@ -1,32 +1,56 @@
 import React, { memo } from "react";
 import Avatar from "@material-ui/core/Avatar";
+import PropTypes from "prop-types";
 import remy from "./men.png";
-import { useStyles, StyledBadge } from "./style";
+import { useStyles, OfflineBadge, OnlineBadge } from "./style";
 
-const UserAvatar = ({ imageUrl }) => {
+const UserAvatar = ({ imageUrl, isOnline }) => {
   const classes = useStyles();
 
   let userPicture = imageUrl || remy;
 
   return (
     <div className={classes.root}>
-      <StyledBadge
-        overlap="circle"
-        anchororigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        variant="dot"
-      >
-        <Avatar
-          variant="circle"
-          alt="Remy Sharp"
-          src={userPicture}
-          className={classes.avatar}
-        />
-      </StyledBadge>
+      {isOnline ? (
+        <OnlineBadge
+          overlap="circle"
+          anchororigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          variant="dot"
+        >
+          <Avatar
+            variant="circle"
+            alt="Remy Sharp"
+            src={userPicture}
+            className={classes.avatar}
+          />
+        </OnlineBadge>
+      ) : (
+        <OfflineBadge
+          overlap="circle"
+          anchororigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          variant="dot"
+        >
+          <Avatar
+            variant="circle"
+            alt="Remy Sharp"
+            src={userPicture}
+            className={classes.avatar}
+          />
+        </OfflineBadge>
+      )}
     </div>
   );
 };
 
 export default memo(UserAvatar);
+
+UserAvatar.propTypes = {
+  imageUrl: PropTypes.string,
+  isOnline: PropTypes.bool,
+};
