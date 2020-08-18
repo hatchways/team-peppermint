@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "center",
     paddingLeft: theme.spacing(2),
     paddingTop: 0,
@@ -22,5 +22,15 @@ export const useStyles = makeStyles((theme) => ({
   chip: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+  },
+  buttonBase: {
+    marginLeft: 20,
+    marginRight: 20,
+    padding: 10,
+    borderRadius: "50%",
+  },
+  contactName: {
+    marginBottom: 0,
+    fontWeight: 600,
   },
 }));

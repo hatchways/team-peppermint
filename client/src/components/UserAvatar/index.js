@@ -1,10 +1,12 @@
-import React from "react";
+import React, { memo } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import remy from "./men.png";
 import { useStyles, StyledBadge } from "./style";
 
-const UserAvatar = () => {
+const UserAvatar = ({ imageUrl }) => {
   const classes = useStyles();
+
+  let userPicture = imageUrl || remy;
 
   return (
     <div className={classes.root}>
@@ -19,7 +21,7 @@ const UserAvatar = () => {
         <Avatar
           variant="circle"
           alt="Remy Sharp"
-          src={remy}
+          src={userPicture}
           className={classes.avatar}
         />
       </StyledBadge>
@@ -27,4 +29,4 @@ const UserAvatar = () => {
   );
 };
 
-export default UserAvatar;
+export default memo(UserAvatar);
