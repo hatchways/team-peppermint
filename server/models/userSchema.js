@@ -32,7 +32,8 @@ const UserSchema = new mongoose.Schema({
     min: 6
   },
   contacts: {
-    type: Array
+    type: [contactSchema],
+    default:[]
   },
   language: {
     type: String,

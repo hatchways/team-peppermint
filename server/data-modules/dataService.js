@@ -4,7 +4,6 @@ const uri = process.env.uri;
 
 
 const UserSchema = require('../models/userSchema');
-const InvitationSchema = require("../models/invitationSchema");
 const ConversationSchema = require("../models/conversationSchema");
 var User, Invitation, Conversation;
 module.exports = function(){
@@ -19,7 +18,6 @@ module.exports = function(){
                 db.once('open', ()=>{
                     console.log("connected to db");
                     User = db.model("users", UserSchema);
-                    Invitation = db.model("invitations", InvitationSchema);
                     Conversation = db.model("conversations", ConversationSchema);
                     resolve();
                 });
@@ -64,35 +62,7 @@ module.exports = function(){
                 });
             });
         },
-        createInvitation: function(inviteObject){
-            return new Promise((resolve, reject)=>{
-                let newInvite = new Invitation(inviteObject);
-                newInvite.save((err)=>{
-                    if(err) reject(err);
-                    else resolve("Invitation Created");
-                })
-            })
-        },
-        getIncomingInvites: function(userEmail, accepted=false, canceled =false ) {
-            return new Promise((resolve, reject)=>{
-                Invitation.find({
-                    approved: accepted,
-                    rejected: canceled,
-                    to_user: userEmail
-                }).exec()
-                .then(invites=>resolve(invites))
-                .catch(err=>reject(err));
-            })
-        },
-        getSentInvites: function(userEmail){
-            return new Promise((resolve, reject)=>{
-                Invitation.find({
-                    from_user: userEmail
-                }).exec()
-                .then(invites=>resolve(invites))
-                .catch(err=>reject(err));
-            })   
-        },
+
         getConversations: function(userEmail) {
             return new Promise((resolve, reject)=>{
                 Conversation.find({usersEmail: {$in: userEmail}}).exec()
