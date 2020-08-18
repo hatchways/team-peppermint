@@ -5,12 +5,17 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "ajv": "^6.8.1",
+    "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "react": "^16.8.6",
     "react-copy-to-clipboard": "^5.0.2",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.4.3"
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.3",
+    "socket.io-client": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
