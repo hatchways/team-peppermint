@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from "react";
 import contactsReducer from "./contactsReducer";
-import { fetchContacts, deleteContacts } from "./helper";
+import { fetchContacts, deleteContact } from "./helper";
 
 const ContactsStateContext = React.createContext();
 const ContactsDispatchContext = React.createContext();
@@ -40,5 +40,5 @@ export {
   useContactsState,
   useContactsDispatch,
   fetchContacts,
-  deleteContacts,
+  deleteContact,
 };

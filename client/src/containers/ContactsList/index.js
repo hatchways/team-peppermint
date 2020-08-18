@@ -8,12 +8,13 @@ import {
   useContactsDispatch,
   useContactsState,
   fetchContacts,
+  deleteContact,
 } from "../../context/contacts/contactsContext";
 
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
   const classes = useStyles();
-  
+
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
 
@@ -24,6 +25,10 @@ const ContactsList = () => {
   useEffect(() => {
     setContactsList(contacts);
   }, [contacts]);
+
+  const handleDeleteContactButton = (email, index) => {
+    deleteContact(email, index, dispatch);
+  };
 
   return (
     <>
@@ -47,6 +52,7 @@ const ContactsList = () => {
               imageUrl={contact.imageUrl}
               isOnline={contact.isOnline}
               index={index}
+              handleDeleteContactButton={handleDeleteContactButton}
             />
           ))
         ) : (

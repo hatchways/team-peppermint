@@ -10,16 +10,18 @@ export const fetchContacts = async (email, dispatch) => {
 
   dispatch({
     type: FETCH_CONTACTS,
-    payload: userData.data.contacts,
+    payload: userData.data,
   });
 };
 
-export const deleteContacts = async (email, index, dispatch) => {
-  const contacts = await axios.delete(`user/${email}/contacts`);
+export const deleteContact = async (email, index, dispatch) => {
+  // const contacts = await axios.delete(`user/${email}/contacts`);
 
-  if (!contacts.data) {
-    throw Error("Sorry, no books found");
-  }
+  // if (!contacts.data) {
+  //   throw Error("Sorry, failed to delete contact");
+  // }
 
-  dispatch({ type: DELETE_CONTACT, payload: { index } });
+  dispatch({ type: DELETE_CONTACT, payload: { email, index } });
 };
+
+
