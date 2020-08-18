@@ -34,3 +34,8 @@ const InvitationItem = (props) => {
 };
 
 export default memo(InvitationItem);
+
+InvitationItem.propTypes = {
+  email: PropTypes.string,
+  index: PropTypes.number,
+};

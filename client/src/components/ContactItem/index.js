@@ -13,12 +13,11 @@ import { DropzoneDialog } from "material-ui-dropzone";
 import { MoreHoriz } from "@material-ui/icons";
 import uploadUserImage from "../../services/uploadUserImage";
 
-const ContactItem = (props) => {
+const ContactItem = ({ imageUrl, name, index, isOnline }) => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const classes = useStyles();
-  const { imageUrl, name, index } = props;
 
   const handleSave = (files) => {
     uploadUserImage(files[0]);
@@ -37,7 +36,7 @@ const ContactItem = (props) => {
   return (
     <ListItem button className={classes.root}>
       <div className={classes.avatarNameContainer}>
-        <UserAvatar imageUrl={imageUrl} />
+        <UserAvatar imageUrl={imageUrl} isOnline={isOnline} />
         <Typography
           variant="body1"
           className={classes.contactName}
@@ -83,3 +82,10 @@ const ContactItem = (props) => {
 };
 
 export default memo(ContactItem);
+
+ContactItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  imageUrl:PropTypes.string,
+  index:PropTypes.number.isRequired,
+  isOnline:PropTypes.bool.isRequired,
+};
