@@ -144,20 +144,17 @@ export default function UserAuthForm({headerText}) {
   function isFormValid() {
     //check individual
     //check individual
-    validEmail = validateEmail();
-    validPassword = validPassword();
+    validEmail = validateEmail(email);
+    validPassword = validatePass(password);
     
     if (validEmail) setEmailHelperText('');
     if (validPassword) setPasswordHelperText('');
     if(headerText === 'Create an account.') {
-      validName = validateName();
+      validName = validateName(name);
       if (validName) setNameHelperText('');
     }    
     //check entire form
-    return (validName==undefined? true: validName) && validEmail && validPassword; 
-
-  
-    
+    return (validName===undefined ? true: validName) && validEmail && validPassword; 
   }
 
   function resetInputs() {
@@ -195,7 +192,8 @@ export default function UserAuthForm({headerText}) {
           localStorage.setItem("auth-token", loginRes.data.token);
           resetInputs();
           history.push("/");
-        } else { //login route
+        } 
+        else { //login route
           //UI response
           setIsAlert(true);
           //set user to login and then post to backend, then reset fields
@@ -215,7 +213,10 @@ export default function UserAuthForm({headerText}) {
       }
     }
     catch (err) {
-      err.response.data.msg && setError(err.response.data.msg);
+      if (err.response.data.msg)
+        setError(err.response.data.msg);
+      else
+        console.log(err);
     }
   }
 
