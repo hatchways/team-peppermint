@@ -12,7 +12,7 @@ import "./App.css";
 import { ContactsProvider } from "./context/contacts/contactsContext";
 import UserContext from "./Context/UserContext";
 
-// const dotenv = require("dotenv").config();
+const dotenv = require("dotenv").config();
 
 function App() {
   const [userData, setUserData] = useState({
