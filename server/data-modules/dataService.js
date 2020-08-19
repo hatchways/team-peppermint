@@ -65,7 +65,6 @@ module.exports = function(){
                 });
             });
         },
-
         getConversations: function(userEmail) {
             return new Promise((resolve, reject)=>{
                 Conversation.find({usersEmail: {$in: userEmail}}).exec()
@@ -76,6 +75,15 @@ module.exports = function(){
         },
         getContacts: function(userEmail){
             return `${userEmail}: contacts`;
+        },
+        createConversation: function(conversationObject){
+            return new Promise((resolve, reject)=>{
+                let newConversation =new Conversation(conversationObject);
+                newConversation.save((err)=>{
+                    if(err) reject(err)
+                    else resolve("New conversation created")
+                })
+            })
         }
 
     }

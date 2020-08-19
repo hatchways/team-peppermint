@@ -95,15 +95,6 @@ router.delete('/delete', checkAuth, async (req, res) => {
   }
 });
 
-router.get("/", checkAuth, (req, res, next) => {
-  res.json({
-    posts: {
-      title: 'my first post',
-      description: "only see if you're authenticated"
-    }
-  })
-});
-
 router.get('/getCookie', async (req, res) => {
   try {
     const token = req.cookies.auth_token;
@@ -138,7 +129,7 @@ router.post("/tokenIsValid", async (req, res) => {
     const user = await data.getUserByEmail(verified.id);
     if (!user) return res.json(false);
     console.log("user: " + user);
-    return res.json(true);
+    return res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -39,7 +39,8 @@ const ConversationSchema = new mongoose.Schema({
         required: true
     },
     messages: {
-        type: [MessageSchema]
+        type: [MessageSchema],
+        default: []
     }
   }, { _id: false }) 
   module.exports = ConversationSchema;
