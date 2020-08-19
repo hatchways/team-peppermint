@@ -11,6 +11,7 @@ import {
   fetchContacts,
   deleteContact,
 } from "../../context/contacts/contactsContext";
+const jwt_decode = require("jwt-decode");
 
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
@@ -27,8 +28,10 @@ const ContactsList = () => {
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
 
+  const userToken = localStorage.getItem("auth-token");
+  const decodedToken = jwt_decode(userToken);
   useEffect(() => {
-    fetchContacts("lee1975uz@gmail.com", dispatch);
+    decodedToken && fetchContacts(decodedToken.id, dispatch);
   }, []);
 
   useEffect(() => {

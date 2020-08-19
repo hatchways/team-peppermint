@@ -6,10 +6,9 @@ export const fetchContacts = async (email, dispatch) => {
   if (!userData.data) {
     throw Error("Sorry, no contacts found");
   }
-
   dispatch({
     type: FETCH_CONTACTS,
-    payload: userData.data[0].type,
+    payload: userData.data,
   });
 };
 
