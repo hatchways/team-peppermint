@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const bcrypt = require('bcryptjs');
 const dataService = require('../data-modules/dataService');
 const data = dataService();
 
@@ -9,43 +8,30 @@ const data = dataService();
 const checkAuth = require('../middleware/checkAuth');
 
 //middleware validation
-const {signupValidation, loginValidation, generateToken} = require('../middleware/validation');
+const {signupValidation, loginValidation} = require('../middleware/validation');
 const UserSchema = require('../models/userSchema');
 
 //signup route
 router.post('/signup', async (req, res) => {
   try {
     let {name, email, password, language} = req.body;
-
-    if (!name || !email || !password)
-      return res.status(400).json({msg: "Not all the fields have been entered."});
-
-    if (password.length < 6)
-      return res
-        .status(400)
-        .json({ msg: "The password needs to be at least 6 characters long." });
+    let validateUser=signupValidation(req.body);
+    if (validateUser.error) return res.status(400).json({msg: error});
 
     //Check if the user is already in the database
     const user = await data.getUserByEmail(email);
-    if(user) 
-      return res.status(400).json({ msg: "An account with this email already exists."});
-    
-    //Hash the pass
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
+    if(user) return res.status(400).json({ msg: "An account with this email already exists."});
     //set default language to english if none provided
     const prefLanguage = language ? language : 'english';
     // create a new user
     const newUser = {
       name: name,
       email: email,
-      password: hashPassword,
+      password: password,
       language: prefLanguage
     };  
     data.createUser(newUser)
-      .then(()=>{
-        // res.status(201).send(msg);
-        
+      .then(()=>{        
         //create and assign a token
         const token = jwt.sign(email, process.env.TOKEN_SECRET);
         //create httpOnly cookie
@@ -69,8 +55,8 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     //validate the data before logging in
-    const { error } = loginValidation(req.body);
-    if (error) return res.status(400).json({msg: error.details[0].message});
+    let validLogin = loginValidation(req.body);
+    if (validLogin.error) return res.status(400).json({msg: error});
 
     //check if the user is already in the database
     const user = await data.getUserByEmail(req.body.email);

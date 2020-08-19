@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Axios from 'axios';
-
+import UserContext from './Context/UserContext';
 import { theme } from "./themes/theme";
 import LoginPage from './pages/loginPage';
 import SignupPage from './pages/signupPage';
@@ -12,7 +12,7 @@ import "./App.css";
 const dotenv = require('dotenv');
 dotenv.config();
 
-import UserContext from './Context/UserContext';
+
 
 function App() {
   const [userData, setUserData] = useState({
@@ -42,15 +42,7 @@ function App() {
         });
       }
     }
-    // const checkLoggedIn = async () => {
-    //   const tokenRes = await userCall.post("http://localhost:3001/api/user/tokenIsValid");
-    //   if (tokenRes) {
-    //     const userRes = await userCall.get("http://localhost:3001/api/user/");
-    //     setUserData({
-    //       user: userRes.data
-    //     });
-    //   }
-    // }
+
     checkLoggedIn();
   }, []);
 

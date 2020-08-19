@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 mongoose.Promise = global.Promise;
 const uri = process.env.URI;
 const UserSchema = require('../models/userSchema');
@@ -21,9 +22,13 @@ module.exports = function(){
                 });
             });
         },
-        createUser: function(userObject){
+        createUser:  function(userObject){
 
-            return new Promise((resolve,reject)=>{
+            return new Promise(async (resolve,reject)=>{
+                try{
+                    const salt = await bcrypt.genSalt(10);
+                    userObject.password = await bcrypt.hash(userObject.password, salt);
+                }catch(err){ reject(err)};
                 let newUser = new User(userObject);
                 newUser.save((err) => {
                     if(err) reject(err);
