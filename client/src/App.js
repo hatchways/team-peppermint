@@ -10,10 +10,9 @@ import MainPage from "./containers/MainPage";
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
 import { ContactsProvider } from "./context/contacts/contactsContext";
-const dotenv = require("dotenv");
-dotenv.config();
-
 import UserContext from "./Context/UserContext";
+
+// const dotenv = require("dotenv").config();
 
 function App() {
   const [userData, setUserData] = useState({

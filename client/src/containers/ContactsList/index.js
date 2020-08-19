@@ -28,7 +28,7 @@ const ContactsList = () => {
   const { contacts } = useContactsState();
 
   useEffect(() => {
-    fetchContacts("ya@ya.ru", dispatch);
+    fetchContacts("lee1975uz@gmail.com", dispatch);
   }, []);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const ContactsList = () => {
           contactsList.map((contact, index) => (
             <ContactItem
               key={index}
-              name={contact.name}
+              name={contact.email}
               imageUrl={contact.imageUrl}
               isOnline={contact.isOnline}
               index={index}

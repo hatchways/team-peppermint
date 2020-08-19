@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
+import { translateText } from "../../context/messages/helper";
 
 const ContactItem = ({
   imageUrl,
@@ -17,7 +18,7 @@ const ContactItem = ({
   index,
   isOnline,
   handleDeleteContactButton,
-}) => { 
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const classes = useStyles();
@@ -50,7 +51,6 @@ const ContactItem = ({
       >
         <MoreHoriz />
       </ButtonBase>
-
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -61,7 +61,10 @@ const ContactItem = ({
         <MenuItem onClick={() => handleDeleteContactButton("ya@ya.ru", index)}>
           Delete contact
         </MenuItem>
-      </Menu>      
+        <MenuItem onClick={() => translateText("How are you, buddy?", 'fr')}>
+          Translate text{" "}
+        </MenuItem>
+      </Menu>
     </ListItem>
   );
 };
@@ -69,7 +72,7 @@ const ContactItem = ({
 export default memo(ContactItem);
 
 ContactItem.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   imageUrl: PropTypes.string,
   index: PropTypes.number.isRequired,
   isOnline: PropTypes.bool,

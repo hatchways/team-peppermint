@@ -3,14 +3,13 @@ import axios from "axios";
 
 export const fetchContacts = async (email, dispatch) => {
   const userData = await axios.get(`/user/${email}/contacts`);
-
   if (!userData.data) {
     throw Error("Sorry, no contacts found");
   }
 
   dispatch({
     type: FETCH_CONTACTS,
-    payload: userData.data,
+    payload: userData.data[0].type,
   });
 };
 
@@ -23,5 +22,3 @@ export const deleteContact = async (email, index, dispatch) => {
 
   dispatch({ type: DELETE_CONTACT, payload: { email, index } });
 };
-
-
