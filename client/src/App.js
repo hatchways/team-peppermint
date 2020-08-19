@@ -9,7 +9,8 @@ import MainPage from "./containers/MainPage";
 
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
-const dotenv = require('dotenv');
+import { ContactsProvider } from "./context/contacts/contactsContext";
+const dotenv = require("dotenv");
 dotenv.config();
 
 import UserContext from './Context/UserContext';
@@ -58,6 +59,7 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <Router>
         <UserContext.Provider value={{userData, setUserData}}>
+        <ContactsProvider>
           <CssBaseline />
           <Container maxWidth="lg" style={{ margin: "auto" }}>
             <Switch>
@@ -66,6 +68,7 @@ function App() {
               <Route path="/signup" component={SignupPage} />
             </Switch>
           </Container>
+        </ContactsProvider>
         </UserContext.Provider>
       </Router>
     </MuiThemeProvider>

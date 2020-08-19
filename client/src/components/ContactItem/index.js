@@ -9,22 +9,18 @@ import {
   Menu,
   MenuItem,
 } from "@material-ui/core";
-import { DropzoneDialog } from "material-ui-dropzone";
 import { MoreHoriz } from "@material-ui/icons";
-import uploadUserImage from "../../services/uploadUserImage";
 
-const ContactItem = (props) => {
-  const [open, setOpen] = useState(false);
+const ContactItem = ({
+  imageUrl,
+  name,
+  index,
+  isOnline,
+  handleDeleteContactButton,
+}) => { 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const classes = useStyles();
-  const { imageUrl, name, index } = props;
-
-  const handleSave = (files) => {
-    uploadUserImage(files[0]);
-    setAnchorEl(null);
-    setOpen(false);
-  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,7 +33,7 @@ const ContactItem = (props) => {
   return (
     <ListItem button className={classes.root}>
       <div className={classes.avatarNameContainer}>
-        <UserAvatar imageUrl={imageUrl} />
+        <UserAvatar imageUrl={imageUrl} isOnline={isOnline} />
         <Typography
           variant="body1"
           className={classes.contactName}
@@ -62,24 +58,19 @@ const ContactItem = (props) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => setOpen(true)}>Add picture</MenuItem>
-        <MenuItem onClick={() => console.log("Contact deleted")}>
+        <MenuItem onClick={() => handleDeleteContactButton("ya@ya.ru", index)}>
           Delete contact
         </MenuItem>
-      </Menu>
-
-      <DropzoneDialog
-        open={open}
-        onSave={handleSave}
-        showPreviews={true}
-        maxFileSize={300000}
-        onClose={() => {
-          setOpen(false);
-          handleClose();
-        }}
-      />
+      </Menu>      
     </ListItem>
   );
 };
 
 export default memo(ContactItem);
+
+ContactItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string,
+  index: PropTypes.number.isRequired,
+  isOnline: PropTypes.bool,
+};

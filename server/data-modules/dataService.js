@@ -70,9 +70,12 @@ module.exports = function(){
             
         },
         getContacts: function(userEmail){
-            return `${userEmail}: contacts`;
+            return new Promise((resolve, reject)=>{
+                this.getUserByEmail(userEmail).then((user)=>{
+                    resolve(user.contacts);
+                }).catch((err)=> reject(err));
+            });
         }
-
     }
 }
 
