@@ -18,10 +18,6 @@ const MessageSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    textOriginal:{
-        type: textSchema,
-        required: true
-    },
     textVersions:{
         type:[textSchema],
         default:[]
@@ -42,5 +38,5 @@ const ConversationSchema = new mongoose.Schema({
         type: [MessageSchema],
         default: []
     }
-  }, { _id: false }) 
+  }) 
   module.exports = ConversationSchema;

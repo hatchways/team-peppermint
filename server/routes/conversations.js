@@ -11,15 +11,38 @@ router.get("/:email/conversations", checkAuth, async (req, res) => {
     res.status(400).json(err);
   }
 });
-router.post("/:email/conversation", checkAuth, async (req,res)=>{
+router.post("/:email/conversation", async (req,res)=>{
     let users = req.body;
+    users.sort();
     let conversation = {
       conversationID: users.join('-'),
       users: users
     }
     data.createConversation(conversation)
-    .then((msg)=>res.send(msg))
-    .catch((err)=>res.send(err))
+    .then((msg)=>res.status(200).json(msg))
+    .catch((err)=>{console.log(err); res.status(500).json(err)})
+})
+router.get("/conversation/:convID", async(req,res)=>{
+  try{
+    let conversation = await data.getConversationById(req.params.convID);
+    
+    if(!conversation) return res.status(404).json({found:false, msg:'conversation not found'})
+    return res.status(200).json({conversation})
+  }catch(err){
+    console.log(err)
+    return res.status(500).json({msg: err});
+  }
+})
+router.post("/:email/conversation/:convID/newMessage", async(req,res)=>{
+  console.log(req.body)
+  let newMessage = {
+    sender: req.params.email,
+    date: req.body.date,
+    textVersions: req.body.textVersion
+  }
+  data.addMessage(req.params.convID, newMessage)
+  .then((msg)=>res.status(200).json(msg))
+  .catch((err)=>res.status(500).json(err))
 })
 
 module.exports = router;

@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 const uri = process.env.URI;
 const UserSchema = require('../models/userSchema');
 const ConversationSchema = require("../models/conversationSchema");
-var User, Invitation, Conversation;
+var User, Conversation;
 module.exports = function(){
     
     return{
@@ -17,7 +17,7 @@ module.exports = function(){
                 db.once('open', ()=>{
                     console.log("connected to db");
                     User = db.model("users", UserSchema);
-                    Conversation = db.model("conversations", ConversationSchema);
+                    Conversation = db.model("conversations", ConversationSchema, "conversations");
                     resolve();
                 });
             });
@@ -67,7 +67,7 @@ module.exports = function(){
         },
         getConversations: function(userEmail) {
             return new Promise((resolve, reject)=>{
-                Conversation.find({usersEmail: {$in: userEmail}}).exec()
+                Conversation.find({users: {$in: userEmail}}).exec()
                 .then(conversations => resolve(conversations))
                 .catch(err=>reject(err))
             })
@@ -83,6 +83,22 @@ module.exports = function(){
                     if(err) reject(err)
                     else resolve("New conversation created")
                 })
+            })
+        },
+        getConversationById: function(convID){
+            return new Promise((resolve, reject)=>{
+                Conversation.findOne({conversationID: convID}).exec()
+                .then(conversation => resolve(conversation))
+                .catch((err)=>reject(err));
+            })
+        },
+        addMessage: function(conversationID, message){
+            return new Promise((resolve, reject)=>{
+                Conversation.updateOne(
+                    {conversationID : conversationID},
+                    {$push:{ messages: message }}
+                ).then(()=>resolve("message added"))
+                .catch((err)=>reject(err));
             })
         }
 
