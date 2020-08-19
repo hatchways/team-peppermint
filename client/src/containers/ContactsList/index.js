@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import  InvitationDialog  from "../InvitationDialog";
 import { useStyles } from "./style";
-import { List, Typography } from "@material-ui/core";
+import { List, Typography, Button } from "@material-ui/core";
 import ContactItem from "../../components/ContactItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
@@ -29,6 +30,15 @@ const ContactsList = () => {
   const handleDeleteContactButton = (email, index) => {
     deleteContact(email, index, dispatch);
   };
+  
+  const [inviteDiaolog, showInviteDialog]= useState(false);
+  const openInviteDialog=()=>{
+    showInviteDialog(true);
+  }
+  const closeInviteDialog=()=>{
+    showInviteDialog(false);
+  }
+
 
   return (
     <>
@@ -40,7 +50,8 @@ const ContactsList = () => {
           className={classes.typography}
           gutterBottom
         >
-          Invite friends
+          <Button onClick={() => openInviteDialog()}>Invite Friends</Button>
+          <InvitationDialog open ={inviteDiaolog} onClose = {closeInviteDialog}/>
         </Typography>
       </div>
       <List className={classes.root}>

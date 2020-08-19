@@ -1,0 +1,23 @@
+POST http://localhost:3001/api/user/login
+Content-Type: application/json
+
+{
+  "email": "cookiemonster9@gmail.com",
+  "password": "authtest"
+}
+
+###
+#get w/o valid cookie
+GET http://localhost:3001/api/user/
+###
+#get with valid cookie
+GET http://localhost:3001/api/user/
+Cookie: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNvb2tpZW1vbnN0ZXI5QGdtYWlsLmNvbSIsImlhdCI6MTU5NzY0ODkwMn0.jy3Un8pGR5R1Uwxz1vsNddRp8iDpVLTbOJd2blUKpCU; Max-Age=3; Path=/; Expires=Mon, 17 Aug 2020 07:21:45 GMT; HttpOnly
+
+###
+##delete with invalid cookie
+DELETE http://localhost:3001/api/user/delete
+###
+## delete with valid cookie
+DELETE http://localhost:3001/api/user/delete
+Cookie: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNvb2tpZW1vbnN0ZXI5QGdtYWlsLmNvbSIsImlhdCI6MTU5NzY0ODkwMn0.jy3Un8pGR5R1Uwxz1vsNddRp8iDpVLTbOJd2blUKpCU; Max-Age=3; Path=/; Expires=Mon, 17 Aug 2020 07:21:45 GMT; HttpOnly
