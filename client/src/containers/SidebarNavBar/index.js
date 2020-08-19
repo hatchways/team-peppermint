@@ -7,6 +7,8 @@ import UserAvatar from "../../components/UserAvatar/index";
 import uploadUserImage from "../../services/uploadUserImage";
 import { NavLink } from "react-router-dom";
 
+const isOnline = localStorage.getItem('auth-token')
+
 const SidebarNavBar = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -35,7 +37,7 @@ const SidebarNavBar = () => {
   return (
     <div className={classes.root}>
       <div className={classes.leftRightSideStyle}>
-        <UserAvatar />
+        <UserAvatar isOnline={!!isOnline}/>
         <Typography variant="body2" className={classes.typography}>
           Santiago
         </Typography>

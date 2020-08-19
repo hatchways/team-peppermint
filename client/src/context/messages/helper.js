@@ -10,7 +10,9 @@ export const translateText = async (text, language) => {
       "TRANSLATED TEXT ",
       res.data.data.translations[0].translatedText
     );
+    return res.data.data.translations[0].translatedText
   } catch (err) {
     console.log("FAILED TO TRANSLATE ", err);
+    throw Error("Sorry, failed to translate");
   }
 };

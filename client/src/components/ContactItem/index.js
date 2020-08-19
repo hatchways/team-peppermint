@@ -10,7 +10,6 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
-import { translateText } from "../../context/messages/helper";
 
 const ContactItem = ({
   imageUrl,
@@ -60,10 +59,7 @@ const ContactItem = ({
       >
         <MenuItem onClick={() => handleDeleteContactButton("ya@ya.ru", index)}>
           Delete contact
-        </MenuItem>
-        <MenuItem onClick={() => translateText("How are you, buddy?", 'fr')}>
-          Translate text{" "}
-        </MenuItem>
+        </MenuItem>        
       </Menu>
     </ListItem>
   );
