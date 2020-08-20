@@ -17,7 +17,6 @@ const uploadUserImage = (file) => {
       writable: true,
     },
   });
-
   uploadFile(file, config)
     .then((data) => console.log("IMAGE URL", data.location))
     .catch((err) => console.log("ERROR ", err.message));
