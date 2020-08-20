@@ -88,11 +88,14 @@ router.post('/login', async (req, res) => {
       httpOnly: true,
       // secure: true -> uncomment in production?
     });
+    console.log(`${user.email} from backnd`)
     res.status(200).json({
       token,
       user: {
         id: user._id,
-        name: user.name
+        name: user.name,
+        email: user.email,
+        language: user.language
       }
     });
   } catch (err) {
@@ -107,15 +110,6 @@ router.delete('/delete', checkAuth, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
-
-router.get("/", checkAuth, (req, res, next) => {
-  res.json({
-    posts: {
-      title: 'my first post',
-      description: "only see if you're authenticated"
-    }
-  })
 });
 
 router.get('/getCookie', async (req, res) => {
@@ -146,12 +140,11 @@ router.post("/tokenIsValid", async (req, res) => {
     if (!token) return res.json(false);
     console.log("token: " + token);
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-    console.log("verified: " + verified);
+    console.log("verified: ", verified);
     if (!verified) return res.json(false);
 
     const user = await data.getUserByEmail(verified.id);
     if (!user) return res.json(false);
-    console.log("user: " + user);
     return res.json(true);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -159,11 +152,16 @@ router.post("/tokenIsValid", async (req, res) => {
 });
 
 router.get("/", checkAuth, async (req, res) => {
-  const user = data.getUserByEmail(req.user);
-  res.json({
-    name: user.name,
-    id: user._id
-  });
+  data.getUserByEmail(req.user)
+  .then((user)=>{
+    res.json({
+      name: user.name,
+      id: user._id,
+      email: user.email,
+      language: user.language
+    });
+  })
+  .catch((err)=>res.json(err))
 })
 
 module.exports = router;

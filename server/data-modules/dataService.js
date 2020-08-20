@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 mongoose.Promise = global.Promise;
 const uri = process.env.URI;
 const UserSchema = require('../models/userSchema');
 const ConversationSchema = require("../models/conversationSchema");
-var User, Invitation, Conversation;
+var User, Conversation;
 module.exports = function () {
 
     return {
@@ -16,14 +17,18 @@ module.exports = function () {
                 db.once('open', () => {
                     console.log("connected to db");
                     User = db.model("users", UserSchema);
-                    Conversation = db.model("conversations", ConversationSchema);
+                    Conversation = db.model("conversations", ConversationSchema, "conversations");
                     resolve();
                 });
             });
         },
         createUser: function (userObject) {
 
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const salt = await bcrypt.genSalt(10);
+                    userObject.password = await bcrypt.hash(userObject.password, salt);
+                } catch (err) { reject(err) };
                 let newUser = new User(userObject);
                 newUser.save((err) => {
                     if (err) reject(err);
@@ -117,7 +122,7 @@ module.exports = function () {
                     email: email,
                 },
                     {
-                        $pull: { contacts: {email: contactToDelete} }
+                        $pull: { contacts: { email: contactToDelete } }
                     }).exec()
                     .then((msg) => resolve(`contact ${contactToDelete} removed from contacts`))
                     .catch((err) => reject(err))

@@ -22,6 +22,10 @@ export const useStyles = makeStyles((theme) => ({
   },
   badge: { top: 63, right: 5 },
   typography: {
-    fontWeight: 600,    
+    fontWeight: 600,
+  },
+  logoutStyle: {
+    color: "black",
+    textDecoration: "none",
   },
 }));
