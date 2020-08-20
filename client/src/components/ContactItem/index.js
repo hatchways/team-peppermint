@@ -8,6 +8,7 @@ import {
   ButtonBase,
   Menu,
   MenuItem,
+  Tooltip,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
 
@@ -42,14 +43,16 @@ const ContactItem = ({
           {name}
         </Typography>
       </div>
-      <ButtonBase
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-        className={classes.buttonBase}
-      >
-        <MoreHoriz />
-      </ButtonBase>
+      <Tooltip title="Delete contact" placement="bottom" arrow>
+        <ButtonBase
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          className={classes.buttonBase}
+        >
+          <MoreHoriz />
+        </ButtonBase>
+      </Tooltip>
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -59,7 +62,7 @@ const ContactItem = ({
       >
         <MenuItem onClick={() => handleDeleteContactButton("ya@ya.ru", index)}>
           Delete contact
-        </MenuItem>        
+        </MenuItem>
       </Menu>
     </ListItem>
   );

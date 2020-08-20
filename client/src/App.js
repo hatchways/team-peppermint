@@ -45,6 +45,7 @@ function App() {
         });
       }
     };
+    console.log('USERES ', userData)
     // const checkLoggedIn = async () => {
     //   const tokenRes = await userCall.post("http://localhost:3001/api/user/tokenIsValid");
     //   if (tokenRes) {

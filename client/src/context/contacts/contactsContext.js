@@ -29,18 +29,18 @@ function ContactsProvider({ children }) {
 
 function useContactsState() {
   const context = useContext(ContactsStateContext);
-  if (context === undefined) {
-    throw new Error("useContactsState must be used within a ContactsProvider");
-  }
+  // if (context === undefined) {
+  //   throw new Error("useContactsState must be used within a ContactsProvider");
+  // }
   return context;
 }
 function useContactsDispatch() {
   const context = useContext(ContactsDispatchContext);
-  if (context === undefined) {
-    throw new Error(
-      "useContactsDispatch must be used within a ContactsProvider"
-    );
-  }
+  // if (context === undefined) {
+  //   throw new Error(
+  //     "useContactsDispatch must be used within a ContactsProvider"
+  //   );
+  // }
   return context;
 }
 
