@@ -57,7 +57,6 @@ const ContactItem = ({
       >
         <MoreHoriz />
       </ButtonBase>
-
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -67,7 +66,7 @@ const ContactItem = ({
       >
         <MenuItem onClick={() => handleDeleteContactButton("ya@ya.ru", index)}>
           Delete contact
-        </MenuItem>
+        </MenuItem>        
       </Menu>
     </ListItem>
   );
@@ -76,7 +75,7 @@ const ContactItem = ({
 export default memo(ContactItem);
 
 ContactItem.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   imageUrl: PropTypes.string,
   index: PropTypes.number.isRequired,
   isOnline: PropTypes.bool,

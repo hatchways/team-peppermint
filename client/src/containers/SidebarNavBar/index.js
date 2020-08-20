@@ -5,6 +5,9 @@ import { DropzoneDialog } from "material-ui-dropzone";
 import { MoreHoriz } from "@material-ui/icons";
 import UserAvatar from "../../components/UserAvatar/index";
 import uploadUserImage from "../../services/uploadUserImage";
+import { NavLink } from "react-router-dom";
+
+const isOnline = localStorage.getItem('auth-token')
 
 const SidebarNavBar = () => {
   const [open, setOpen] = useState(false);
@@ -26,10 +29,15 @@ const SidebarNavBar = () => {
     setOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("auth-token");
+    setAnchorEl(null);
+  };
+
   return (
     <div className={classes.root}>
       <div className={classes.leftRightSideStyle}>
-        <UserAvatar />
+        <UserAvatar isOnline={!!isOnline}/>
         <Typography variant="body2" className={classes.typography}>
           Santiago
         </Typography>
@@ -51,7 +59,11 @@ const SidebarNavBar = () => {
           onClose={handleClose}
         >
           <MenuItem onClick={() => setOpen(true)}>Add picture</MenuItem>
-          <MenuItem onClick={() => console.log("Logged out")}>Log out</MenuItem>
+          <MenuItem onClick={handleLogout}>
+            <NavLink to="/login" className={classes.logoutStyle}>
+              Log out
+            </NavLink>
+          </MenuItem>
         </Menu>
         <DropzoneDialog
           open={open}

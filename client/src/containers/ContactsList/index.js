@@ -18,6 +18,14 @@ const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
   const classes = useStyles();
 
+  const [inviteDiaolog, showInviteDialog] = useState(false);
+  const openInviteDialog = () => {
+    showInviteDialog(true);
+  };
+  const closeInviteDialog = () => {
+    showInviteDialog(false);
+  };
+
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
   const userToken = localStorage.getItem("auth-token");
@@ -34,14 +42,6 @@ const ContactsList = () => {
   const handleDeleteContactButton = (email, index) => {
     deleteContact(email, index, dispatch);
   };
-
-  const [inviteDiaolog, showInviteDialog] = useState(false);
-  const openInviteDialog = () => {
-    showInviteDialog(true);
-  }
-  const closeInviteDialog = () => {
-    showInviteDialog(false);
-  }
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
