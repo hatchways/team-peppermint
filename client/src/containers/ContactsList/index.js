@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
-import { List, Typography, Button } from "@material-ui/core";
+import { List, Typography, ButtonBase } from "@material-ui/core";
 import ContactItem from "../../components/ContactItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
@@ -11,13 +11,13 @@ import {
   fetchContacts,
   deleteContact,
 } from "../../context/contacts/contactsContext";
-const jwt_decode = require("jwt-decode");
+const jwtDecode = require("jwt-decode");
 
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
   const classes = useStyles();
 
-  const [inviteDiaolog, showInviteDialog] = useState(false);
+  const [inviteDialog, showInviteDialog] = useState(false);
   const openInviteDialog = () => {
     showInviteDialog(true);
   };
@@ -29,41 +29,38 @@ const ContactsList = () => {
   const { contacts } = useContactsState();
 
   const userToken = localStorage.getItem("auth-token");
-  const decodedToken = jwt_decode(userToken);
+  const decodedToken = jwtDecode(userToken);
   useEffect(() => {
     decodedToken && fetchContacts(decodedToken.id, dispatch);
   }, []);
 
   useEffect(() => {
-    setContactsList(contacts);
+    setContactsList(contacts.contacts);
   }, [contacts]);
 
   const handleDeleteContactButton = (email, index) => {
     deleteContact(email, index, dispatch);
   };
 
-  const [inviteDiaolog, showInviteDialog] = useState(false);
-  const openInviteDialog = () => {
-    showInviteDialog(true);
-  };
-  const closeInviteDialog = () => {
-    showInviteDialog(false);
-  };
-
   return (
     <>
-      <div className={classes.inviteFriendsContainer}>
-        <AddIcon color="primary" />
-        <Typography
-          variant="body2"
-          color="primary"
-          className={classes.typography}
-          gutterBottom
-        >
-          <Button onClick={() => openInviteDialog()}>Invite Friends</Button>
-          <InvitationDialog open={inviteDiaolog} onClose={closeInviteDialog} />
-        </Typography>
-      </div>
+      <ButtonBase
+        onClick={() => openInviteDialog()}
+        style={{ marginBottom: 10 }}
+      >
+        <div className={classes.inviteFriendsContainer}>
+          <AddIcon color="primary" />
+          <Typography
+            variant="body2"
+            color="primary"
+            className={classes.typography}
+            gutterBottom
+          >
+            Invite Friends
+          </Typography>
+        </div>
+      </ButtonBase>
+      <InvitationDialog open={inviteDialog} onClose={closeInviteDialog} />
       <List className={classes.root}>
         {!!contactsList.length ? (
           contactsList.map((contact, index) => (

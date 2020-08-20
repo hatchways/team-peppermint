@@ -20,6 +20,7 @@ router.post("/:email/invite", async (req, res) => {
     }
 });
 router.get("/:email/invitations", async (req, res) => {
+  console.log('starting invitations BE...')
     try {
       //get all invitatitions by user id
       const invitations = await data.getIncomingInvites(req.params.email);

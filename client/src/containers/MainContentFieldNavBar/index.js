@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Typography, Switch, ButtonBase, Badge } from "@material-ui/core";
 import { useStyles, StyledBadge } from "./style";
 import { MoreHoriz } from "@material-ui/icons";
+const classNames = require("classnames");
 
 const MainContentFieldNavBar = () => {
   const [checked, setChecked] = useState(false);
@@ -30,9 +31,29 @@ const MainContentFieldNavBar = () => {
         </div>
       </div>
       <div className={classes.leftRightSideStyle}>
-        <Typography variant="body2" style={{ fontSize: "0.8rem" }}>
-          Original language
-        </Typography>
+        {checked ? (
+          <Typography
+            variant="body2"
+            style={{
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              color: "#3A8DFF",
+            }}
+          >
+            Original language
+          </Typography>
+        ) : (
+          <Typography
+            variant="body2"
+            style={{
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              opacity: 0.5,
+            }}
+          >
+            Original language
+          </Typography>
+        )}
         <Switch
           checked={checked}
           onChange={handleChange}

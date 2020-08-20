@@ -1,14 +1,23 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, useCallback } from "react";
+import combineReducers from "react-combine-reducers";
 import contactsReducer from "./contactsReducer";
-import { fetchContacts, deleteContact } from "./helper";
+import invitationsReducer from "./invitationsReducer";
+import { fetchContacts, deleteContact, fetchInvitations } from "./helper";
 
 const ContactsStateContext = React.createContext();
 const ContactsDispatchContext = React.createContext();
 
+const [rootReducerCombined, initialStateCombined] = combineReducers({
+  contacts: [contactsReducer, { contacts: [] }],
+  invitations: [invitationsReducer, { invitations: [] }],
+});
+
 function ContactsProvider({ children }) {
-  const [state, dispatch] = useReducer(contactsReducer, {
-    contacts: [],
-  });
+  const [state, dispatch] = useReducer(
+    rootReducerCombined,
+    initialStateCombined
+  );
+
   return (
     <ContactsStateContext.Provider value={state}>
       <ContactsDispatchContext.Provider value={dispatch}>
@@ -41,4 +50,5 @@ export {
   useContactsDispatch,
   fetchContacts,
   deleteContact,
+  fetchInvitations,
 };

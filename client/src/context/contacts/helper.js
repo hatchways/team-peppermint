@@ -1,4 +1,10 @@
-import { FETCH_CONTACTS, DELETE_CONTACT } from "../../types";
+import {
+  FETCH_CONTACTS,
+  DELETE_CONTACT,
+  FETCH_INVITATIONS,
+  APPROVE_INVITATION,
+  RE,
+} from "../../types";
 import axios from "axios";
 
 export const fetchContacts = async (email, dispatch) => {
@@ -20,4 +26,17 @@ export const deleteContact = async (email, index, dispatch) => {
   // }
 
   dispatch({ type: DELETE_CONTACT, payload: { email, index } });
+};
+
+export const fetchInvitations = async (email, dispatch) => {
+  console.log("starting fetching invitations");
+  const invitations = await axios.get(`/user/${email}/invitations`);
+  if (!invitations.data) {
+    throw Error("Sorry, no invitations found");
+  }
+  console.log("FETCH INVITATIONS FUNCTION FE ", invitations);
+  dispatch({
+    type: FETCH_INVITATIONS,
+    payload: invitations.data,
+  });
 };
