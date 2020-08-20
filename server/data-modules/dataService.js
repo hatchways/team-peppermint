@@ -117,10 +117,10 @@ module.exports = function () {
                     email: email,
                 },
                     {
-                        $pull: { contacts: {"contacts.email": contactToDelete }}
+                        $pull: { contacts: {email: contactToDelete} }
                     }).exec()
-                    .then(() => resolve(`contact ${contactToDelete} removed from contacts`))
-                    .reject((err) => reject(err))
+                    .then((msg) => resolve(`contact ${contactToDelete} removed from contacts`))
+                    .catch((err) => reject(err))
             })
         },
         respondToInvite: function (email, emailToAprove, status) {

@@ -25,6 +25,6 @@ router.post('/:email/reject', (req, res) => {
 router.post('/:email/deletecontact', (req, res) => {
   data.deleteContact(req.params.email, req.body.contactToDelete)
     .then((msg) => res.status(200).json({ message: msg }))
-    .catch((err) => res.status(400).json(err))
+    .catch((err) => {console.log(err);res.status(400).json(err)})
 })
 module.exports = router;
