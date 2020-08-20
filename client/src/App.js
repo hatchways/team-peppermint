@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Axios from 'axios';
-import UserContext from './Context/UserContext';
+
 import { theme } from "./themes/theme";
 import LoginPage from './pages/loginPage';
 import SignupPage from './pages/signupPage';
 import MainPage from "./containers/MainPage";
-
+import UserContext from './Context/UserContext';
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
 import { ContactsProvider } from "./Context/contacts/contactsContext";
@@ -25,7 +25,7 @@ function App() {
   useEffect(() => {
     const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
-      console.log(token);
+      
       if (token === null) {
         localStorage.setItem("auth-token", "");
         token = "";
@@ -34,16 +34,28 @@ function App() {
         headers: { "x-auth-token": token },
       });
       if (tokenRes.data) {
+        const userRes = await Axios.get("http://localhost:3001/api/user/", {
+          headers: { "x-auth-token": token },
+        })
+        console.log(userRes)
         setUserData({
           token,
-          user: tokenRes.data
+          user: userRes.data
         });
       }
     }
-
+    // const checkLoggedIn = async () => {
+    //   const tokenRes = await userCall.post("http://localhost:3001/api/user/tokenIsValid");
+    //   if (tokenRes) {
+    //     const userRes = await userCall.get("http://localhost:3001/api/user/");
+    //     setUserData({
+    //       user: userRes.data
+    //     });
+    //   }
+    // }
     checkLoggedIn();
   }, []);
-
+  console.log(userData);
   return (
     <MuiThemeProvider theme={theme}>
       <Router>

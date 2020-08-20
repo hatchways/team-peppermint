@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const dataService = require('../data-modules/dataService');
 const data = dataService();
 
@@ -8,30 +9,43 @@ const data = dataService();
 const checkAuth = require('../middleware/checkAuth');
 
 //middleware validation
-const {signupValidation, loginValidation} = require('../middleware/validation');
+const {signupValidation, loginValidation, generateToken} = require('../middleware/validation');
 const UserSchema = require('../models/userSchema');
 
 //signup route
 router.post('/signup', async (req, res) => {
   try {
     let {name, email, password, language} = req.body;
-    let validateUser=signupValidation(req.body);
-    if (validateUser.error) return res.status(400).json({msg: error});
+
+    if (!name || !email || !password)
+      return res.status(400).json({msg: "Not all the fields have been entered."});
+
+    if (password.length < 6)
+      return res
+        .status(400)
+        .json({ msg: "The password needs to be at least 6 characters long." });
 
     //Check if the user is already in the database
     const user = await data.getUserByEmail(email);
-    if(user) return res.status(400).json({ msg: "An account with this email already exists."});
+    if(user) 
+      return res.status(400).json({ msg: "An account with this email already exists."});
+    
+    //Hash the pass
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
     //set default language to english if none provided
     const prefLanguage = language ? language : 'english';
     // create a new user
     const newUser = {
       name: name,
       email: email,
-      password: password,
+      password: hashPassword,
       language: prefLanguage
     };  
     data.createUser(newUser)
-      .then(()=>{        
+      .then(()=>{
+        // res.status(201).send(msg);
+        
         //create and assign a token
         const token = jwt.sign(email, process.env.TOKEN_SECRET);
         //create httpOnly cookie
@@ -55,8 +69,8 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     //validate the data before logging in
-    let validLogin = loginValidation(req.body);
-    if (validLogin.error) return res.status(400).json({msg: error});
+    const { error } = loginValidation(req.body);
+    if (error) return res.status(400).json({msg: error.details[0].message});
 
     //check if the user is already in the database
     const user = await data.getUserByEmail(req.body.email);
@@ -74,11 +88,14 @@ router.post('/login', async (req, res) => {
       httpOnly: true,
       // secure: true -> uncomment in production?
     });
+    console.log(`${user.email} from backnd`)
     res.status(200).json({
       token,
       user: {
         id: user._id,
-        name: user.name
+        name: user.name,
+        email: user.email,
+        language: user.language
       }
     });
   } catch (err) {
@@ -123,24 +140,28 @@ router.post("/tokenIsValid", async (req, res) => {
     if (!token) return res.json(false);
     console.log("token: " + token);
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-    console.log("verified: " + verified);
+    console.log("verified: ", verified);
     if (!verified) return res.json(false);
 
     const user = await data.getUserByEmail(verified.id);
     if (!user) return res.json(false);
-    console.log("user: " + user);
-    return res.json(user);
+    return res.json(true);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
 router.get("/", checkAuth, async (req, res) => {
-  const user = data.getUserByEmail(req.user);
-  res.json({
-    name: user.name,
-    id: user._id
-  });
+  data.getUserByEmail(req.user)
+  .then((user)=>{
+    res.json({
+      name: user.name,
+      id: user._id,
+      email: user.email,
+      language: user.language
+    });
+  })
+  .catch((err)=>res.json(err))
 })
 
 module.exports = router;
