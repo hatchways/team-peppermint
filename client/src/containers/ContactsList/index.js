@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
@@ -27,7 +27,6 @@ const ContactsList = () => {
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
-
   const userToken = localStorage.getItem("auth-token");
   const decodedToken = jwtDecode(userToken);
   useEffect(() => {
@@ -41,6 +40,11 @@ const ContactsList = () => {
   const handleDeleteContactButton = (email, index) => {
     deleteContact(email, index, dispatch);
   };
+  const [selectedIndex, setSelectedIndex] = React.useState(-1);
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
+
 
   return (
     <>
@@ -71,18 +75,21 @@ const ContactsList = () => {
               isOnline={contact.isOnline}
               index={index}
               handleDeleteContactButton={handleDeleteContactButton}
+              contact={contact}
+              select={handleListItemClick}
+              selected={selectedIndex}
             />
           ))
         ) : (
-          <Typography
-            variant="body1"
-            color="primary"
-            gutterBottom
-            style={{ color: "black", textAlign: "center" }}
-          >
-            No contacts
-          </Typography>
-        )}
+            <Typography
+              variant="body1"
+              color="primary"
+              gutterBottom
+              style={{ color: "black", textAlign: "center" }}
+            >
+              No contacts
+            </Typography>
+          )}
       </List>
     </>
   );

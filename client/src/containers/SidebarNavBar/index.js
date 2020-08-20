@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  Typography,
-  ButtonBase,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
+import { Typography, ButtonBase, Menu, MenuItem,Tooltip } from "@material-ui/core";
 import { useStyles } from "./style";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { MoreHoriz } from "@material-ui/icons";
@@ -18,8 +12,8 @@ const isOnline = localStorage.getItem("auth-token");
 const SidebarNavBar = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-
   const classes = useStyles();
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -84,7 +78,6 @@ const SidebarNavBar = () => {
           }}
         />
       </div>
-    </div>
-  );
+    </div>);
 };
 export default SidebarNavBar;

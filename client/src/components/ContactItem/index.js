@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useContext } from "react";
 import { useStyles } from "./style";
 import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
@@ -11,18 +11,25 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
-
+import SelectContact from "../../Context/SelectContact";
 const ContactItem = ({
   imageUrl,
   name,
   index,
   isOnline,
   handleDeleteContactButton,
+  contact,
+  select,
+  selected
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const context = useContext(SelectContact);
   const classes = useStyles();
-
+  const onContactClick = (event) => {
+    select(event, index)
+    context.setContact(contact)
+  }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -32,7 +39,7 @@ const ContactItem = ({
   };
 
   return (
-    <ListItem button className={classes.root}>
+    <ListItem button className={classes.root} onClick={onContactClick} selected={selected === index}>
       <div className={classes.avatarNameContainer}>
         <UserAvatar imageUrl={imageUrl} isOnline={isOnline} />
         <Typography

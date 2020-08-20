@@ -4,6 +4,7 @@ import bgImage from "../../assets/login-signup-bgImage.png";
 import SmsRoundedIcon from "@material-ui/icons/SmsRounded";
 import TranslateRoundedIcon from "@material-ui/icons/TranslateRounded";
 
+
 const useStyles = makeStyles({
   imageContainer: {
     backgroundImage: `url(${bgImage})`,
