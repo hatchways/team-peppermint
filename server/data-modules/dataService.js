@@ -4,16 +4,16 @@ const uri = process.env.URI;
 const UserSchema = require('../models/userSchema');
 const ConversationSchema = require("../models/conversationSchema");
 var User, Invitation, Conversation;
-module.exports = function(){
-    
-    return{
-        connect: function(){ 
-            return new Promise(function(resolve,reject){
-                let db = mongoose.createConnection(uri,{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }); 
-                db.on('error', (err)=>{
+module.exports = function () {
+
+    return {
+        connect: function () {
+            return new Promise(function (resolve, reject) {
+                let db = mongoose.createConnection(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+                db.on('error', (err) => {
                     reject(err);
                 });
-                db.once('open', ()=>{
+                db.once('open', () => {
                     console.log("connected to db");
                     User = db.model("users", UserSchema);
                     Conversation = db.model("conversations", ConversationSchema);
@@ -21,59 +21,59 @@ module.exports = function(){
                 });
             });
         },
-        createUser: function(userObject){
+        createUser: function (userObject) {
 
-            return new Promise((resolve,reject)=>{
+            return new Promise((resolve, reject) => {
                 let newUser = new User(userObject);
                 newUser.save((err) => {
-                    if(err) reject(err);
-                    else resolve(`new user: ${newUser.email} successfully added`);                    
+                    if (err) reject(err);
+                    else resolve(`new user: ${newUser.email} successfully added`);
                 });
             });
         },
-        getUserByEmail: function(userEmail){
-            return new Promise((resolve,reject)=>{
-                User.findOne({email: userEmail}).exec().then(user=>{
+        getUserByEmail: function (userEmail) {
+            return new Promise((resolve, reject) => {
+                User.findOne({ email: userEmail }).exec().then(user => {
                     resolve(user)
-                }).catch(err=>{
+                }).catch(err => {
                     reject(err);
                 });
             });
         },
-        deleteByEmail: function(userEmail){
-            return new Promise((resolve,reject)=>{
-                User.deleteOne({email: userEmail}).exec().then(()=>{
+        deleteByEmail: function (userEmail) {
+            return new Promise((resolve, reject) => {
+                User.deleteOne({ email: userEmail }).exec().then(() => {
                     resolve(`user ${userEmail} successfully deleted`)
-                }).catch(err=>{
+                }).catch(err => {
                     reject(err);
                 });
             });
         },
-        updateUserFieldByEmail: function(userEmail, newData){
-            return new Promise((resolve,reject)=>{
-                User.updateOne({email: userEmail}, {
+        updateUserFieldByEmail: function (userEmail, newData) {
+            return new Promise((resolve, reject) => {
+                User.updateOne({ email: userEmail }, {
                     $set: newData
-                }).exec().then(()=>{
+                }).exec().then(() => {
                     resolve(`user ${userEmail} successfully updated`)
-                }).catch(err=>{
+                }).catch(err => {
                     reject(err);
                 });
             });
         },
 
-        getConversations: function(userEmail) {
-            return new Promise((resolve, reject)=>{
-                Conversation.find({usersEmail: {$in: userEmail}}).exec()
-                .then(conversations => resolve(conversations))
-                .catch(err=>reject(err))
+        getConversations: function (userEmail) {
+            return new Promise((resolve, reject) => {
+                Conversation.find({ usersEmail: { $in: userEmail } }).exec()
+                    .then(conversations => resolve(conversations))
+                    .catch(err => reject(err))
             })
-            
+
         },
-        getContacts: function(userEmail){
-            return new Promise((resolve, reject)=>{
-                this.getUserByEmail(userEmail).then((user)=>{
+        getContacts: function (userEmail) {
+            return new Promise((resolve, reject) => {
+                this.getUserByEmail(userEmail).then((user) => {
                     resolve(user.contacts);
-                }).catch((err)=> reject(err));
+                }).catch((err) => reject(err));
             });
         },
         addContact: function (currentEmail, emailToAdd) {
@@ -111,6 +111,18 @@ module.exports = function(){
                     .catch((err) => reject(err))
             })
         },
+        deleteContact: function (email, contactToDelete) {
+            return new Promise((resolve, reject) => {
+                User.updateOne({
+                    email: email,
+                },
+                    {
+                        $pull: { contacts: {"contacts.email": contactToDelete }}
+                    }).exec()
+                    .then(() => resolve(`contact ${contactToDelete} removed from contacts`))
+                    .reject((err) => reject(err))
+            })
+        },
         respondToInvite: function (email, emailToAprove, status) {
             return new Promise((resolve, reject) => {
                 User.updateOne({
@@ -123,8 +135,8 @@ module.exports = function(){
                         }
                     }
                 ).exec()
-                .then(()=>resolve(`${emailToAprove}'s status changed`))
-                .catch((err)=>reject(err))
+                    .then(() => resolve(`${emailToAprove}'s status changed`))
+                    .catch((err) => reject(err))
             })
         },
         getContactsByStatus: function (email, status) {
