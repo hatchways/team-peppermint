@@ -22,6 +22,7 @@ function Alert(props) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
+
     display: "flex",
     flexDirection: "Column",
     marginTop: "40px",
@@ -133,6 +134,7 @@ export default function UserAuthForm({ headerText }) {
     validPassword = password.length >= 6;
     if (!validPassword)
       setPasswordHelperText("Password needs to be at least 6 characters");
+
     return validPassword;
   }
 
@@ -168,9 +170,11 @@ export default function UserAuthForm({ headerText }) {
     setError();
     try {
       //make sure that form is valid
+
       if (isFormValid()) {
         if (headerText === "Create an account.") {
           //Signup route
+
           //UI response
           setIsAlert(true);
           //set newUser to register and then post to backend, then reset fields
@@ -301,6 +305,7 @@ export default function UserAuthForm({ headerText }) {
             </Select>
           </>
         ) : null}
+
 
         <Button
           variant="contained"

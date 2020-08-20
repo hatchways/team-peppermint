@@ -41,6 +41,15 @@ const ContactsList = () => {
   const handleDeleteContactButton = (email, index) => {
     deleteContact(email, index, dispatch);
   };
+  
+  const [inviteDiaolog, showInviteDialog]= useState(false);
+  const openInviteDialog=()=>{
+    showInviteDialog(true);
+  }
+  const closeInviteDialog=()=>{
+    showInviteDialog(false);
+  }
+
 
   return (
     <>
