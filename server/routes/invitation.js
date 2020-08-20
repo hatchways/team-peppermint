@@ -2,32 +2,24 @@ const router = require("express").Router();
 const data = require('../data-modules/dataService')();
 
 //contacts route
-router.post("/:email/invite", async (req, res) => {
-    let invitationExist = await data.getSentInvites(req.params.email);
-    if(invitationExist.length >0)
-        res.send("You already sent invite"); 
-    else{
-        let newInvitation={
-            approved: false,
-            rejected: false,
-            from_user: req.params.email,
-            to_user: req.body.to_user,
-            to_userEmail: req.body.to_userEmail
-        }
-        data.createInvitation(newInvitation)
-        .then((msg)=>res.json(msg))
-        .catch((err)=>res.status(400).json(err));
-    }
+router.post("/:email/invite", (req, res) => {
+  data.addContact(req.params.email, req.body.newContact)
+  .then(()=>{res.status(200).json("contact added")})
+  .catch((err)=>{res.status(400).json(err)})
 });
-router.get("/:email/invitations", async (req, res) => {
-    try {
-      //get all invitatitions by user id
-      const invitations = await data.getIncomingInvites(req.params.email);
-      if(invitations.length===0) res.send("You do not have invitations");
-      //send response with invitations
-      res.json(invitations);
-    } catch (err) {
-      res.status(400).json({ error:err });
-    }
-  });
+router.get("/:email/invitations", (req, res) => {
+  data.getContactsByStatus(req.params.email, 0)
+  .then((contacts)=>{ res.status(200).json(contacts)})
+  .catch((err)=>{res.status(400).json(err)})
+});
+router.post('/:email/aprove', (req,res)=>{
+  data.respondToInvite(req.params.email, req.body.emailToAprove, 1)
+  .then((msg)=>{res.status(200).json({message: msg})})
+  .catch((err)=>{res.status(500).json({err})})
+})
+router.post('/:email/reject', (req,res)=>{
+  data.respondToInvite(req.params.email, req.body.email, 2)
+  .then((msg)=>{res.status(200).json({message: msg})})
+  .catch((err)=>{res.status(500).json({err})})
+})
 module.exports = router;

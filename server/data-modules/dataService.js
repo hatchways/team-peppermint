@@ -75,7 +75,70 @@ module.exports = function(){
                     resolve(user.contacts);
                 }).catch((err)=> reject(err));
             });
+        },
+        addContact: function (currentEmail, emailToAdd) {
+            let conversationID = [currentEmail, emailToAdd].sort().join()
+            return new Promise((resolve, reject) => {
+                User.updateOne({
+                    email: currentEmail
+                },
+                    {
+                        $push: {
+                            contacts: {
+                                email: emailToAdd,
+                                status: 0,
+                                conversationID: conversationID
+                            }
+                        }
+                    }).exec()
+                    .then(() => {
+                        User.updateOne({
+                            email: emailToAdd
+                        },
+                            {
+                                $push: {
+                                    contacts: {
+                                        email: currentEmail,
+                                        status: 1,
+                                        conversationID: conversationID
+                                    }
+                                }
+                            }).exec()
+                            .then(() => resolve())
+                            .catch((err) => reject(err))
+
+                    })
+                    .catch((err) => reject(err))
+            })
+        },
+        respondToInvite: function (email, emailToAprove, status) {
+            return new Promise((resolve, reject) => {
+                User.updateOne({
+                    email: email,
+                    "contacts.email": emailToAprove
+                },
+                    {
+                        $set: {
+                            "contacts.$.status": status
+                        }
+                    }
+                ).exec()
+                .then(()=>resolve(`${emailToAprove}'s status changed`))
+                .catch((err)=>reject(err))
+            })
+        },
+        getContactsByStatus: function (email, status) {
+            return new Promise((resolve, reject) => {
+                this.getUserByEmail(email).then((user) => {
+                    if (user.contacts.length > 0) {
+                        resolve(user.contacts.find((contact) => contact.status === status))
+                    } else {
+                        resolve(user.contacts);
+                    }
+                }).catch((err) => reject(err));
+            });
         }
+
     }
 }
 
