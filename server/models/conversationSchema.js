@@ -1,36 +1,36 @@
 const mongoose = require('mongoose');
-const textSchema = new mongoose.Schema({  
-    language:{
+const textSchema = new mongoose.Schema({
+    language: {
         type: String,
         required: true
     },
-    text:{
+    text: {
         type: String,
         required: true
     }
-},{ _id: false })
+}, { _id: false })
 const MessageSchema = new mongoose.Schema({
-    sender:{
+    sender: {
         type: String,
         required: true
     },
-    date:{
+    date: {
         type: Date,
         required: true
     },
-    textVersions:{
-        type:[textSchema],
-        default:[]
+    textVersions: {
+        type: [textSchema],
+        default: []
     }
-},{ _id: false })
+}, { _id: false })
 
 const ConversationSchema = new mongoose.Schema({
-    conversationID:{
+    conversationID: {
         type: String,
         unique: true,
         required: true
     },
-    users:{
+    users: {
         type: [String],
         required: true
     },
@@ -38,5 +38,5 @@ const ConversationSchema = new mongoose.Schema({
         type: [MessageSchema],
         default: []
     }
-  }) 
-  module.exports = ConversationSchema;
+})
+module.exports = ConversationSchema;

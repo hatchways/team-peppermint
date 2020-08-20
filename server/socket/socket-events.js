@@ -1,28 +1,27 @@
-var connections=[];
-const { addUser, removeUser, getUser, getUsersInRoom} =require('./socket-helper');
-module.exports = function(io){
-    io.on('connection', (socket) => { 
 
-        connections.push(socket);
-        socket.on('login', ()=>{
-          
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./socket-helper');
+const { remove } = require('../models/userSchema');
+module.exports = function (io) {
+    io.on('connection', (socket) => {
+
+        socket.on('login', () => {
+
         });
-        socket.on('join', ({name, room}, callback)=>{
-
-            const { error, user} = addUser({id: socket.id, name, room});
-            if(error) return callback(error);
-            socket.join(user.room);
+        socket.on('join', ({ email, room }, callback) => {
+            console.log(`${email} connected to ${room}`)
+            const { error, connection } = addUser({ id: socket.id, email, room });
+            if (error) return callback(error);
+            socket.join(connection.room);
             callback();
         })
 
-        socket.on('message', (message, time, callback)=>{ 
-
+        socket.on('message', ({ message, time }, callback) => {
             const user = getUser(socket.id);
-            io.to(user.room).emit('message', {user: user.name, text: message, time: time});
+            io.to(user.room).emit('message', { user: user.email, text: message, time: time})
             callback();
         });
-        socket.on('disconnect', ()=>{
-            connections.splice(connections.indexOf(socket), 1);
+        socket.on('disconnect', () => {
+            removeUser(socket.id)
             console.log(`disconnected`);
         })
     });

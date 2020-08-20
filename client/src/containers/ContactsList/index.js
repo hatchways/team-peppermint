@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
-import  InvitationDialog  from "../InvitationDialog";
+import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
 import { List, Typography, Button } from "@material-ui/core";
 import ContactItem from "../../components/ContactItem";
@@ -10,7 +10,9 @@ import {
   useContactsState,
   fetchContacts,
   deleteContact,
-} from "../../context/contacts/contactsContext";
+} from "../../Context/contacts/contactsContext";
+
+const jwt_decode = require("jwt-decode");
 
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
@@ -18,9 +20,11 @@ const ContactsList = () => {
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
+  const userToken = localStorage.getItem("auth-token");
+  const decodedToken = jwt_decode(userToken);
 
   useEffect(() => {
-    fetchContacts("ya@ya.ru", dispatch);
+    decodedToken && fetchContacts(decodedToken.id, dispatch);
   }, []);
 
   useEffect(() => {
@@ -30,14 +34,18 @@ const ContactsList = () => {
   const handleDeleteContactButton = (email, index) => {
     deleteContact(email, index, dispatch);
   };
-  
-  const [inviteDiaolog, showInviteDialog]= useState(false);
-  const openInviteDialog=()=>{
+
+  const [inviteDiaolog, showInviteDialog] = useState(false);
+  const openInviteDialog = () => {
     showInviteDialog(true);
   }
-  const closeInviteDialog=()=>{
+  const closeInviteDialog = () => {
     showInviteDialog(false);
   }
+  const [selectedIndex, setSelectedIndex] = React.useState(-1);
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
 
 
   return (
@@ -51,7 +59,7 @@ const ContactsList = () => {
           gutterBottom
         >
           <Button onClick={() => openInviteDialog()}>Invite Friends</Button>
-          <InvitationDialog open ={inviteDiaolog} onClose = {closeInviteDialog}/>
+          <InvitationDialog open={inviteDiaolog} onClose={closeInviteDialog} />
         </Typography>
       </div>
       <List className={classes.root}>
@@ -59,23 +67,26 @@ const ContactsList = () => {
           contactsList.map((contact, index) => (
             <ContactItem
               key={index}
-              name={contact.name}
+              name={contact.email}
               imageUrl={contact.imageUrl}
               isOnline={contact.isOnline}
               index={index}
               handleDeleteContactButton={handleDeleteContactButton}
+              contact={contact}
+              select={handleListItemClick}
+              selected={selectedIndex}
             />
           ))
         ) : (
-          <Typography
-            variant="body1"
-            color="primary"
-            gutterBottom
-            style={{ color: "black", textAlign: "center" }}
-          >
-            No contacts
-          </Typography>
-        )}
+            <Typography
+              variant="body1"
+              color="primary"
+              gutterBottom
+              style={{ color: "black", textAlign: "center" }}
+            >
+              No contacts
+            </Typography>
+          )}
       </List>
     </>
   );

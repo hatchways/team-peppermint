@@ -9,7 +9,7 @@ import MainPage from "./containers/MainPage";
 
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
-import { ContactsProvider } from "./context/contacts/contactsContext";
+import { ContactsProvider } from "./Context/contacts/contactsContext";
 const dotenv = require("dotenv");
 dotenv.config();
 

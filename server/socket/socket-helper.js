@@ -1,23 +1,21 @@
-const users = [];
+const { connect } = require("mongoose");
+const connections = [];
+const addUser = ({ id, email, room }) => {
+  const index = connections.findIndex((connection) => connection.id === id);
+  if (index !== -1) {
+    connections[index].room = room;
+    return { connection: connections[index] }
+  }
+  const connection = { id, email, room };
+  connections.push(connection);
 
-const addUser = ({ id, name, room }) => {
-
-
-  const user = { id, name, room };
-
-  users.push(user);
-
-  return { user };
+  return { connection };
 }
-
 const removeUser = (id) => {
-  const index = users.findIndex((user) => user.id === id);
-
-  if(index !== -1) return users.splice(index, 1)[0];
+  const index = connections.findIndex((connection) => connection.id === id);
+  if (index !== -1) return connections.splice(index, 1)[0];
 }
-
-const getUser = (id) => users.find((user) => user.id === id);
-
-const getUsersInRoom = (room) => users.filter((user) => user.room === room);
+const getUser = (id) => connections.find((connection) => connection.id === id);
+const getUsersInRoom = (room) => connections.filter((connection) => connection.room === room);
 
 module.exports = { addUser, removeUser, getUser, getUsersInRoom };

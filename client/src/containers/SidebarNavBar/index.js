@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState }from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Typography, ButtonBase, Menu, MenuItem } from "@material-ui/core";
 import { useStyles } from "./style";
 import { DropzoneDialog } from "material-ui-dropzone";
@@ -10,10 +10,10 @@ import uploadUserImage from "../../services/uploadUserImage";
 const SidebarNavBar = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [user, setUser]=useState({});
+  const context = useContext(UserContext);
+  const user = context.userData.user;
   const classes = useStyles();
   const userContext = useContext(UserContext);
-  
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,18 +28,13 @@ const SidebarNavBar = () => {
     setAnchorEl(null);
     setOpen(false);
   };
- 
-  useEffect(()=>{
-    setUser(userContext.userData.user)
-  },[userContext])
-  
-  if(user){
+
   return (
     <div className={classes.root}>
       <div className={classes.leftRightSideStyle}>
         <UserAvatar />
         <Typography variant="body2" className={classes.typography}>
-          Santiago
+          {!!user && user.email}
         </Typography>
       </div>
       <div className={classes.leftRightSideStyle}>
@@ -72,10 +67,6 @@ const SidebarNavBar = () => {
           }}
         />
       </div>
-    </div>
-    );
-  }else{
-    return null;
-  }
+    </div>);
 };
 export default SidebarNavBar;
