@@ -7,15 +7,14 @@ import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
 
 import MainPage from "./containers/MainPage";
-
+import UserContext from './Context/UserContext';
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
-import { ContactsProvider } from "./context/contacts/contactsContext";
-import UserContext from "./Context/UserContext";
+import { ContactsProvider } from "./Context/contacts/contactsContext";
+const dotenv = require("dotenv");
+dotenv.config();
 
-const dotenv = require("dotenv").config();
 
-import UserContext from './Context/UserContext';
 
 function App() {
   const [userData, setUserData] = useState({
@@ -25,7 +24,7 @@ function App() {
   useEffect(() => {
     const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
-      console.log(token);
+      
       if (token === null) {
         localStorage.setItem("auth-token", "");
         token = "";
@@ -60,7 +59,7 @@ function App() {
     // }
     checkLoggedIn();
   }, []);
-
+  console.log(userData);
   return (
     <MuiThemeProvider theme={theme}>
       <Router>

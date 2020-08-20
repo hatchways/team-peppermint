@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
@@ -10,8 +10,9 @@ import {
   useContactsState,
   fetchContacts,
   deleteContact,
-} from "../../context/contacts/contactsContext";
-const jwtDecode = require("jwt-decode");
+} from "../../Context/contacts/contactsContext";
+
+const jwt_decode = require("jwt-decode");
 
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
@@ -27,9 +28,9 @@ const ContactsList = () => {
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
-
   const userToken = localStorage.getItem("auth-token");
-  const decodedToken = jwtDecode(userToken);
+  const decodedToken = jwt_decode(userToken);
+
   useEffect(() => {
     decodedToken && fetchContacts(decodedToken.id, dispatch);
   }, []);
@@ -41,14 +42,10 @@ const ContactsList = () => {
   const handleDeleteContactButton = (email, index) => {
     deleteContact(email, index, dispatch);
   };
-  
-  const [inviteDiaolog, showInviteDialog]= useState(false);
-  const openInviteDialog=()=>{
-    showInviteDialog(true);
-  }
-  const closeInviteDialog=()=>{
-    showInviteDialog(false);
-  }
+  const [selectedIndex, setSelectedIndex] = React.useState(-1);
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
 
 
   return (
@@ -75,18 +72,21 @@ const ContactsList = () => {
               isOnline={contact.isOnline}
               index={index}
               handleDeleteContactButton={handleDeleteContactButton}
+              contact={contact}
+              select={handleListItemClick}
+              selected={selectedIndex}
             />
           ))
         ) : (
-          <Typography
-            variant="body1"
-            color="primary"
-            gutterBottom
-            style={{ color: "black", textAlign: "center" }}
-          >
-            No contacts
-          </Typography>
-        )}
+            <Typography
+              variant="body1"
+              color="primary"
+              gutterBottom
+              style={{ color: "black", textAlign: "center" }}
+            >
+              No contacts
+            </Typography>
+          )}
       </List>
     </>
   );
