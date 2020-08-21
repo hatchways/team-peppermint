@@ -15,6 +15,7 @@ import SelectContact from "../../Context/SelectContact";
 const ContactItem = ({
   imageUrl,
   name,
+  email,
   index,
   isOnline,
   handleDeleteContactButton,
@@ -67,7 +68,7 @@ const ContactItem = ({
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => handleDeleteContactButton("ya@ya.ru", index)}>
+        <MenuItem onClick={() => handleDeleteContactButton(email, index)}>
           Delete contact
         </MenuItem>
       </Menu>

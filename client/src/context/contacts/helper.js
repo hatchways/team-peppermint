@@ -1,42 +1,43 @@
 import {
-  FETCH_CONTACTS,
+  FETCH_CONTACTS_INVITATIONS,
   DELETE_CONTACT,
-  FETCH_INVITATIONS,
   APPROVE_INVITATION,
-  RE,
+  REJECT_INVITATION,
 } from "../../types";
 import axios from "axios";
 
-export const fetchContacts = async (email, dispatch) => {
+export const fetchContactsAndInvitations = async (email, dispatch) => {
   const userData = await axios.get(`/user/${email}/contacts`);
   if (!userData.data) {
     throw Error("Sorry, no contacts found");
   }
+
   dispatch({
-    type: FETCH_CONTACTS,
-    payload: userData.data,
+    type: FETCH_CONTACTS_INVITATIONS,
+    payload: {
+      contacts: userData.data.contactsList,
+      invitations: userData.data.invitationsList,
+    },
   });
 };
 
-export const deleteContact = async (email, index, dispatch) => {
-  // const contacts = await axios.delete(`user/${email}/contacts`);
+export const deleteContact = async (
+  userEmail,
+  emailToDelete,
+  index,
+  dispatch
+) => {
+  const contacts = await axios.delete(`user/${emailToDelete}/contacts`, {
+    data: {
+      userEmail,
+    },
+  });
 
-  // if (!contacts.data) {
-  //   throw Error("Sorry, failed to delete contact");
-  // }
+  console.log("userEmail ", userEmail);
 
-  dispatch({ type: DELETE_CONTACT, payload: { email, index } });
-};
-
-export const fetchInvitations = async (email, dispatch) => {
-  console.log("starting fetching invitations");
-  const invitations = await axios.get(`/user/${email}/invitations`);
-  if (!invitations.data) {
-    throw Error("Sorry, no invitations found");
+  if (!contacts.data) {
+    throw Error("Sorry, failed to delete contact");
   }
-  console.log("FETCH INVITATIONS FUNCTION FE ", invitations);
-  dispatch({
-    type: FETCH_INVITATIONS,
-    payload: invitations.data,
-  });
+  console.log("contact deleted ", contacts);
+  dispatch({ type: DELETE_CONTACT, payload: { emailToDelete, index } });
 };

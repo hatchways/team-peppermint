@@ -1,19 +1,28 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Typography, ButtonBase, Menu, MenuItem,Tooltip } from "@material-ui/core";
+import React, { useContext, useState } from "react";
+import {
+  Typography,
+  ButtonBase,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@material-ui/core";
 import { useStyles } from "./style";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { MoreHoriz } from "@material-ui/icons";
 import UserAvatar from "../../components/UserAvatar/index";
 import uploadUserImage from "../../services/uploadUserImage";
 import { NavLink } from "react-router-dom";
+import UserContext from "../../Context/UserContext";
 
 const isOnline = localStorage.getItem("auth-token");
 
 const SidebarNavBar = () => {
+  const { userData } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
-
+  
+  const userInfo = { ...userData.user };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,9 +46,9 @@ const SidebarNavBar = () => {
   return (
     <div className={classes.root}>
       <div className={classes.leftRightSideStyle}>
-        <UserAvatar isOnline={!!isOnline} />
+        <UserAvatar isOnline={!!isOnline} imageUrl={userInfo.pictureUrl} />
         <Typography variant="body2" className={classes.typography}>
-          Santiago
+          {userInfo.name}
         </Typography>
       </div>
       <div className={classes.leftRightSideStyle}>
@@ -78,6 +87,7 @@ const SidebarNavBar = () => {
           }}
         />
       </div>
-    </div>);
+    </div>
+  );
 };
 export default SidebarNavBar;

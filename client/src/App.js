@@ -5,26 +5,24 @@ import Axios from "axios";
 import { theme } from "./themes/theme";
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
-
+import { ContactsProvider } from "./context/contacts/contactsContext";
 import MainPage from "./containers/MainPage";
-import UserContext from './Context/UserContext';
+import UserContext from "./Context/UserContext";
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
-import { ContactsProvider } from "./Context/contacts/contactsContext";
+
 const dotenv = require("dotenv");
 dotenv.config();
 
-
-
 function App() {
   const [userData, setUserData] = useState({
-    token: undefined,
-    user: undefined,
+    token: null,
+    user: null,
   });
   useEffect(() => {
     const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
-      
+
       if (token === null) {
         localStorage.setItem("auth-token", "");
         token = "";

@@ -45,6 +45,17 @@ module.exports = function () {
                 });
             });
         },
+        getUsers: function(emails){
+            return new Promise((resolve, reject)=>{
+                User.find({
+                    email: {$in : emails}
+                }).exec()
+                .then((users)=>{
+                    resolve(users);
+                })
+                .catch((err)=>reject(err))
+            })
+        },
         deleteByEmail: function (userEmail) {
             return new Promise((resolve, reject) => {
                 User.deleteOne({ email: userEmail }).exec().then(() => {
