@@ -139,11 +139,11 @@ module.exports = function () {
                     .catch((err) => reject(err))
             })
         },
-        respondToInvite: function (email, emailToAprove, status) {
+        respondToInvite: function (email, emailToApprove, status) {
             return new Promise((resolve, reject) => {
                 User.updateOne({
                     email: email,
-                    "contacts.email": emailToAprove
+                    "contacts.email": emailToApprove
                 },
                     {
                         $set: {
@@ -151,7 +151,7 @@ module.exports = function () {
                         }
                     }
                 ).exec()
-                    .then(() => resolve(`${emailToAprove}'s status changed`))
+                    .then(() => resolve(`${emailToApprove}'s status changed`))
                     .catch((err) => reject(err))
             })
         },

@@ -7,6 +7,8 @@ import {
   useContactsDispatch,
   useContactsState,
   fetchContactsAndInvitations,
+  approveContact,
+  rejectContact,
 } from "../../context/contacts/contactsContext";
 const jwtDecode = require("jwt-decode");
 
@@ -30,6 +32,9 @@ const InvitationsList = () => {
     setInvitationsList(invitations);
   }, [invitations]);
 
+  const handleApproveContact = (emailToApprove) =>
+    approveContact(decodedToken.id, emailToApprove, dispatch);
+
   return (
     <div className={classes.root}>
       <List className={classes.root}>
@@ -39,6 +44,7 @@ const InvitationsList = () => {
               key={index}
               email={invitation.email}
               index={index}
+              handleApproveContact={handleApproveContact}
             />
           ))
         ) : (

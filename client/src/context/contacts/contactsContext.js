@@ -1,7 +1,12 @@
-import React, { useReducer, useContext, useCallback } from "react";
+import React, { useReducer, useContext } from "react";
 import combineReducers from "react-combine-reducers";
 import contactsInvitaitionsReducer from "./contactsInvitationsReducer";
-import { fetchContactsAndInvitations, deleteContact } from "./helper";
+import {
+  fetchContactsAndInvitations,
+  deleteContact,
+  approveContact,
+  rejectContact,
+} from "./helper";
 
 const ContactsStateContext = React.createContext();
 const ContactsDispatchContext = React.createContext();
@@ -49,4 +54,6 @@ export {
   useContactsDispatch,
   fetchContactsAndInvitations,
   deleteContact,
+  approveContact,
+  rejectContact,
 };

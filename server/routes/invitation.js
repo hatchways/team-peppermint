@@ -12,8 +12,8 @@ router.get("/:email/invitations", (req, res) => {
     .then((contacts) => { res.status(200).json(contacts) })
     .catch((err) => { res.status(400).json(err) })
 });
-router.post('/:email/aprove', (req, res) => {
-  data.respondToInvite(req.params.email, req.body.contactToAprove, 1)
+router.post('/:email/approve', (req, res) => {
+  data.respondToInvite(req.params.email, req.body.contactToApprove, 1)
     .then((msg) => { res.status(200).json({ message: msg }) })
     .catch((err) => { res.status(500).json({ err }) })
 })

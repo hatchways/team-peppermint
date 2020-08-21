@@ -1,4 +1,9 @@
-import { FETCH_CONTACTS_INVITATIONS, DELETE_CONTACT } from "../../types";
+import {
+  FETCH_CONTACTS_INVITATIONS,
+  DELETE_CONTACT,
+  UPDATE_INVITATIONS,
+  UPDATE_CONTACTS,
+} from "../../types";
 
 export default function contactsInvitaitionsReducer(state, action) {
   switch (action.type) {
@@ -15,6 +20,12 @@ export default function contactsInvitaitionsReducer(state, action) {
         contacts: state.contacts
           .slice(0, action.payload.index)
           .concat(state.contacts.slice(action.payload.index + 1)),
+      };
+    }
+    case UPDATE_INVITATIONS: {
+      return {
+        ...state,
+        invitations: action.payload,
       };
     }
     default:

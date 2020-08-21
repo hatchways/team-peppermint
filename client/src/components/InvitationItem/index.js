@@ -5,19 +5,20 @@ import { Typography, ListItem, Button } from "@material-ui/core";
 
 const InvitationItem = (props) => {
   const classes = useStyles();
-  const { email, index } = props;
+  const { email, index, handleApproveContact } = props;
 
   return (
     <ListItem className={classes.root}>
-      <Typography
-        variant="body2"
-        style={{ marginBottom: 0, fontWeight: 600 }}
-        gutterBottom
-      >
+      <Typography variant="body2" className={classes.typography} gutterBottom>
         {email}
       </Typography>
       <span>
-        <Button variant="outlined" size="small" color="primary">
+        <Button
+          variant="outlined"
+          size="small"
+          color="primary"
+          onClick={() => handleApproveContact(email)}
+        >
           Approve
         </Button>
         <Button
