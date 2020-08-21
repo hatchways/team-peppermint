@@ -23,7 +23,6 @@ module.exports = function () {
             });
         },
         createUser: function (userObject) {
-
             return new Promise(async (resolve, reject) => {
                 try {
                     const salt = await bcrypt.genSalt(10);
@@ -65,7 +64,6 @@ module.exports = function () {
                 });
             });
         },
-
         getConversations: function (userEmail) {
             return new Promise((resolve, reject) => {
                 Conversation.find({ usersEmail: { $in: userEmail } }).exec()

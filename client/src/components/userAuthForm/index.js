@@ -302,6 +302,7 @@ export default function UserAuthForm({ headerText }) {
               <MenuItem value="chinese">Chinese (Mandarin)</MenuItem>
               <MenuItem value="spanish">Spanish</MenuItem>
               <MenuItem value="french">French</MenuItem>
+              <MenuItem value="russian">Russian</MenuItem>              
             </Select>
           </>
         ) : null}
