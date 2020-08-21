@@ -162,6 +162,15 @@ module.exports = function () {
                     .catch((err) => reject(err));
             })
         },
+        createConversation: function (conversationObject) {
+            return new Promise((resolve, reject) => {
+                let newConversation = new Conversation(conversationObject);
+                newConversation.save((err) => {
+                    if (err) reject(err)
+                    else resolve("New conversation created")
+                })
+            })
+        },
         addMessage: function (conversationID, message) {
             return new Promise((resolve, reject) => {
                 Conversation.updateOne(
