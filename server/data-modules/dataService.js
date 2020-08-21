@@ -154,7 +154,23 @@ module.exports = function () {
                     }
                 }).catch((err) => reject(err));
             });
-        }
+        },
+        getConversationById: function (convID) {
+            return new Promise((resolve, reject) => {
+                Conversation.findOne({ conversationID: convID }).exec()
+                    .then(conversation => resolve(conversation))
+                    .catch((err) => reject(err));
+            })
+        },
+        addMessage: function (conversationID, message) {
+            return new Promise((resolve, reject) => {
+                Conversation.updateOne(
+                    { conversationID: conversationID },
+                    { $push: { messages: message } }
+                ).then(() => resolve("message added"))
+                    .catch((err) => reject(err));
+            })
+        },
 
     }
 }
