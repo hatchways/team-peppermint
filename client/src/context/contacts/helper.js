@@ -1,9 +1,6 @@
-import {
-  FETCH_CONTACTS_INVITATIONS,
-  DELETE_CONTACT,
-  UPDATE_INVITATIONS,
-} from "../../types";
+import { FETCH_CONTACTS_INVITATIONS, UPDATE_INVITATIONS } from "../../types";
 import axios from "axios";
+const jwtDecode = require("jwt-decode");
 
 export const fetchContactsAndInvitations = async (email, dispatch) => {
   const userData = await axios.get(`/user/${email}/contacts`);
@@ -36,7 +33,7 @@ export const deleteContact = async (
     throw Error("Sorry, failed to delete contact");
   }
 
-  dispatch({ type: DELETE_CONTACT, payload: { emailToDelete, index } });
+  fetchContactsAndInvitations(userEmail, dispatch);
 };
 
 export const approveContact = async (userEmail, contactToApprove, dispatch) => {
@@ -46,9 +43,6 @@ export const approveContact = async (userEmail, contactToApprove, dispatch) => {
         contactToApprove,
       },
     });
-
-    console.log("Contact approved ", message.data);
-    console.log("Incoming parameters", userEmail, contactToApprove);
 
     fetchContactsAndInvitations(userEmail, dispatch);
   } catch (err) {
@@ -60,11 +54,9 @@ export const rejectContact = async (userEmail, emailToReject, dispatch) => {
   try {
     const msg = await axios.post(`user/${userEmail}/reject`, {
       data: {
-        emailToReject,
+        contactToReject: emailToReject,
       },
     });
-
-    console.log("Contact rejected ", msg.data.message);
 
     const newInvitationsList = await axios.get(`user/${userEmail}/invitations`);
 
@@ -72,4 +64,11 @@ export const rejectContact = async (userEmail, emailToReject, dispatch) => {
   } catch (err) {
     throw Error("Sorry something went wrong ", err.message);
   }
+};
+
+export const userEmailFromLocalStorage = (params) => {
+  const userToken = localStorage.getItem("auth-token");
+  const decodedToken = jwtDecode(userToken);
+
+  return decodedToken.id;
 };

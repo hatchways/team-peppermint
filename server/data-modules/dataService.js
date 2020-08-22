@@ -76,7 +76,16 @@ module.exports = function () {
                 });
             });
         },
-
+        updateUserImage: function (email, imageURL) {
+            return new Promise((resolve, reject) => {
+                User.updateOne({
+                    email: email
+                },
+                    { $set: { pictureURL: imageURL } }
+                ).exec().then(()=>resolve("image updated"))
+                .catch((err)=>reject(err))
+            })
+        },
         getConversations: function (userEmail) {
             return new Promise((resolve, reject) => {
                 Conversation.find({ usersEmail: { $in: userEmail } }).exec()

@@ -56,7 +56,7 @@ function App() {
     // }
     checkLoggedIn();
   }, []);
-  console.log(userData);
+
   return (
     <MuiThemeProvider theme={theme}>
       <Router>

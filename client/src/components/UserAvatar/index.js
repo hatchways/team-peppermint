@@ -1,13 +1,13 @@
 import React, { memo } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import PropTypes from "prop-types";
-import remy from "./men.png";
+import defaultAvatar from "./default.png";
 import { useStyles, OfflineBadge, OnlineBadge } from "./style";
 
 const UserAvatar = ({ imageUrl, isOnline }) => {
   const classes = useStyles();
 
-  let userPicture = imageUrl || remy;
+  let userPicture = imageUrl || defaultAvatar;
 
   return (
     <div className={classes.root}>

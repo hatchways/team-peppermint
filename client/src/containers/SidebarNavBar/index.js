@@ -21,8 +21,8 @@ const SidebarNavBar = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
-  
-  const userInfo = { ...userData.user };
+
+  let userInfo = { ...userData.user };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,7 +37,6 @@ const SidebarNavBar = () => {
     setAnchorEl(null);
     setOpen(false);
   };
-
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
     setAnchorEl(null);
@@ -46,7 +45,7 @@ const SidebarNavBar = () => {
   return (
     <div className={classes.root}>
       <div className={classes.leftRightSideStyle}>
-        <UserAvatar isOnline={!!isOnline} imageUrl={userInfo.pictureUrl} />
+        <UserAvatar isOnline={!!isOnline} imageUrl={userInfo.pictureURL} />
         <Typography variant="body2" className={classes.typography}>
           {userInfo.name}
         </Typography>
@@ -69,7 +68,7 @@ const SidebarNavBar = () => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => setOpen(true)}>Add picture</MenuItem>
+          <MenuItem onClick={() => setOpen(true)}>Replace picture</MenuItem>
           <MenuItem onClick={handleLogout}>
             <NavLink to="/login" className={classes.logoutStyle}>
               Log out

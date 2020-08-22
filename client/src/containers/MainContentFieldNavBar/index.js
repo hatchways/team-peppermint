@@ -1,12 +1,15 @@
-import React, { useState } from "react";
-import { Typography, Switch, ButtonBase, Badge } from "@material-ui/core";
+import React, { useState, useContext } from "react";
+import { Typography, Switch, ButtonBase } from "@material-ui/core";
 import { useStyles, StyledBadge } from "./style";
 import { MoreHoriz } from "@material-ui/icons";
-const classNames = require("classnames");
+import UserContext from "../../Context/UserContext";
 
 const MainContentFieldNavBar = () => {
+  const { userData } = useContext(UserContext);
   const [checked, setChecked] = useState(false);
   const classes = useStyles();
+
+  let userInfo = { ...userData.user };
 
   const handleChange = () => {
     setChecked(!checked);
@@ -19,7 +22,7 @@ const MainContentFieldNavBar = () => {
           variant="h6"
           style={{ fontWeight: 600, marginLeft: 20, marginRight: 20 }}
         >
-          Santiago
+          {userInfo.name}
         </Typography>
         <div className={classes.onOfflineStyle}>
           <StyledBadge overlap="circle" variant="dot">

@@ -48,4 +48,19 @@ router.delete("/:email/contacts", async (req, res) => {
   }
 });
 
+router.put("/:email/image", async (req, res) => {
+  try {
+    //find user's contacts by user email
+    const msg = await data.updateUserImage(
+      req.params.email,
+      req.body.data.imageUrl
+    );   
+    
+    //response with contacts
+    res.status(200).json(msg);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
 module.exports = router;

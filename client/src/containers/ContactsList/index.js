@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
 import { List, Typography, ButtonBase } from "@material-ui/core";
@@ -10,8 +9,8 @@ import {
   useContactsState,
   fetchContactsAndInvitations,
   deleteContact,
+  userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
-const jwtDecode = require("jwt-decode");
 
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
@@ -27,26 +26,27 @@ const ContactsList = () => {
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
-  const userToken = localStorage.getItem("auth-token");
-  const decodedToken = jwtDecode(userToken);
+
+  const userEmail = userEmailFromLocalStorage();
+
   useEffect(() => {
-    decodedToken.id &&
+    userEmail &&
       !contactsList.length &&
-      fetchContactsAndInvitations(decodedToken.id, dispatch);
-  }, []);
+      fetchContactsAndInvitations(userEmail, dispatch);
+  }, [userEmail, contactsList.length, dispatch]);
 
   useEffect(() => {
     setContactsList(contacts);
   }, [contacts]);
-  
+
   const handleDeleteContactButton = (email, index) => {
-    deleteContact(decodedToken.id, email, index, dispatch);
+    deleteContact(userEmail, email, index, dispatch);
   };
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
-  
+
   return (
     <>
       <ButtonBase

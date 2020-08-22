@@ -12,19 +12,15 @@ router.get("/:email/invitations", (req, res) => {
     .then((contacts) => { res.status(200).json(contacts) })
     .catch((err) => { res.status(400).json(err) })
 });
-router.post('/:email/approve', (req, res) => {
-  data.respondToInvite(req.params.email, req.body.contactToApprove, 1)
+router.post('/:email/approve', (req, res) => {  
+  data.respondToInvite(req.params.email, req.body.data.contactToApprove, 1)
     .then((msg) => { res.status(200).json({ message: msg }) })
     .catch((err) => { res.status(500).json({ err }) })
 })
 router.post('/:email/reject', (req, res) => {
-  data.respondToInvite(req.params.email, req.body.contactToReject, 2)
+  data.respondToInvite(req.params.email, req.body.data.contactToReject, 2)
     .then((msg) => { res.status(200).json({ message: msg }) })
     .catch((err) => { res.status(500).json({ err }) })
 })
-router.post('/:email/deletecontact', (req, res) => {
-  data.deleteContact(req.params.email, req.body.contactToDelete)
-    .then((msg) => res.status(200).json({ message: msg }))
-    .catch((err) => {console.log(err);res.status(400).json(err)})
-})
+
 module.exports = router;

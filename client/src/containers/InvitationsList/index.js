@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useStyles } from "./style";
 import { List, Typography } from "@material-ui/core";
 import InvitationItem from "../../components/InvitationItem";
@@ -9,8 +8,8 @@ import {
   fetchContactsAndInvitations,
   approveContact,
   rejectContact,
+  userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
-const jwtDecode = require("jwt-decode");
 
 const InvitationsList = () => {
   const [invitationsList, setInvitationsList] = useState([]);
@@ -19,21 +18,23 @@ const InvitationsList = () => {
   const dispatch = useContactsDispatch();
   const { invitations } = useContactsState();
 
-  const userToken = localStorage.getItem("auth-token");
-  const decodedToken = jwtDecode(userToken);
+  const userEmail = userEmailFromLocalStorage();
 
   useEffect(() => {
-    decodedToken.id &&
+    userEmail &&
       !invitations.length &&
-      fetchContactsAndInvitations(decodedToken.id, dispatch);
-  }, []);
+      fetchContactsAndInvitations(userEmail, dispatch);
+  }, [userEmail, invitations.length, dispatch]);
 
   useEffect(() => {
     setInvitationsList(invitations);
   }, [invitations]);
 
   const handleApproveContact = (emailToApprove) =>
-    approveContact(decodedToken.id, emailToApprove, dispatch);
+    approveContact(userEmail, emailToApprove, dispatch);
+
+  const handleRejectContact = (emailToReject) =>
+    rejectContact(userEmail, emailToReject, dispatch);
 
   return (
     <div className={classes.root}>
@@ -45,6 +46,7 @@ const InvitationsList = () => {
               email={invitation.email}
               index={index}
               handleApproveContact={handleApproveContact}
+              handleRejectContact={handleRejectContact}
             />
           ))
         ) : (

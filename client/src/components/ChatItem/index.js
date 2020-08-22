@@ -4,13 +4,12 @@ import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
 import { Typography, Chip, ListItem } from "@material-ui/core";
 
-const ChatItem = (props) => {
+const ChatItem = ({ name, messageCount }) => {
   const classes = useStyles();
-  const { name, messageCount, index } = props;
 
   return (
     <ListItem button className={classes.root}>
-      <div className={classes.avatarNameContainer} >
+      <div className={classes.avatarNameContainer}>
         <UserAvatar />
         <div className={classes.nameContainer}>
           <Typography
@@ -41,3 +40,8 @@ const ChatItem = (props) => {
 };
 
 export default memo(ChatItem);
+
+ChatItem.propTypes = {
+  name: PropTypes.string,
+  messageCount: PropTypes.number,
+};
