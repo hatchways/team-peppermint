@@ -23,7 +23,6 @@ module.exports = function () {
             });
         },
         createUser: function (userObject) {
-
             return new Promise(async (resolve, reject) => {
                 try {
                     const salt = await bcrypt.genSalt(10);
@@ -174,7 +173,32 @@ module.exports = function () {
                     }
                 }).catch((err) => reject(err));
             });
-        }
+        },
+        getConversationById: function (convID) {
+            return new Promise((resolve, reject) => {
+                Conversation.findOne({ conversationID: convID }).exec()
+                    .then(conversation => resolve(conversation))
+                    .catch((err) => reject(err));
+            })
+        },
+        createConversation: function (conversationObject) {
+            return new Promise((resolve, reject) => {
+                let newConversation = new Conversation(conversationObject);
+                newConversation.save((err) => {
+                    if (err) reject(err)
+                    else resolve("New conversation created")
+                })
+            })
+        },
+        addMessage: function (conversationID, message) {
+            return new Promise((resolve, reject) => {
+                Conversation.updateOne(
+                    { conversationID: conversationID },
+                    { $push: { messages: message } }
+                ).then(() => resolve("message added"))
+                    .catch((err) => reject(err));
+            })
+        },
 
     }
 }

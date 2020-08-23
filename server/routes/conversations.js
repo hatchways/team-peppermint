@@ -37,8 +37,9 @@ router.post("/:email/conversation/:convID/newMessage", async (req, res) => {
   let newMessage = {
     sender: req.params.email,
     date: req.body.date,
-    textVersions: req.body.textVersion
+    textVersions: req.body.textVersions
   }
+
   data.addMessage(req.params.convID, newMessage)
     .then((msg) => res.status(200).json(msg))
     .catch((err) => res.status(500).json(err))

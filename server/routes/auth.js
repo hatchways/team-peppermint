@@ -30,16 +30,13 @@ router.post('/signup', async (req, res) => {
     if(user) 
       return res.status(400).json({ msg: "An account with this email already exists."});
     
-    //Hash the pass
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
     //set default language to english if none provided
     const prefLanguage = language ? language : 'english';
     // create a new user
     const newUser = {
       name: name,
       email: email,
-      password: hashPassword,
+      password: password,
       language: prefLanguage
     };  
     data.createUser(newUser)
@@ -78,6 +75,7 @@ router.post('/login', async (req, res) => {
 
     //checking password is correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
+
     if (!validPass) return res.status(400).json({msg: 'Invalid credentials.'});
 
     //create and assign a token
@@ -164,6 +162,11 @@ router.get("/", checkAuth, async (req, res) => {
     });
   })
   .catch((err)=>res.json(err))
+})
+router.get("/:email/language", (req,res)=>{
+  data.getUserByEmail(req.params.email)
+  .then((user)=>res.status(200).json({language: user.language}))
+  .catch((err)=>res.status(400).json(err))
 })
 
 module.exports = router;
