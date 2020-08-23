@@ -11,9 +11,9 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
-import SelectContact from "../../Context/SelectContact";
+import SelectContact from "../../context/SelectContact";
 const ContactItem = ({
-  imageUrl,
+  pictureUrl,
   name,
   email,
   index,
@@ -21,16 +21,16 @@ const ContactItem = ({
   handleDeleteContactButton,
   contact,
   select,
-  selected
+  selected,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const context = useContext(SelectContact);
   const classes = useStyles();
   const onContactClick = (event) => {
-    select(event, index)
-    context.setContact(contact)
-  }
+    select(event, index);
+    context.setContact(contact);
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -40,9 +40,14 @@ const ContactItem = ({
   };
 
   return (
-    <ListItem button className={classes.root} onClick={onContactClick} selected={selected === index}>
+    <ListItem
+      button
+      className={classes.root}
+      onClick={onContactClick}
+      selected={selected === index}
+    >
       <div className={classes.avatarNameContainer}>
-        <UserAvatar imageUrl={imageUrl} isOnline={isOnline} />
+        <UserAvatar imageUrl={pictureUrl} isOnline={isOnline} />
         <Typography
           variant="body1"
           className={classes.contactName}
@@ -68,7 +73,7 @@ const ContactItem = ({
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => handleDeleteContactButton(email, index)}>
+        <MenuItem onClick={() => handleDeleteContactButton(email)}>
           Delete contact
         </MenuItem>
       </Menu>

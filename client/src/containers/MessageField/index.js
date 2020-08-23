@@ -4,7 +4,7 @@ import { TextField } from "@material-ui/core";
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
 import Axios from "axios";
-import SelectContact from "../../Context/SelectContact";
+import SelectContact from "../../context/SelectContact";
 
 const getVersion = (versions, language) => {
   return versions.find((version) => version.language === language);
@@ -133,6 +133,7 @@ const MessageField = ({ user }) => {
                   <MessageItem
                     name={msg.sender}
                     date={msg.date}
+                    avatar={user.pictureURL}
                     text={
                       msgVersion ? msgVersion.text : msg.textVersions[0].text
                     }

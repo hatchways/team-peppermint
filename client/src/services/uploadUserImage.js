@@ -1,13 +1,13 @@
 import axios from "axios";
-import { userEmailFromLocalStorage } from "../context/contacts/helper";
+import { userEmailFromLocalStorage } from "../context/contacts/contactsContext";
 
 const { uploadFile } = require("react-s3");
 
 const userEmail = userEmailFromLocalStorage();
 
-const updateUserImage = async (imageUrl) => {
+const replaceUserImage = (imageUrl) => {
   try {
-    await axios.put(`user/${userEmail}/image`, {
+    axios.put(`user/${userEmail}/image`, {
       data: {
         imageUrl,
       },
@@ -18,7 +18,7 @@ const updateUserImage = async (imageUrl) => {
 };
 
 //upload user image to AWS S3
-const uploadUserImage = (file) => {
+const uploadUserImage = async (file) => {
   const config = {
     bucketName: process.env.REACT_APP_BUCKET_NAME,
     dirName: "photos" /* optional */,
@@ -35,8 +35,8 @@ const uploadUserImage = (file) => {
     },
   });
 
-  uploadFile(file, config)
-    .then((data) => updateUserImage(data.location))
+  await uploadFile(file, config)
+    .then((data) => replaceUserImage(data.location))
     .catch((err) => console.log("ERROR ", err.message));
 };
 

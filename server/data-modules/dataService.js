@@ -170,7 +170,7 @@ module.exports = function () {
                     if (user.contacts.length > 0) {
                         resolve(user.contacts.find((contact) => contact.status === status))
                     } else {
-                        resolve(user.contacts);
+                        resolve([]);
                     }
                 }).catch((err) => reject(err));
             });

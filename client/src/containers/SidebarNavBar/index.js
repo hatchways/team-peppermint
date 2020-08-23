@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   ButtonBase,
@@ -12,17 +12,22 @@ import { MoreHoriz } from "@material-ui/icons";
 import UserAvatar from "../../components/UserAvatar/index";
 import uploadUserImage from "../../services/uploadUserImage";
 import { NavLink } from "react-router-dom";
-import UserContext from "../../Context/UserContext";
+import {
+  useUserState,
+  useUserDispatch,
+  fetchUserData,
+} from "../../context/user/userContext";
 
 const isOnline = localStorage.getItem("auth-token");
 
 const SidebarNavBar = () => {
-  const { userData } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [userData, setUserData] = useState({});
   const classes = useStyles();
 
-  let userInfo = { ...userData.user };
+  const { user } = useUserState();
+  const dispatch = useUserDispatch();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -32,22 +37,27 @@ const SidebarNavBar = () => {
     setAnchorEl(null);
   };
 
-  const handleSave = (files) => {
-    uploadUserImage(files[0]);
+  const handleSave = async (files) => {
+    await uploadUserImage(files[0]);
     setAnchorEl(null);
     setOpen(false);
+    fetchUserData(dispatch);
   };
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
     setAnchorEl(null);
   };
 
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
+
   return (
     <div className={classes.root}>
       <div className={classes.leftRightSideStyle}>
-        <UserAvatar isOnline={!!isOnline} imageUrl={userInfo.pictureURL} />
+        <UserAvatar isOnline={!!isOnline} imageUrl={userData.pictureURL} />
         <Typography variant="body2" className={classes.typography}>
-          {userInfo.name}
+          {userData.name}
         </Typography>
       </div>
       <div className={classes.leftRightSideStyle}>

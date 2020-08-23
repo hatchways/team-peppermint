@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Axios from "axios";
 
 import { theme } from "./themes/theme";
 import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
-import { ContactsProvider } from "./context/contacts/contactsContext";
+import { useUserDispatch, fetchUserData } from "./context/user/userContext";
 import MainPage from "./containers/MainPage";
-import UserContext from "./Context/UserContext";
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
 
@@ -15,10 +14,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 function App() {
-  const [userData, setUserData] = useState({
-    token: null,
-    user: null,
-  });
+  const dispatch = useUserDispatch();
+
   useEffect(() => {
     const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
@@ -36,13 +33,14 @@ function App() {
         }
       );
       if (tokenRes.data) {
-        const userRes = await Axios.get("http://localhost:3001/api/user/", {
-          headers: { "x-auth-token": token },
-        });
-        setUserData({
-          token,
-          user: userRes.data,
-        });
+        // const userRes = await Axios.get("http://localhost:3001/api/user/", {
+        //   headers: { "x-auth-token": token },
+        // });
+        // setUserData({
+        //   token,
+        //   user: userRes.data,
+        // });
+        fetchUserData(dispatch);
       }
     };
     // const checkLoggedIn = async () => {
@@ -60,18 +58,14 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <Router>
-        <UserContext.Provider value={{ userData, setUserData }}>
-          <ContactsProvider>
-            <CssBaseline />
-            <Container maxWidth="lg" style={{ margin: "auto" }}>
-              <Switch>
-                <Route exact path="/" component={MainPage} />
-                <Route path="/login" component={LoginPage} />
-                <Route path="/signup" component={SignupPage} />
-              </Switch>
-            </Container>
-          </ContactsProvider>
-        </UserContext.Provider>
+        <CssBaseline />
+        <Container maxWidth="lg" style={{ margin: "auto" }}>
+          <Switch>
+            <Route exact path="/" component={MainPage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/signup" component={SignupPage} />
+          </Switch>
+        </Container>
       </Router>
     </MuiThemeProvider>
   );

@@ -39,8 +39,8 @@ const ContactsList = () => {
     setContactsList(contacts);
   }, [contacts]);
 
-  const handleDeleteContactButton = (email, index) => {
-    deleteContact(userEmail, email, index, dispatch);
+  const handleDeleteContactButton = (email) => {
+    deleteContact(userEmail, email, dispatch);
   };
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const handleListItemClick = (event, index) => {
@@ -73,7 +73,7 @@ const ContactsList = () => {
               key={index}
               name={contact.name}
               email={contact.email}
-              imageUrl={""}
+              pictureUrl={contact.pictureUrl}
               isOnline={true}
               index={index}
               handleDeleteContactButton={handleDeleteContactButton}

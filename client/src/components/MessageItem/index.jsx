@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useStyles } from "./style";
 import { Typography, Avatar } from "@material-ui/core";
-import defaultAvatar from "../UserAvatar/default.png";
+
 const MessageItem = (props) => {
   const classes = useStyles();
   const { name, date, avatar, text, myMessage } = props;
@@ -10,7 +10,7 @@ const MessageItem = (props) => {
     <div className={classes.root}>
       <div className={`${classes.messageView} ${myMessage ? "my" : "other"}`}>
         {!myMessage && (
-          <Avatar variant="circle" alt="Remy Sharp" src={defaultAvatar} />
+          <Avatar variant="circle" alt="Remy Sharp" src={avatar} />
         )}
         <div className={classes.messageInfo}>
           <Typography

@@ -23,7 +23,7 @@ router.get("/:email/contacts", async (req, res) => {
       return {
         email: contact.email,
         name: usersByEmail[index].name,
-        pictureUrl: usersByEmail[index].pictureUrl,
+        pictureUrl: usersByEmail[index].pictureURL,
       };
     });
 
@@ -40,7 +40,7 @@ router.delete("/:email/contacts", async (req, res) => {
     const contacts = await data.deleteContact(
       req.body.userEmail,
       req.params.email
-    );    
+    );
     //response with contacts
     res.status(200).json(contacts);
   } catch (err) {
@@ -54,8 +54,8 @@ router.put("/:email/image", async (req, res) => {
     const msg = await data.updateUserImage(
       req.params.email,
       req.body.data.imageUrl
-    );   
-    
+    );
+
     //response with contacts
     res.status(200).json(msg);
   } catch (err) {

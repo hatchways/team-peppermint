@@ -19,8 +19,7 @@ export const fetchContactsAndInvitations = async (email, dispatch) => {
 
 export const deleteContact = async (
   userEmail,
-  emailToDelete,
-  index,
+  emailToDelete,  
   dispatch
 ) => {
   const contacts = await axios.delete(`user/${emailToDelete}/contacts`, {
@@ -65,10 +64,11 @@ export const rejectContact = async (userEmail, emailToReject, dispatch) => {
     throw Error("Sorry something went wrong ", err.message);
   }
 };
-
-export const userEmailFromLocalStorage = (params) => {
+export const userEmailFromLocalStorage = () => {
   const userToken = localStorage.getItem("auth-token");
-  const decodedToken = jwtDecode(userToken);
-
+  let decodedToken = "Sorry no email found";
+  if (userToken) {
+    decodedToken = jwtDecode(userToken);
+  }
   return decodedToken.id;
 };
