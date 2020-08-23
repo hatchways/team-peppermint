@@ -11,17 +11,25 @@ import {
   deleteContact,
   userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
+import axios from "axios";
+import isEmail from "validator/lib/isEmail";
 
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const classes = useStyles();
 
   const [inviteDialog, showInviteDialog] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertError, setAlertError] = useState(null);
+
   const openInviteDialog = () => {
     showInviteDialog(true);
+    setAlertError(null);
   };
   const closeInviteDialog = () => {
     showInviteDialog(false);
+    setAlertError(null);
   };
 
   const dispatch = useContactsDispatch();
@@ -42,9 +50,38 @@ const ContactsList = () => {
   const handleDeleteContactButton = (email) => {
     deleteContact(userEmail, email, dispatch);
   };
-  const [selectedIndex, setSelectedIndex] = React.useState(-1);
+
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
+  };
+
+  const handleSendEmail = async (email) => {
+    const isEmailValid = isEmail(email);
+    if (!isEmailValid) {
+      setIsAlertOpen(true);
+      setAlertError("Email is not valid. Please verify it is correct.");
+      setTimeout(() => {
+        setIsAlertOpen(false);
+      }, 3000);
+      return;
+    }
+    try {
+      let res = "";
+      if (isEmailValid) {
+        setAlertError(null);
+        res = await axios.post(`/mail/${email}/sendMail`);
+      }
+      res.data && setIsAlertOpen(true);
+      setTimeout(() => {
+        showInviteDialog(false);
+        setIsAlertOpen(false);
+      }, 30000000);
+    } catch (err) {
+      setAlertError(err.message);
+      setTimeout(() => {
+        setIsAlertOpen(false);
+      }, 3000);
+    }
   };
 
   return (
@@ -65,7 +102,13 @@ const ContactsList = () => {
           </Typography>
         </div>
       </ButtonBase>
-      <InvitationDialog open={inviteDialog} onClose={closeInviteDialog} />
+      <InvitationDialog
+        open={inviteDialog}
+        isAlertOpen={isAlertOpen}
+        alertError={alertError}
+        onClose={closeInviteDialog}
+        handleSendEmail={handleSendEmail}
+      />
       <List className={classes.root}>
         {!!contactsList.length ? (
           contactsList.map((contact, index) => (

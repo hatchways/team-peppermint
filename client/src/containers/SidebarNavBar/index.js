@@ -37,8 +37,8 @@ const SidebarNavBar = () => {
     setAnchorEl(null);
   };
 
-  const handleSave = async (files) => {
-    await uploadUserImage(files[0]);
+  const handleSave = async (files) => {    
+    await uploadUserImage(files[0], userData.pictureURL);
     setAnchorEl(null);
     setOpen(false);
     fetchUserData(dispatch);

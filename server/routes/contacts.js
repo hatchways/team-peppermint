@@ -53,9 +53,8 @@ router.put("/:email/image", async (req, res) => {
     //find user's contacts by user email
     const msg = await data.updateUserImage(
       req.params.email,
-      req.body.data.imageUrl
-    );
-
+      req.body.data.newImageUrl
+    );    
     //response with contacts
     res.status(200).json(msg);
   } catch (err) {
