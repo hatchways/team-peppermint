@@ -22,16 +22,22 @@ const InvitationDialog = ({
   alertError,
   onClose,
   handleSendEmail,
+  userId,
 }) => {
   const [email, setEmail] = useState("");
 
-  const [linkToCopy, setlinkToCopy] = useState("share.link");
+  const [linkToCopy, setlinkToCopy] = useState(
+    `localhost:3000/signup?referrer=${userId}`
+  );
   const [copied, setCopied] = useState(false);
   return (
     <Dialog
       fullWidth={true}
       open={open}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        setCopied(false);
+      }}
       aria-labelledby="invitation-dialog-title"
     >
       <DialogContent
@@ -70,9 +76,19 @@ const InvitationDialog = ({
                   text={linkToCopy}
                   onCopy={() => setCopied(true)}
                 >
-                  <Button variant="contained" color="primary">
-                    Copy
-                  </Button>
+                  {copied ? (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      style={{ backgroundColor: "green" }}
+                    >
+                      Copied
+                    </Button>
+                  ) : (
+                    <Button variant="contained" color="primary">
+                      Copy
+                    </Button>
+                  )}
                 </CopyToClipboard>
               </InputAdornment>
             ),
@@ -105,7 +121,7 @@ export default InvitationDialog;
 InvitationDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   isAlertOpen: PropTypes.bool,
-  alertError: PropTypes.oneOfType([PropTypes.string, PropTypes.number,]),
+  alertError: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onClose: PropTypes.func.isRequired,
   handleSendEmail: PropTypes.func.isRequired,
 };

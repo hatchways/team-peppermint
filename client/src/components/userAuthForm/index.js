@@ -8,11 +8,26 @@ import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
+import { Redirect } from "react-router-dom";
+
 import { useUserDispatch, setUserData } from "../../context/user/userContext";
 
 import { useHistory } from "react-router";
 
 import Axios from "axios";
+
+import {
+  userEmailFromLocalStorage,
+  createInvitation,
+  findInvitationByContactId,
+} from "../../context/contacts/contactsContext";
+
+const userEmail = userEmailFromLocalStorage();
+
+const parseUrl = require("parse-url");
+
+const pageUrl = window.location.href;
+const referrer = parseUrl(pageUrl).search.split("=")[1];
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -70,6 +85,16 @@ export default function UserAuthForm({ headerText }) {
   const [nameHelperText, setNameHelperText] = useState("");
   const [emailHelperText, setEmailHelperText] = useState("");
   const [passwordHelperText, setPasswordHelperText] = useState("");
+
+  // if user logged in and gets invitation link with referrer then invitaions created automatically for both sides
+  const foundInvitation = findInvitationByContactId(userEmail, referrer);
+  if (userEmail && referrer && !foundInvitation.email) {
+    createInvitation(userEmail, referrer);
+    history.push("/");
+  }
+  if (userEmail && referrer && foundInvitation.email) {
+    history.push("/");
+  }
 
   function validateInput(name, email, password) {
     // true means invalid, so our conditions got reversed
@@ -179,6 +204,7 @@ export default function UserAuthForm({ headerText }) {
             email: email,
             password: password,
             language: language,
+            referrer: referrer,
           };
           await Axios.post("http://localhost:3001/api/user/signup", newUser);
           const loginRes = await Axios.post(
@@ -292,7 +318,7 @@ export default function UserAuthForm({ headerText }) {
               <MenuItem value="chinese">Chinese (Mandarin)</MenuItem>
               <MenuItem value="spanish">Spanish</MenuItem>
               <MenuItem value="french">French</MenuItem>
-              <MenuItem value="russian">Russian</MenuItem>              
+              <MenuItem value="russian">Russian</MenuItem>
             </Select>
           </>
         ) : null}

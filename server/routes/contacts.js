@@ -19,17 +19,22 @@ router.get("/:email/contacts", async (req, res) => {
     const approvedContacts = contacts.filter((contact) => contact.status === 1);
 
     // create contacts list
-    const contactsList = approvedContacts.map((contact, index) => {
-      return {
-        email: contact.email,
-        name: usersByEmail[index].name,
-        pictureUrl: usersByEmail[index].pictureURL,
-      };
-    });
+    let contactsList = [];
+
+    if (approvedContacts.length) {
+      contactsList = approvedContacts.map((contact, index) => {
+        return {
+          email: contact.email,
+          name: usersByEmail[index].name,
+          pictureUrl: usersByEmail[index].pictureURL,
+        };
+      });
+    }
 
     //response with contacts and invitations lists
     res.status(200).json({ invitationsList, contactsList });
   } catch (err) {
+    console.log("ERROR FETCHING CONTACTS ", err.message);
     res.status(400).json(err);
   }
 });
@@ -54,7 +59,7 @@ router.put("/:email/image", async (req, res) => {
     const msg = await data.updateUserImage(
       req.params.email,
       req.body.data.newImageUrl
-    );    
+    );
     //response with contacts
     res.status(200).json(msg);
   } catch (err) {

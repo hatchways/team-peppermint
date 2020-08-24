@@ -7,6 +7,8 @@ import {
   approveContact,
   rejectContact,
   userEmailFromLocalStorage,
+  createInvitation,
+  findInvitationByContactId,
 } from "./helper";
 
 const ContactsStateContext = React.createContext();
@@ -58,4 +60,6 @@ export {
   approveContact,
   rejectContact,
   userEmailFromLocalStorage,
+  createInvitation,
+  findInvitationByContactId,
 };

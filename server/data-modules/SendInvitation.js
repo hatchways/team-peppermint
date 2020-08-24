@@ -3,7 +3,6 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SG_API_KEY);
 
 const sendMail = (receiver) => {
-  console.log("SENDING EMAIL...");
   const mailGenerator = new MailGen({
     theme: "salted",
     product: {

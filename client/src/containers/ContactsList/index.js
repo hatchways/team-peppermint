@@ -11,6 +11,7 @@ import {
   deleteContact,
   userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
+import { useUserState } from "../../context/user/userContext";
 import axios from "axios";
 import isEmail from "validator/lib/isEmail";
 
@@ -34,6 +35,7 @@ const ContactsList = () => {
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
+  const { user } = useUserState();
 
   const userEmail = userEmailFromLocalStorage();
 
@@ -105,7 +107,8 @@ const ContactsList = () => {
       <InvitationDialog
         open={inviteDialog}
         isAlertOpen={isAlertOpen}
-        alertError={alertError}
+        alertError={alertError}        
+        userId={user.id}
         onClose={closeInviteDialog}
         handleSendEmail={handleSendEmail}
       />

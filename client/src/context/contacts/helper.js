@@ -17,11 +17,7 @@ export const fetchContactsAndInvitations = async (email, dispatch) => {
   });
 };
 
-export const deleteContact = async (
-  userEmail,
-  emailToDelete,  
-  dispatch
-) => {
+export const deleteContact = async (userEmail, emailToDelete, dispatch) => {
   const contacts = await axios.delete(`user/${emailToDelete}/contacts`, {
     data: {
       userEmail,
@@ -64,6 +60,28 @@ export const rejectContact = async (userEmail, emailToReject, dispatch) => {
     throw Error("Sorry something went wrong ", err.message);
   }
 };
+
+export const createInvitation = async (userEmail, referrer) => {
+  try {
+    await axios.post(`user/${userEmail}/invite`, {
+      referrer,
+    });
+  } catch (err) {
+    throw Error("Sorry something went wrong ", err.message);
+  }
+};
+
+export const findInvitationByContactId = async (userEmail, referrer) => {
+  try {    
+    const res = await axios.post(`user/${userEmail}/invitationByContactId`,{
+      referrer,
+    });    
+    return res.data;
+  } catch (err) {    
+    return null
+  }
+};
+
 export const userEmailFromLocalStorage = () => {
   const userToken = localStorage.getItem("auth-token");
   let decodedToken = "Sorry no email found";
