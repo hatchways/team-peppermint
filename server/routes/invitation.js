@@ -3,36 +3,63 @@ const data = require("../data-modules/dataService")();
 
 //contacts route
 router.post("/:email/invite", async (req, res) => {
-  const userData = await data.getUserById(req.body.referrer);
-  console.log("FOUND USER BY REFERRER ", userData);
-  data
-    .addContact(req.params.email, userData.email)
-    .then(() => {
-      res.status(200).json("contact added");
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
+  try {
+    //find the user, who sent invitation, by id
+    const userData = await data.getUserById(req.body.referrer);
+    const pendingInvitationByContactEmail = await data.getInvitationByContactEmail(
+      req.params.email,
+      userData.email,
+      0
+    );
+    if (
+      pendingInvitationByContactEmail !== undefined &&
+      "email" in pendingInvitationByContactEmail
+    ) {
+      res.status(200).json(pendingInvitationByContactEmail);
+    }
+
+    const approvedInvitationByContactEmail = await data.getInvitationByContactEmail(
+      req.params.email,
+      userData.email,
+      1
+    );
+
+    if (
+      approvedInvitationByContactEmail !== undefined &&
+      "email" in approvedInvitationByContactEmail
+    ) {
+      res.status(200).json(approvedInvitationByContactEmail);
+    }
+
+    const rejectedContactFoundByContactEmail = await data.getInvitationByContactEmail(
+      req.params.email,
+      userData.email,
+      2
+    );
+
+    if (rejectedContactFoundByContactEmail !== undefined) {
+      await data.deleteContact(req.params.email, userData.email);
+      await data.deleteContact(userData.email, req.params.email);
+    }
+    approvedInvitationByContactEmail === undefined &&
+      pendingInvitationByContactEmail === undefined &&
+      data
+        .addContact(req.params.email, userData.email)
+        .then(() => {
+          res.status(200).json("contact added");
+        })
+        .catch((err) => {
+          res.status(400).json(err);
+        });
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
 });
 router.get("/:email/invitations", (req, res) => {
   data
     .getContactsByStatus(req.params.email, 0)
     .then((contacts) => {
       res.status(200).json(contacts);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
-});
-router.post("/:email/invitationByContactId", async (req, res) => {
-  const userData = await data.getUserById(req.body.referrer);
-
-  !userData.email && res.status(404).json(null);
-
-  data
-    .getInvitationByContactEmail(req.params.email, userData.email, 0)
-    .then((contact) => {
-      res.status(200).json(contact);
     })
     .catch((err) => {
       res.status(400).json(err);

@@ -62,23 +62,26 @@ export const rejectContact = async (userEmail, emailToReject, dispatch) => {
 };
 
 export const createInvitation = async (userEmail, referrer) => {
+  console.log("SENDING CREATE INVITE REQUEST...", userEmail, referrer);
   try {
-    await axios.post(`user/${userEmail}/invite`, {
+    const res = await axios.post(`user/${userEmail}/invite`, {
       referrer,
     });
+    console.log("REPLY FROM BACKEND INVITATION...", res.data);
+    return res.data;
   } catch (err) {
     throw Error("Sorry something went wrong ", err.message);
   }
 };
 
 export const findInvitationByContactId = async (userEmail, referrer) => {
-  try {    
-    const res = await axios.post(`user/${userEmail}/invitationByContactId`,{
+  try {
+    const res = await axios.post(`user/${userEmail}/invitationByContactId`, {
       referrer,
-    });    
+    });
     return res.data;
-  } catch (err) {    
-    return null
+  } catch (err) {
+    return null;
   }
 };
 

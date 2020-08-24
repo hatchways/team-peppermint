@@ -220,7 +220,7 @@ module.exports = function () {
           .then((user) => {
             if (user.contacts.length > 0) {
               resolve(
-                user.contacts.find((contact) => contact.status === status)
+                user.contacts.filter((contact) => contact.status === status)
               );
             } else {
               resolve([]);
@@ -241,7 +241,7 @@ module.exports = function () {
                 )
               );
             } else {
-              resolve([]);
+              resolve({});
             }
           })
           .catch((err) => reject(err));

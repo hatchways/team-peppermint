@@ -2,7 +2,7 @@ const MailGen = require("mailgen");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SG_API_KEY);
 
-const sendMail = (receiver) => {
+const sendMail = (receiver, referrer) => {
   const mailGenerator = new MailGen({
     theme: "salted",
     product: {
@@ -20,7 +20,7 @@ const sendMail = (receiver) => {
         button: {
           color: "#33b5e5",
           text: "Create an account",
-          link: "http://localhost:3000/signup",
+          link: `http://localhost:3000/signup?referrer=${referrer}`,
         },
       },
     },

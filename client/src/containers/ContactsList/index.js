@@ -71,13 +71,15 @@ const ContactsList = () => {
       let res = "";
       if (isEmailValid) {
         setAlertError(null);
-        res = await axios.post(`/mail/${email}/sendMail`);
+        res = await axios.post(`/mail/${email}/sendMail`, {
+          referrer: user.id,
+        });
       }
       res.data && setIsAlertOpen(true);
       setTimeout(() => {
         showInviteDialog(false);
         setIsAlertOpen(false);
-      }, 30000000);
+      }, 3000);
     } catch (err) {
       setAlertError(err.message);
       setTimeout(() => {
@@ -107,7 +109,7 @@ const ContactsList = () => {
       <InvitationDialog
         open={inviteDialog}
         isAlertOpen={isAlertOpen}
-        alertError={alertError}        
+        alertError={alertError}
         userId={user.id}
         onClose={closeInviteDialog}
         handleSendEmail={handleSendEmail}

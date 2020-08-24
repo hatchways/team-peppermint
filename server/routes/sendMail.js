@@ -4,9 +4,9 @@ const { sendMail } = require("../data-modules/SendInvitation");
 
 //contacts route
 router.post("/:email/sendMail", async (req, res) => {
-  console.log('RECEIVED MAIL REQUEST ', req.params.email)
+  console.log("RECEIVED MAIL REQUEST ", req.params.email, req.body.referrer);
   try {
-    const sent = await sendMail(req.params.email);
+    const sent = await sendMail(req.params.email, req.body.referrer);
     if (sent) {
       res.send({ message: "email sent successfully" });
     }

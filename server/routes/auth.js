@@ -20,7 +20,6 @@ const UserSchema = require("../models/userSchema");
 router.post("/signup", async (req, res) => {
   try {
     let { name, email, password, language, referrer } = req.body;
-
     if (!name || !email || !password)
       return res
         .status(400)
@@ -61,7 +60,7 @@ router.post("/signup", async (req, res) => {
         });
         if (referrer) {
           // Data of the user who sent a referral link
-          const userData = await data.getUserById(referrer);
+          const userData = await data.getUserById(referrer);          
           await data.addContact(user.email, userData.email);
         }
         newUser._id = user._id;
