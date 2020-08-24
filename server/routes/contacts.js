@@ -1,7 +1,21 @@
 const router = require("express").Router();
 const data = require("../data-modules/dataService")();
+// const sortByEmail = require("../helper/sortByEmail");
 
 router.get("/:email/contacts", async (req, res) => {
+  const sortByEmail = (a, b) => {
+    let emailA = a.email.toLowerCase(); // ignore upper and lowercase
+    let emailB = b.email.toLowerCase(); // ignore upper and lowercase
+    if (emailA < emailB) {
+      return -1;
+    }
+    if (emailA > emailB) {
+      return 1;
+    }
+    // names must be equal
+    return 0;
+  };
+
   try {
     //find user's contacts by user email
     const contacts = await data.getContacts(req.params.email);
@@ -11,21 +25,27 @@ router.get("/:email/contacts", async (req, res) => {
 
     // find users by their email
     const usersByEmail = await data.getUsers(contactsEmails);
+    const sortUsersByEmail = usersByEmail.sort((a, b) => sortByEmail(a, b));
 
     // find all contacts with pending status
-    const invitationsList = contacts.filter((contact) => contact.status === 0);
+    const invitationsList = await data.getContactsByStatus(req.params.email, 0);
 
     // select approved contacts with status === 1
-    const approvedContacts = contacts.filter((contact) => contact.status === 1);
+    const approvedContacts = await data.getContactsByStatus(
+      req.params.email,
+      1
+    );
 
     // create contacts list
-    const contactsList = approvedContacts.map((contact, index) => {
-      return {
-        email: contact.email,
-        name: usersByEmail[index].name,
-        pictureUrl: usersByEmail[index].pictureURL,
-      };
-    });
+    const contactsList = approvedContacts
+      .sort((a, b) => sortByEmail(a, b))
+      .map((contact, index) => {
+        return {
+          email: contact.email,
+          name: sortUsersByEmail[index].name,
+          pictureUrl: sortUsersByEmail[index].pictureURL,
+        };
+      });
 
     //response with contacts and invitations lists
     res.status(200).json({ invitationsList, contactsList });

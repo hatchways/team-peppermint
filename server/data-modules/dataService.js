@@ -167,7 +167,7 @@ module.exports = function () {
             return new Promise((resolve, reject) => {
                 this.getUserByEmail(email).then((user) => {
                     if (user.contacts.length > 0) {
-                        resolve(user.contacts.find((contact) => contact.status === status))
+                        resolve(user.contacts.filter((contact) => contact.status === status))
                     } else {
                         resolve([]);
                     }
