@@ -11,6 +11,11 @@ export const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
     width: "100%",
     borderRadius: theme.spacing(1),
-    backgroundColor: "transparent",   
-  }  
+    backgroundColor: "transparent",
+  },
+  typography: {
+    fontSize: theme.spacing(2),
+    marginBottom: 0,
+    fontWeight: 600,
+  },
 }));

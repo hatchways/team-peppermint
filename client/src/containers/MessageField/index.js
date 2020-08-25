@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext, memo } from "react";
 import { useStyles } from "./style";
-import { Grid, TextField } from "@material-ui/core"
+import { TextField } from "@material-ui/core";
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
 import Axios from 'axios';
-import SelectContact from "../../Context/SelectContact"
-import { translateText } from "../../Context/messages/helper"
+import SelectContact from "../../context/SelectContact"
+import { translateText } from "../../context/messages/helper"
 import ISO6391 from 'iso-639-1';
 
 const getVersion = (versions, language) => {
   return versions.find((version) => version.language === language);
-}
+};
 
 const MessageField = ({ user }) => {
   let currentTime, msgVersion, convo;
@@ -74,9 +74,9 @@ const MessageField = ({ user }) => {
   }
   useEffect(() => {
     scrollToBottom();
-  }, [messages])
+  }, [messages]);
   useEffect(() => {
-    setRoom([user.email, context.contact.email].sort().join('-'));
+    setRoom([user.email, context.contact.email].sort().join("-"));
     setMessages([]);
     Axios.get(`/api/user/${context.contact.email}/language`)
       .then((response) => setContactLanguage(response.data.language))
@@ -92,7 +92,7 @@ const MessageField = ({ user }) => {
       if (error) alert(error);
     });
     return () => {
-      socket.emit('disconnect');
+      socket.emit("disconnect");
       socket.off();
     }
   }, [room])
@@ -107,6 +107,7 @@ const MessageField = ({ user }) => {
                 <MessageItem
                   name={msg.sender}
                   date={msg.date}
+                  avatar={user.pictureURL}
                   text={msgVersion ? msgVersion.text : msg.textVersions[0].text}
                   myMessage={msg.sender === user.email} />
               </div>)
@@ -121,14 +122,13 @@ const MessageField = ({ user }) => {
         placeholder="message..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        onKeyPress={e => (e.key === 'Enter' ? sendMessage(e) : null)}
-        autoComplete='off'
+        onKeyPress={(e) => (e.key === "Enter" ? sendMessage(e) : null)}
+        autoComplete="off"
         fullWidth
         disabled={Object.keys(context.contact).length === 0}
       />
     </div>
   );
-
 };
 
-export default MessageField;
+export default memo(MessageField);

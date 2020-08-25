@@ -1,8 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useStyles } from "./style";
 import ChatItem from "../../components/ChatItem";
-import List from '@material-ui/core/List';
+import List from "@material-ui/core/List";
 
 const ChatList = () => {
   const classes = useStyles();
@@ -59,7 +58,6 @@ const ChatList = () => {
             key={index}
             name={chat.name}
             messageCount={chat.messageCount}
-            index={index}
           />
         ))}
     </List>

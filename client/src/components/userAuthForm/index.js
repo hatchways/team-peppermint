@@ -1,7 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Redirect } from "react-router-dom";
-
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -10,11 +8,11 @@ import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 
+import { useUserDispatch, setUserData } from "../../context/user/userContext";
+
 import { useHistory } from "react-router";
 
 import Axios from "axios";
-
-import UserContext from "../../Context/UserContext";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -22,7 +20,6 @@ function Alert(props) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-
     display: "flex",
     flexDirection: "Column",
     marginTop: "40px",
@@ -62,7 +59,7 @@ export default function UserAuthForm({ headerText }) {
   const [error, setError] = useState();
   let validEmail, validPassword, validName;
 
-  const { setUserData } = useContext(UserContext);
+  const dispatch = useUserDispatch();
   const history = useHistory();
 
   const [touched, setTouched] = useState({
@@ -140,7 +137,6 @@ export default function UserAuthForm({ headerText }) {
 
   function isFormValid() {
     //check individual
-    //check individual
     validEmail = validateEmail(email);
     validPassword = validatePass(password);
 
@@ -192,10 +188,7 @@ export default function UserAuthForm({ headerText }) {
               password,
             }
           );
-          setUserData({
-            token: loginRes.data.token,
-            user: loginRes.data.user,
-          });
+          setUserData(loginRes.data.token, loginRes.data.user, dispatch);
           localStorage.setItem("auth-token", loginRes.data.token);
           resetInputs();
           history.push("/");
@@ -212,10 +205,7 @@ export default function UserAuthForm({ headerText }) {
             "http://localhost:3001/api/user/login",
             user
           );
-          setUserData({
-            token: loginRes.data.token,
-            user: loginRes.data.user,
-          });
+          setUserData(loginRes.data.token, loginRes.data.user, dispatch);
           localStorage.setItem("auth-token", loginRes.data.token);
           resetInputs();
           history.push("/");
@@ -306,7 +296,6 @@ export default function UserAuthForm({ headerText }) {
             </Select>
           </>
         ) : null}
-
 
         <Button
           variant="contained"

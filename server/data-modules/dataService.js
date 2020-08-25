@@ -44,6 +44,17 @@ module.exports = function () {
                 });
             });
         },
+        getUsers: function(emails){
+            return new Promise((resolve, reject)=>{
+                User.find({
+                    email: {$in : emails}
+                }).exec()
+                .then((users)=>{
+                    resolve(users);
+                })
+                .catch((err)=>reject(err))
+            })
+        },
         deleteByEmail: function (userEmail) {
             return new Promise((resolve, reject) => {
                 User.deleteOne({ email: userEmail }).exec().then(() => {
@@ -63,6 +74,16 @@ module.exports = function () {
                     reject(err);
                 });
             });
+        },
+        updateUserImage: function (email, imageURL) {
+            return new Promise((resolve, reject) => {
+                User.updateOne({
+                    email: email
+                },
+                    { $set: { pictureURL: imageURL } }
+                ).exec().then(()=>resolve("image updated"))
+                .catch((err)=>reject(err))
+            })
         },
         getConversations: function (userEmail) {
             return new Promise((resolve, reject) => {
@@ -126,11 +147,11 @@ module.exports = function () {
                     .catch((err) => reject(err))
             })
         },
-        respondToInvite: function (email, emailToAprove, status) {
+        respondToInvite: function (email, emailToApprove, status) {
             return new Promise((resolve, reject) => {
                 User.updateOne({
                     email: email,
-                    "contacts.email": emailToAprove
+                    "contacts.email": emailToApprove
                 },
                     {
                         $set: {
@@ -138,7 +159,7 @@ module.exports = function () {
                         }
                     }
                 ).exec()
-                    .then(() => resolve(`${emailToAprove}'s status changed`))
+                    .then(() => resolve(`${emailToApprove}'s status changed`))
                     .catch((err) => reject(err))
             })
         },
@@ -146,9 +167,9 @@ module.exports = function () {
             return new Promise((resolve, reject) => {
                 this.getUserByEmail(email).then((user) => {
                     if (user.contacts.length > 0) {
-                        resolve(user.contacts.find((contact) => contact.status === status))
+                        resolve(user.contacts.filter((contact) => contact.status === status))
                     } else {
-                        resolve(user.contacts);
+                        resolve([]);
                     }
                 }).catch((err) => reject(err));
             });

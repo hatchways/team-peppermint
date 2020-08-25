@@ -2,22 +2,18 @@ import React from "react";
 import { useStyles } from "./style";
 import MainContentFieldNavBar from "../MainContentFieldNavBar";
 import MessageField from "../MessageField";
-import UserContext from "../../Context/UserContext";
+import { useUserState } from "../../context/user/userContext";
+
 const MainContentField = () => {
+  const { user } = useUserState();
+
   const classes = useStyles();
 
   return (
-
     <section className={classes.root}>
-      <MainContentFieldNavBar />
-      <UserContext.Consumer>
-        {value => (
-          !!value.userData.user &&
-          <MessageField user={value.userData.user} />
-        )}
-      </UserContext.Consumer>
+      <MainContentFieldNavBar />      
+      {!!user && <MessageField user={user} />}
     </section>
-
   );
 };
 

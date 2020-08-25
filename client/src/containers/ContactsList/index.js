@@ -1,24 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
-import { List, Typography, Button } from "@material-ui/core";
+import { List, Typography, ButtonBase } from "@material-ui/core";
 import ContactItem from "../../components/ContactItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
   useContactsDispatch,
   useContactsState,
-  fetchContacts,
+  fetchContactsAndInvitations,
   deleteContact,
-} from "../../Context/contacts/contactsContext";
-
-const jwt_decode = require("jwt-decode");
+  userEmailFromLocalStorage,
+} from "../../context/contacts/contactsContext";
 
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
   const classes = useStyles();
 
-  const [inviteDiaolog, showInviteDialog] = useState(false);
+  const [inviteDialog, showInviteDialog] = useState(false);
   const openInviteDialog = () => {
     showInviteDialog(true);
   };
@@ -28,48 +26,55 @@ const ContactsList = () => {
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
-  const userToken = localStorage.getItem("auth-token");
-  const decodedToken = jwt_decode(userToken);
+
+  const userEmail = userEmailFromLocalStorage();
 
   useEffect(() => {
-    decodedToken && fetchContacts(decodedToken.id, dispatch);
-  }, []);
+    userEmail &&
+      !contactsList.length &&
+      fetchContactsAndInvitations(userEmail, dispatch);
+  }, [userEmail, contactsList.length, dispatch]);
 
   useEffect(() => {
     setContactsList(contacts);
   }, [contacts]);
 
-  const handleDeleteContactButton = (email, index) => {
-    deleteContact(email, index, dispatch);
+  const handleDeleteContactButton = (email) => {
+    deleteContact(userEmail, email, dispatch);
   };
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
 
-
   return (
     <>
-      <div className={classes.inviteFriendsContainer}>
-        <AddIcon color="primary" />
-        <Typography
-          variant="body2"
-          color="primary"
-          className={classes.typography}
-          gutterBottom
-        >
-          <Button onClick={() => openInviteDialog()}>Invite Friends</Button>
-          <InvitationDialog open={inviteDiaolog} onClose={closeInviteDialog} />
-        </Typography>
-      </div>
+      <ButtonBase
+        onClick={() => openInviteDialog()}
+        style={{ marginBottom: 10 }}
+      >
+        <div className={classes.inviteFriendsContainer}>
+          <AddIcon color="primary" />
+          <Typography
+            variant="body2"
+            color="primary"
+            className={classes.typography}
+            gutterBottom
+          >
+            Invite Friends
+          </Typography>
+        </div>
+      </ButtonBase>
+      <InvitationDialog open={inviteDialog} onClose={closeInviteDialog} />
       <List className={classes.root}>
         {!!contactsList.length ? (
           contactsList.map((contact, index) => (
             <ContactItem
               key={index}
-              name={contact.email}
-              imageUrl={contact.imageUrl}
-              isOnline={contact.isOnline}
+              name={contact.name}
+              email={contact.email}
+              pictureUrl={contact.pictureUrl}
+              isOnline={true}
               index={index}
               handleDeleteContactButton={handleDeleteContactButton}
               contact={contact}
@@ -78,15 +83,15 @@ const ContactsList = () => {
             />
           ))
         ) : (
-            <Typography
-              variant="body1"
-              color="primary"
-              gutterBottom
-              style={{ color: "black", textAlign: "center" }}
-            >
-              No contacts
-            </Typography>
-          )}
+          <Typography
+            variant="body1"
+            color="primary"
+            gutterBottom
+            style={{ color: "black", textAlign: "center" }}
+          >
+            No contacts
+          </Typography>
+        )}
       </List>
     </>
   );
