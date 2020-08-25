@@ -23,13 +23,14 @@ const InvitationDialog = ({
   onClose,
   handleSendEmail,
   userId,
+  setCopied,
+  copied,
+  onCopy,
 }) => {
   const [email, setEmail] = useState("");
 
-  const [linkToCopy, setlinkToCopy] = useState(
-    `localhost:3000/signup?referrer=${userId}`
-  );
-  const [copied, setCopied] = useState(false);
+  const linkToCopy = `localhost:3000/signup?referrer=${userId}`;
+
   return (
     <Dialog
       fullWidth={true}
@@ -72,10 +73,7 @@ const InvitationDialog = ({
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <CopyToClipboard
-                  text={linkToCopy}
-                  onCopy={() => setCopied(true)}
-                >
+                <CopyToClipboard text={linkToCopy} onCopy={() => onCopy()}>
                   {copied ? (
                     <Button
                       variant="contained"
@@ -124,4 +122,7 @@ InvitationDialog.propTypes = {
   alertError: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onClose: PropTypes.func.isRequired,
   handleSendEmail: PropTypes.func.isRequired,
+  copied: PropTypes.bool.isRequired,
+  setCopied: PropTypes.func,
+  onCopy: PropTypes.func,
 };

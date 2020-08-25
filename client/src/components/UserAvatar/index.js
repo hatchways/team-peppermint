@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import PropTypes from "prop-types";
-import defaultAvatar from "./default.png";
 import avatar from "./avatar.png";
 import { useStyles, OfflineBadge, OnlineBadge } from "./style";
 
@@ -9,7 +8,7 @@ const UserAvatar = ({ imageUrl, isOnline }) => {
   const classes = useStyles();
   let userPicture = "";
 
-  if (imageUrl !== undefined) {
+  if (imageUrl !== undefined && imageUrl.url) {
     userPicture = imageUrl.url;
   } else {
     userPicture = avatar;

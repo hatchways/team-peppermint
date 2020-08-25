@@ -41,8 +41,9 @@ router.post("/:email/invite", async (req, res) => {
       await data.deleteContact(req.params.email, userData.email);
       await data.deleteContact(userData.email, req.params.email);
     }
-    approvedInvitationByContactEmail === undefined &&
-      pendingInvitationByContactEmail === undefined &&
+
+    !approvedInvitationByContactEmail.email &&
+      !pendingInvitationByContactEmail.email &&
       data
         .addContact(req.params.email, userData.email)
         .then(() => {

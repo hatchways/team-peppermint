@@ -33,7 +33,7 @@ export const deleteContact = async (userEmail, emailToDelete, dispatch) => {
 
 export const approveContact = async (userEmail, contactToApprove, dispatch) => {
   try {
-    const message = await axios.post(`user/${userEmail}/approve`, {
+    await axios.post(`user/${userEmail}/approve`, {
       data: {
         contactToApprove,
       },
@@ -47,7 +47,7 @@ export const approveContact = async (userEmail, contactToApprove, dispatch) => {
 
 export const rejectContact = async (userEmail, emailToReject, dispatch) => {
   try {
-    const msg = await axios.post(`user/${userEmail}/reject`, {
+    await axios.post(`user/${userEmail}/reject`, {
       data: {
         contactToReject: emailToReject,
       },
@@ -62,12 +62,10 @@ export const rejectContact = async (userEmail, emailToReject, dispatch) => {
 };
 
 export const createInvitation = async (userEmail, referrer) => {
-  console.log("SENDING CREATE INVITE REQUEST...", userEmail, referrer);
   try {
     const res = await axios.post(`user/${userEmail}/invite`, {
       referrer,
     });
-    console.log("REPLY FROM BACKEND INVITATION...", res.data);
     return res.data;
   } catch (err) {
     throw Error("Sorry something went wrong ", err.message);

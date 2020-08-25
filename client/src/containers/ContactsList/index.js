@@ -18,6 +18,8 @@ import isEmail from "validator/lib/isEmail";
 const ContactsList = () => {
   const [contactsList, setContactsList] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [copied, setCopied] = useState(false);
+
   const classes = useStyles();
 
   const [inviteDialog, showInviteDialog] = useState(false);
@@ -88,6 +90,16 @@ const ContactsList = () => {
     }
   };
 
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => {
+      closeInviteDialog();
+    }, 1000);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
   return (
     <>
       <ButtonBase
@@ -111,7 +123,10 @@ const ContactsList = () => {
         isAlertOpen={isAlertOpen}
         alertError={alertError}
         userId={user.id}
+        copied={copied}
+        setCopied={setCopied}
         onClose={closeInviteDialog}
+        onCopy={handleCopy}
         handleSendEmail={handleSendEmail}
       />
       <List className={classes.root}>

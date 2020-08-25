@@ -20,7 +20,6 @@ import {
 } from "../../context/contacts/contactsContext";
 
 const userEmail = userEmailFromLocalStorage();
-
 const parseUrl = require("parse-url");
 
 const pageUrl = window.location.href;
@@ -54,7 +53,7 @@ export default function UserAuthForm({ headerText }) {
 
   // if user logged in and gets invitation link with referrer then invitaions created automatically for both sides
   if (userEmail && referrer) {
-    const reply = createInvitation(userEmail, referrer);
+    createInvitation(userEmail, referrer);
     history.push("/");
   }
 

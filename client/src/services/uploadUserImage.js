@@ -12,7 +12,7 @@ const replaceUserImage = async (newImageData, oldImageData) => {
     await axios.put(`user/${userEmail}/image`, {
       newImageData: { ...newImageData },
     });
-    if (oldImageData !== undefined) {
+    if (oldImageData !== undefined && !!oldImageData.name) {
       desertRef = storageRef.child(`photos/${oldImageData.name}`);
       await desertRef.delete();
     }
