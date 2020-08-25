@@ -109,13 +109,20 @@ module.exports = function () {
           });
       });
     },
-    updateUserImage: function (email, imageURL) {
+    updateUserImage: function (email, imageData) {
       return new Promise((resolve, reject) => {
         User.updateOne(
           {
             email: email,
           },
-          { $set: { pictureURL: imageURL } }
+          {
+            $set: {
+              pictureURL: {
+                url: imageData.url,
+                name: imageData.name,
+              },
+            },
+          }
         )
           .exec()
           .then(() => resolve("image updated"))

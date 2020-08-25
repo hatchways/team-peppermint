@@ -107,7 +107,7 @@ const MessageField = ({ user }) => {
                 <MessageItem
                   name={msg.sender}
                   date={msg.date}
-                  avatar={user.pictureURL}
+                  avatar={user.pictureURL.url}
                   text={msgVersion ? msgVersion.text : msg.textVersions[0].text}
                   myMessage={msg.sender === user.email} />
               </div>)

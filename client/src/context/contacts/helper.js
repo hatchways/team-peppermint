@@ -74,17 +74,6 @@ export const createInvitation = async (userEmail, referrer) => {
   }
 };
 
-export const findInvitationByContactId = async (userEmail, referrer) => {
-  try {
-    const res = await axios.post(`user/${userEmail}/invitationByContactId`, {
-      referrer,
-    });
-    return res.data;
-  } catch (err) {
-    return null;
-  }
-};
-
 export const userEmailFromLocalStorage = () => {
   const userToken = localStorage.getItem("auth-token");
   let decodedToken = "Sorry no email found";

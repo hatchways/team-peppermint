@@ -17,7 +17,6 @@ import Axios from "axios";
 import {
   userEmailFromLocalStorage,
   createInvitation,
-  findInvitationByContactId,
 } from "../../context/contacts/contactsContext";
 
 const userEmail = userEmailFromLocalStorage();
@@ -55,22 +54,9 @@ export default function UserAuthForm({ headerText }) {
 
   // if user logged in and gets invitation link with referrer then invitaions created automatically for both sides
   if (userEmail && referrer) {
-    console.log(
-      "USER LOGGED IN AND INVITER REFERRER PRESENT...",
-      userEmail,
-      referrer
-    );
     const reply = createInvitation(userEmail, referrer);
-    console.log("RECEIVED REPLY FROM INVITATION CREATE...", reply);
     history.push("/");
   }
-  // if (userEmail && referrer && !foundInvitation.email) {
-  //   createInvitation(userEmail, referrer);
-  //   history.push("/");
-  // }
-  // if (userEmail && referrer && foundInvitation.email) {
-  //   history.push("/");
-  // }
 
   function validateInput(name, email, password) {
     // true means invalid, so our conditions got reversed

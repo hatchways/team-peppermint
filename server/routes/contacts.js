@@ -52,8 +52,7 @@ router.get("/:email/contacts", async (req, res) => {
 
     //response with contacts and invitations lists
     res.status(200).json({ invitationsList, contactsList });
-  } catch (err) {
-    console.log("ERROR FETCHING CONTACTS ", err.message);
+  } catch (err) {    
     res.status(400).json(err);
   }
 });
@@ -77,7 +76,7 @@ router.put("/:email/image", async (req, res) => {
     //find user's contacts by user email
     const msg = await data.updateUserImage(
       req.params.email,
-      req.body.data.newImageUrl
+      req.body.newImageData
     );
     //response with contacts
     res.status(200).json(msg);
