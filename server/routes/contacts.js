@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const data = require("../data-modules/dataService")();
+// const sortByEmail = require("../helper/sortByEmail");
 
 router.get("/:email/contacts", async (req, res) => {
   const sortByEmail = (a, b) => {
