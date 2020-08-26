@@ -8,8 +8,8 @@ export const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: "100%",
     backgroundColor: "#fff",
-    // [`@media (max-width:820px)`]: {
-    //   width: "100%",
-    // },
+    [`@media (max-width:820px)`]: {
+      width: "100%",
+    },
   },
 }));

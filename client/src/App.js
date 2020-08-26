@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Axios from "axios";
 
@@ -33,27 +33,11 @@ function App() {
         }
       );
       if (tokenRes.data) {
-        // const userRes = await Axios.get("http://localhost:3001/api/user/", {
-        //   headers: { "x-auth-token": token },
-        // });
-        // setUserData({
-        //   token,
-        //   user: userRes.data,
-        // });
         fetchUserData(dispatch);
       }
-    };
-    // const checkLoggedIn = async () => {
-    //   const tokenRes = await userCall.post("http://localhost:3001/api/user/tokenIsValid");
-    //   if (tokenRes) {
-    //     const userRes = await userCall.get("http://localhost:3001/api/user/");
-    //     setUserData({
-    //       user: userRes.data
-    //     });
-    //   }
-    // }
+    };    
     checkLoggedIn();
-  }, []);
+  }, [dispatch]);
 
   return (
     <MuiThemeProvider theme={theme}>

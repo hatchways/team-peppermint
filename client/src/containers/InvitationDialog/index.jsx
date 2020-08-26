@@ -1,22 +1,44 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { TextField, Button, Typography } from "@material-ui/core";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import {
+  TextField,
+  Button,
+  Typography,
+  InputAdornment,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Collapse,
+} from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import CheckIcon from "@material-ui/icons/Check";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-const InvitationDialog = ({ open, onClose }) => {
-  const [linkToCopy, setlinkToCopy] = useState("share.link");
-  const [copied, setCopied] = useState(false);
+const InvitationDialog = ({
+  open,
+  isAlertOpen,
+  alertError,
+  onClose,
+  handleSendEmail,
+  userId,
+  setCopied,
+  copied,
+  onCopy,
+}) => {
+  const [email, setEmail] = useState("");
+
+  const linkToCopy = `localhost:3000/signup?referrer=${userId}`;
+
   return (
     <Dialog
       fullWidth={true}
       open={open}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        setCopied(false);
+      }}
       aria-labelledby="invitation-dialog-title"
     >
       <DialogContent
@@ -38,6 +60,7 @@ const InvitationDialog = ({ open, onClose }) => {
           label="Email Address"
           type="email"
           variant="outlined"
+          onChange={(e) => setEmail(e.target.value)}
           fullWidth
         />
         <DialogContentText>Or share referral link</DialogContentText>
@@ -50,21 +73,43 @@ const InvitationDialog = ({ open, onClose }) => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <CopyToClipboard
-                  text={linkToCopy}
-                  onCopy={() => setCopied(true)}
-                >
-                  <Button variant="contained" color="primary">
-                    Copy
-                  </Button>
+                <CopyToClipboard text={linkToCopy} onCopy={() => onCopy()}>
+                  {copied ? (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      style={{ backgroundColor: "green" }}
+                    >
+                      Copied
+                    </Button>
+                  ) : (
+                    <Button variant="contained" color="primary">
+                      Copy
+                    </Button>
+                  )}
                 </CopyToClipboard>
               </InputAdornment>
             ),
           }}
         />
         <DialogActions>
-          <Button color="primary">Send Invite</Button>
+          <Button color="primary" onClick={() => handleSendEmail(email)}>
+            Send Invite
+          </Button>
         </DialogActions>
+        <Collapse in={isAlertOpen}>
+          {alertError ? (
+            <Alert severity="error">{alertError}</Alert>
+          ) : (
+            <Alert
+              icon={<CheckIcon fontSize="inherit" />}
+              severity="success"
+              style={{ textAlign: "center", marginBottom: 20 }}
+            >
+              Email request successfuly sent
+            </Alert>
+          )}
+        </Collapse>
       </DialogContent>
     </Dialog>
   );
@@ -73,5 +118,11 @@ export default InvitationDialog;
 
 InvitationDialog.propTypes = {
   open: PropTypes.bool.isRequired,
+  isAlertOpen: PropTypes.bool,
+  alertError: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onClose: PropTypes.func.isRequired,
+  handleSendEmail: PropTypes.func.isRequired,
+  copied: PropTypes.bool.isRequired,
+  setCopied: PropTypes.func,
+  onCopy: PropTypes.func,
 };

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -7,6 +6,7 @@ import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import { useStyles } from "./style";
 
 import { useUserDispatch, setUserData } from "../../context/user/userContext";
 
@@ -14,39 +14,19 @@ import { useHistory } from "react-router";
 
 import Axios from "axios";
 
+import {
+  userEmailFromLocalStorage,
+  createInvitation,
+} from "../../context/contacts/contactsContext";
+
+const userEmail = userEmailFromLocalStorage();
+const parseUrl = require("parse-url");
+
+const pageUrl = window.location.href;
+const referrer = parseUrl(pageUrl).search.split("=")[1];
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "Column",
-    marginTop: "40px",
-  },
-  formField: {
-    width: "80%",
-    marginBottom: "40px",
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "25ch",
-  },
-  header: {
-    marginTop: "80px",
-  },
-  languageHeader: {
-    marginTop: "20px",
-  },
-  ctaBTN: {
-    color: "#fff",
-    backgroundColor: "#3A8DFF",
-    width: "40%",
-    margin: "0 17.5%",
-    padding: "20px 30px",
-  },
-}));
 
 export default function UserAuthForm({ headerText }) {
   const classes = useStyles();
@@ -70,6 +50,12 @@ export default function UserAuthForm({ headerText }) {
   const [nameHelperText, setNameHelperText] = useState("");
   const [emailHelperText, setEmailHelperText] = useState("");
   const [passwordHelperText, setPasswordHelperText] = useState("");
+
+  // if user logged in and gets invitation link with referrer then invitaions created automatically for both sides
+  if (userEmail && referrer) {
+    createInvitation(userEmail, referrer);
+    history.push("/");
+  }
 
   function validateInput(name, email, password) {
     // true means invalid, so our conditions got reversed
@@ -179,6 +165,7 @@ export default function UserAuthForm({ headerText }) {
             email: email,
             password: password,
             language: language,
+            referrer: referrer,
           };
           await Axios.post("http://localhost:3001/api/user/signup", newUser);
           const loginRes = await Axios.post(
@@ -292,7 +279,7 @@ export default function UserAuthForm({ headerText }) {
               <MenuItem value="chinese">Chinese (Mandarin)</MenuItem>
               <MenuItem value="spanish">Spanish</MenuItem>
               <MenuItem value="french">French</MenuItem>
-              <MenuItem value="russian">Russian</MenuItem>              
+              <MenuItem value="russian">Russian</MenuItem>
             </Select>
           </>
         ) : null}

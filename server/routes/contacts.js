@@ -37,19 +37,23 @@ router.get("/:email/contacts", async (req, res) => {
     );
 
     // create contacts list
-    const contactsList = approvedContacts
-      .sort((a, b) => sortByEmail(a, b))
-      .map((contact, index) => {
-        return {
-          email: contact.email,
-          name: sortUsersByEmail[index].name,
-          pictureUrl: sortUsersByEmail[index].pictureURL,
-        };
-      });
+    let contactsList = [];
+
+    if (approvedContacts.length) {
+      contactsList = approvedContacts
+        .sort((a, b) => sortByEmail(a, b))
+        .map((contact, index) => {
+          return {
+            email: contact.email,
+            name: sortUsersByEmail[index].name,
+            pictureUrl: sortUsersByEmail[index].pictureURL,
+          };
+        });
+    }
 
     //response with contacts and invitations lists
     res.status(200).json({ invitationsList, contactsList });
-  } catch (err) {
+  } catch (err) {    
     res.status(400).json(err);
   }
 });
@@ -73,9 +77,8 @@ router.put("/:email/image", async (req, res) => {
     //find user's contacts by user email
     const msg = await data.updateUserImage(
       req.params.email,
-      req.body.data.imageUrl
+      req.body.newImageData
     );
-
     //response with contacts
     res.status(200).json(msg);
   } catch (err) {

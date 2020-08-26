@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Typography, Switch, ButtonBase } from "@material-ui/core";
 import { useStyles, StyledBadge } from "./style";
 import { MoreHoriz } from "@material-ui/icons";

@@ -1,13 +1,18 @@
 import React, { memo } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import PropTypes from "prop-types";
-import defaultAvatar from "./default.png";
+import avatar from "./avatar.png";
 import { useStyles, OfflineBadge, OnlineBadge } from "./style";
 
 const UserAvatar = ({ imageUrl, isOnline }) => {
   const classes = useStyles();
+  let userPicture = "";
 
-  let userPicture = imageUrl || defaultAvatar;
+  if (imageUrl !== undefined && imageUrl.url) {
+    userPicture = imageUrl.url;
+  } else {
+    userPicture = avatar;
+  }
 
   return (
     <div className={classes.root}>
@@ -51,6 +56,9 @@ const UserAvatar = ({ imageUrl, isOnline }) => {
 export default memo(UserAvatar);
 
 UserAvatar.propTypes = {
-  imageUrl: PropTypes.string,
+  imageUrl: PropTypes.shape({
+    url: PropTypes.string,
+    name: PropTypes.string,
+  }),
   isOnline: PropTypes.bool,
 };
