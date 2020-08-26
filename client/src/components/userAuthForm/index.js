@@ -18,6 +18,7 @@ import {
   userEmailFromLocalStorage,
   createInvitation,
 } from "../../context/contacts/contactsContext";
+const capitalize = require("capitalize");
 
 const userEmail = userEmailFromLocalStorage();
 const parseUrl = require("parse-url");
@@ -161,7 +162,7 @@ export default function UserAuthForm({ headerText }) {
           setIsAlert(true);
           //set newUser to register and then post to backend, then reset fields
           const newUser = {
-            name: name,
+            name: capitalize(name),
             email: email,
             password: password,
             language: language,

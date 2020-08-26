@@ -7,6 +7,7 @@ import {
   rejectContact,
   userEmailFromLocalStorage,
   createInvitation,
+  findContacts,
 } from "./helper";
 
 const ContactsStateContext = React.createContext();
@@ -46,4 +47,5 @@ export {
   rejectContact,
   userEmailFromLocalStorage,
   createInvitation,
+  findContacts,
 };

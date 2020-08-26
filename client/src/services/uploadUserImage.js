@@ -1,12 +1,9 @@
 import axios from "axios";
 import firebase from "../lib/fbConfig";
-import { userEmailFromLocalStorage } from "../context/contacts/contactsContext";
 
 let storageRef = firebase.storage().ref();
 
-const userEmail = userEmailFromLocalStorage();
-
-const replaceUserImage = async (newImageData, oldImageData) => {
+const replaceUserImage = async (newImageData, oldImageData, userEmail) => {
   let desertRef;
   try {
     await axios.put(`user/${userEmail}/image`, {
@@ -22,7 +19,7 @@ const replaceUserImage = async (newImageData, oldImageData) => {
 };
 
 //upload user image to AWS S3
-const uploadUserImage = async (newImage, oldImageData) => {
+const uploadUserImage = async (newImage, oldImageData, userEmail) => {
   // add user email to make user avatar unique
   Object.defineProperties(newImage, {
     name: {
@@ -37,7 +34,7 @@ const uploadUserImage = async (newImage, oldImageData) => {
     url: newImageUrl,
     name: newImage.name,
   };
-  await replaceUserImage(newImageData, oldImageData);
+  await replaceUserImage(newImageData, oldImageData, userEmail);
 };
 
 export default uploadUserImage;
