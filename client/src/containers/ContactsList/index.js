@@ -4,15 +4,17 @@ import { useStyles } from "./style";
 import { List, Typography, ButtonBase } from "@material-ui/core";
 import ContactItem from "../../components/ContactItem";
 import AddIcon from "@material-ui/icons/Add";
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import {
   useContactsDispatch,
-  useContactsState,  
+  useContactsState,
   deleteContact,
   userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
 import { useUserState } from "../../context/user/userContext";
 import axios from "axios";
 import isEmail from "validator/lib/isEmail";
+import CreateGroupChat from "../../components/CreateGroupChat";
 
 const ContactsList = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -45,6 +47,13 @@ const ContactsList = () => {
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
+  };
+  const [openGroupChatForm, setOpenGroupChatForm] = useState(false);
+  const openChatForm = () => {
+    setOpenGroupChatForm(true);
+  };
+  const closeChatForm = () => {
+    setOpenGroupChatForm(false);
   };
 
   const handleSendEmail = async (email) => {
@@ -106,6 +115,22 @@ const ContactsList = () => {
           </Typography>
         </div>
       </ButtonBase>
+      <ButtonBase 
+        onClick={() => openChatForm()}
+        style={{ marginBottom: 10 }}
+      >
+        <div className={classes.inviteFriendsContainer}>
+          <GroupAddIcon color="primary" />
+          <Typography
+            variant="body2"
+            color="primary"
+            className={classes.typography}
+            gutterBottom
+          >
+            Create Group Chat
+          </Typography>
+        </div>
+      </ButtonBase>
       <InvitationDialog
         open={inviteDialog}
         isAlertOpen={isAlertOpen}
@@ -117,6 +142,7 @@ const ContactsList = () => {
         onCopy={handleCopy}
         handleSendEmail={handleSendEmail}
       />
+      <CreateGroupChat open={openGroupChatForm} onClose={closeChatForm} contactsList={contacts} />
       <List className={classes.root}>
         {!!contacts.length ? (
           contacts.map((contact, index) => (
@@ -134,15 +160,15 @@ const ContactsList = () => {
             />
           ))
         ) : (
-          <Typography
-            variant="body1"
-            color="primary"
-            gutterBottom
-            style={{ color: "black", textAlign: "center" }}
-          >
-            No contacts
-          </Typography>
-        )}
+            <Typography
+              variant="body1"
+              color="primary"
+              gutterBottom
+              style={{ color: "black", textAlign: "center" }}
+            >
+              No contacts
+            </Typography>
+          )}
       </List>
     </>
   );

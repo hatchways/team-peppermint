@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Typography, Switch, ButtonBase } from "@material-ui/core";
 import { useStyles, StyledBadge } from "./style";
 import { MoreHoriz } from "@material-ui/icons";
 import { useUserState } from "../../context/user/userContext";
+import ToggleLanguage from "../../context/ToggleLanguage";
 
 const MainContentFieldNavBar = () => {
   const [checked, setChecked] = useState(false);
   const classes = useStyles();
-
+  const toggleLanguageContext = useContext(ToggleLanguage);
   const { user } = useUserState();
 
   const handleChange = () => {
     setChecked(!checked);
+    toggleLanguageContext.setOriginal(!checked);
   };
 
   return (

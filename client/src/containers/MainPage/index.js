@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { useStyles } from "./style";
 import Sidebar from "../Sidebar";
 import MainContentField from "../MainContentField";
-import SelectContact from "../../context/SelectContact"
+import SelectConversation from "../../context/SelectConversation"
 const MainPage = () => {
   const classes = useStyles();
-  const [contact, setContact] = useState({})
+  const [conversation, setConversation] = useState()
   return (
     <main className={classes.root}>
-      <SelectContact.Provider value={{ contact, setContact }}>
+      <SelectConversation.Provider value={{ conversation, setConversation }}>
         <Sidebar />
         <MainContentField />
-      </SelectContact.Provider>
+      </SelectConversation.Provider>
     </main>
   );
 };

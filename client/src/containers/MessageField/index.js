@@ -3,10 +3,11 @@ import { useStyles } from "./style";
 import { TextField } from "@material-ui/core";
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
-import Axios from "axios";
-import SelectContact from "../../context/SelectContact";
-import { translateText } from "../../context/messages/helper";
-import ISO6391 from "iso-639-1";
+import Axios from 'axios';
+import SelectConversation from "../../context/SelectConversation"
+import { translateText } from "../../context/messages/helper"
+import ISO6391 from 'iso-639-1';
+import ToggleLanguage from "../../context/ToggleLanguage";
 
 const getVersion = (versions, language) => {
   return versions.find((version) => version.language === language);
@@ -15,14 +16,14 @@ const getVersion = (versions, language) => {
 const MessageField = ({ user }) => {
   let currentTime, msgVersion, convo;
   const classes = useStyles();
-  const context = useContext(SelectContact);
+  const context = useContext(SelectConversation);
+  const ToggleLanguageContext = useContext(ToggleLanguage);
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
-  const [room, setRoom] = useState(
-    [user.email, context.contact.email].sort().join("-")
-  );
-  const [contactLanguage, setContactLanguage] = useState("");
+  const [message, setMessage] = useState('');
+  const [room, setRoom] = useState();
+  const [languages, setLanguages] = useState('');
   const messagesEndRef = useRef(null);
+  const [users, setUsers] = useState([]);
   const createMessageObject = async (date, text) => {
     let newMsg = {
       sender: user.email,
@@ -31,32 +32,30 @@ const MessageField = ({ user }) => {
     };
     newMsg.textVersions.push({
       language: user.language,
-      text: text,
-    });
-
-    if (contactLanguage !== user.language && contactLanguage) {
-      let translated = await translateText(
-        text,
-        ISO6391.getCode(contactLanguage)
-      );
-      newMsg.textVersions.push({
-        language: contactLanguage,
-        text: translated,
-      });
+      text: text
+    })
+    console.log(languages)
+    if (languages) {
+      await Promise.all(languages.map(async (language) => {
+        if (language !== user.language) {
+          newMsg.textVersions.push({
+            language: language,
+            text: await translateText(text, ISO6391.getCode(language))
+          })
+        }
+      }))
     }
     return newMsg;
   };
   const loadMessages = async () => {
     convo = null;
-    try {
-      convo = await Axios.get(
-        `http://localhost:3001/user/conversation/${room}`
-      );
-    } catch (err) {
-      console.log(err);
+    try { convo = await Axios.get(`http://localhost:3001/user/conversation/${room}`) }
+    catch (err) { console.error(err) }
+    if (convo) {
+      setMessages(convo.data.conversation.messages)
+      setUsers(convo.data.conversation.users)
     }
-    if (convo) setMessages(convo.data.conversation.messages);
-  };
+  }
   const saveMessage = async (msg) => {
     convo = null;
     try {
@@ -64,17 +63,11 @@ const MessageField = ({ user }) => {
         `http://localhost:3001/user/conversation/${room}`
       );
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
     if (!convo) {
-      try {
-        await Axios.post(
-          `http://localhost:3001/user/${user.email}/conversation`,
-          [context.contact.email, user.email]
-        );
-      } catch (err) {
-        console.log(err);
-      }
+      try { await Axios.post(`http://localhost:3001/user/${user.email}/conversation`, context.conversation.split('-')) }
+      catch (err) { console.error(err) }
     }
     await Axios.post(
       `http://localhost:3001/user/${user.email}/conversation/${room}/newMessage`,
@@ -83,14 +76,19 @@ const MessageField = ({ user }) => {
   };
   const sendMessage = async (event) => {
     event.preventDefault();
-    currentTime = new Date();
+    currentTime = new Date().toISOString();
     if (message) {
-      let newMsg = await createMessageObject(currentTime, message);
-      socket.emit("message", newMsg, () => {
-        saveMessage(newMsg);
-        setMessage("");
-        scrollToBottom();
-      });
+      createMessageObject(currentTime, message)
+        .then((msg) => {
+          socket.emit('message', msg, () => {
+            saveMessage(msg)
+            setMessage('')
+            scrollToBottom()
+          })
+
+        })
+        .catch((err) => console.log(err))
+
     }
   };
   const scrollToBottom = () => {
@@ -100,47 +98,46 @@ const MessageField = ({ user }) => {
     scrollToBottom();
   }, [messages]);
   useEffect(() => {
-    setRoom([user.email, context.contact.email].sort().join("-"));
     setMessages([]);
-    Axios.get(`/api/user/${context.contact.email}/language`)
-      .then((response) => setContactLanguage(response.data.language))
-      .catch((err) => console.log(err));
-  }, [context.contact, setContactLanguage, user.email]);
+    setRoom(context.conversation);
+  }, [context.conversation])
   useEffect(() => {
     loadMessages();
-    socket.on("message", (message) => {
-      setMessages((messages) => [...messages, message]);
-    });
-    socket.emit("join", { email: user.email, room }, (error) => {
+    socket.on('message', message => {
+      setMessages(messages => [...messages, message])
+    })
+    socket.emit('join', { email: user.email, room }, (error) => {
       if (error) alert(error);
     });
     return () => {
       socket.emit("disconnect");
       socket.off();
-    };
-  }, [room,user.email]);
+    }
+  }, [room])
+  useEffect(() => {
+    if (users)
+      Axios.get(`/api/user/${users.join(',')}/languages`)
+        .then((response) => { setLanguages(response.data.languages) })
+        .catch((err) => console.log(err))
+  }, [users])
   return (
     <div className={classes.root}>
       <div className={classes.messegesView}>
-        {!!messages.length > 0 &&
-          messages.map((msg, i) => {
-            if (msg && msg.textVersions[0]) {
-              msgVersion = getVersion(msg.textVersions, user.language);
-              return (
-                <div key={i}>
-                  <MessageItem
-                    name={msg.sender}
-                    date={msg.date}
-                    avatar={user.pictureURL.url}
-                    text={
-                      msgVersion ? msgVersion.text : msg.textVersions[0].text
-                    }
-                    myMessage={msg.sender === user.email}
-                  />
-                </div>
-              );
-            } else return null;
-          })}
+        {!!messages.length > 0 && messages.map((msg, i) => {
+          if (msg && msg.textVersions[0]) {
+
+            msgVersion = getVersion(msg.textVersions, user.language);
+            return (
+              <div key={i}>
+                <MessageItem
+                  name={msg.sender}
+                  date={msg.date}
+                  text={ToggleLanguageContext.original ? msg.textVersions[0].text : msgVersion ? msgVersion.text : msg.textVersions[0].text}
+                  myMessage={msg.sender === user.email} />
+              </div>)
+          }
+          else return null
+        })}
         <div ref={messagesEndRef} />
       </div>
       <TextField
@@ -152,7 +149,7 @@ const MessageField = ({ user }) => {
         onKeyPress={(e) => (e.key === "Enter" ? sendMessage(e) : null)}
         autoComplete="off"
         fullWidth
-        disabled={Object.keys(context.contact).length === 0}
+        disabled={context.conversation ? false : true}
       />
     </div>
   );

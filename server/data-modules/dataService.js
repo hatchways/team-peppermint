@@ -147,7 +147,7 @@ module.exports = function () {
       });
     },
     addContact: function (currentEmail, emailToAdd) {
-      let conversationID = [currentEmail, emailToAdd].sort().join();
+      let conversationID = [currentEmail, emailToAdd].sort().join('-');
       return new Promise((resolve, reject) => {
         User.updateOne(
           {
@@ -280,6 +280,21 @@ module.exports = function () {
           .then(() => resolve("message added"))
           .catch((err) => reject(err));
       });
+    },
+    addGroupChat: function (users, conversationID) {
+      console.log(users)
+      return new Promise((resolve, reject) => {
+        User.updateMany(
+          {
+            email: { $in: users }
+          },
+          {
+            $addToSet: {
+              groupChats: conversationID
+            }
+          }).then(() => resolve("added to users"))
+          .catch((err) => reject(err))
+      })
     },
   };
 };

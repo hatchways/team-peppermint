@@ -47,6 +47,7 @@ router.get("/:email/contacts", async (req, res) => {
             email: contact.email,
             name: sortUsersByEmail[index].name,
             pictureUrl: sortUsersByEmail[index].pictureURL,
+            conversationID: contact.conversationID
           };
         });
     }
@@ -89,6 +90,7 @@ router.post("/:email/search", async (req, res) => {
             email: contact.email,
             name: sortUsersByEmail[index].name,
             pictureUrl: sortUsersByEmail[index].pictureURL,
+            conversationID: contact.conversationID
           };
         });
     }

@@ -179,11 +179,18 @@ router.get("/", checkAuth, async (req, res) => {
     })
     .catch((err) => res.json(err));
 });
-router.get("/:email/language", (req, res) => {
-  data
-    .getUserByEmail(req.params.email)
-    .then((user) => res.status(200).json({ language: user.language }))
-    .catch((err) => res.status(400).json(err));
-});
+router.get("/:users/languages", (req, res) => {
+  let users = req.params.users.split(',');
+  data.getUsers(users)
+    .then((users) => {
+      let languages = users.map((user)=>{
+        return user.language
+      }).filter((value, index, self)=> { 
+        return self.indexOf(value) === index;
+      })
+      res.status(200).json({ languages: languages })
+    })
+    .catch((err) =>res.status(400).json(err))
+})
 
 module.exports = router;
