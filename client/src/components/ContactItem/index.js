@@ -10,7 +10,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
-import SelectContact from "../../Context/SelectContact";
+import SelectConversation from "../../Context/SelectConversation";
 const ContactItem = ({
   imageUrl,
   name,
@@ -23,11 +23,11 @@ const ContactItem = ({
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const context = useContext(SelectContact);
+  const context = useContext(SelectConversation);
   const classes = useStyles();
   const onContactClick = (event) => {
     select(event, index)
-    context.setContact(contact)
+    context.setConversation(contact.conversationID)
   }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

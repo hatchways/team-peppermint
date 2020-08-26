@@ -11,6 +11,7 @@ import {
   fetchContacts,
   deleteContact,
 } from "../../Context/contacts/contactsContext";
+import CreateGroupChat from "../../components/CreateGroupChat";
 
 const jwt_decode = require("jwt-decode");
 
@@ -46,20 +47,37 @@ const ContactsList = () => {
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
+  const [openGroupChatForm, setOpenGroupChatForm] = useState(false);
+  const openChatForm = () => {
+    setOpenGroupChatForm(true);
+  };
+  const closeChatForm = () => {
+    setOpenGroupChatForm(false);
+  };
 
 
   return (
     <>
       <div className={classes.inviteFriendsContainer}>
-        <AddIcon color="primary" />
-        <Typography
-          variant="body2"
-          color="primary"
-          className={classes.typography}
-          gutterBottom
-        >
-          <Button onClick={() => openInviteDialog()}>Invite Friends</Button>
-          <InvitationDialog open={inviteDiaolog} onClose={closeInviteDialog} />
+ 
+          <Typography
+            variant="body2"
+            color="primary"
+            className={classes.typography}
+            gutterBottom
+          >
+            <Button onClick={() => openInviteDialog()}><AddIcon color="primary" /> Invite Friends</Button>
+            <InvitationDialog open={inviteDiaolog} onClose={closeInviteDialog} />
+          </Typography>
+          <Typography
+            variant="body2"
+            color="primary"
+            className={classes.typography}
+            gutterBottom
+          > 
+          <Button onClick={()=>openChatForm()}>
+          <AddIcon color="primary" /> Create Group Chat</Button>
+          <CreateGroupChat open={openGroupChatForm} onClose={closeChatForm} contactsList={contactsList} />
         </Typography>
       </div>
       <List className={classes.root}>

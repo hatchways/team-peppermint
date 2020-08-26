@@ -20,7 +20,13 @@ router.post("/:email/conversation", async (req, res) => {
   }
   data.createConversation(conversation)
     .then((msg) => res.status(200).json(msg))
-    .catch((err) => { console.log(err); res.status(500).json(err) })
+    .catch((err) => { 
+
+      if(err.code === 11000){
+        return res.status(400).json({error: err, code: err.code})
+      }
+      return res.status(500).json(err) 
+    })
 })
 router.get("/conversation/:convID", async (req, res) => {
   try {
@@ -29,7 +35,6 @@ router.get("/conversation/:convID", async (req, res) => {
     if (!conversation) return res.status(404).json({ found: false, msg: 'conversation not found' })
     return res.status(200).json({ conversation })
   } catch (err) {
-    console.log(err)
     return res.status(500).json({ msg: err });
   }
 })
@@ -44,5 +49,22 @@ router.post("/:email/conversation/:convID/newMessage", async (req, res) => {
     .then((msg) => res.status(200).json(msg))
     .catch((err) => res.status(500).json(err))
 })
+router.get("/:email/groupchats", (req, res) => {
+  data.getUserByEmail(req.params.email)
+    .then((user) => {
+      if (user.groupChats.length > 0) res.status(200).send(user.groupChats)
+      else res.status(400).send("No group chats")
+    })
+    .catch((err) => res.status(400).send(err));
+})
+router.get("/:email/groupchat/:groupid", (req, res) => {
 
+})
+router.post("/:email/groupchat", (req, res) => {
+  let users = req.body;
+  console.log(req.body)
+  data.addGroupChat(users, users.sort().join('-'))
+    .then((msg) => res.status(200).json(msg))
+    .catch((err) => res.status(500).json(err))
+})
 module.exports = router;

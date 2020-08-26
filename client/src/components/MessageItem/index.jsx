@@ -5,7 +5,8 @@ import remy from "../UserAvatar/men.png";
 const MessageItem =(props)=>{
     const classes = useStyles();
     const {name, date, avatar, text, myMessage} = props;
-
+    const localDate = new Date(date);
+    const dateString = localDate.toLocaleTimeString([],{hour: '2-digit', minute:'2-digit'});
     return(
         <div className={classes.root}>
             <div className={`${classes.messageView} ${myMessage?'my':'other'}`}>
@@ -16,7 +17,7 @@ const MessageItem =(props)=>{
                 />}
                 <div className={classes.messageInfo}>
                     <Typography variant="body2" className={`${classes.messageDetails} ${myMessage?'my':'other'}`}>
-                        {!myMessage?name:''} {date}
+                        {!myMessage?name:''} {dateString}
                     </Typography>
                     <Typography variant="body1" className={`${classes.messageText} ${myMessage?'my':'other'}`}>
                         {text}

@@ -1,15 +1,21 @@
-import React, { memo } from "react";
+import React, { memo, useState, useContext, useEffect } from "react";
 import { useStyles } from "./style";
 import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
 import { Typography, Chip, ListItem } from "@material-ui/core";
-
+import SelectContact from "../../Context/SelectConversation";
+import Axios from "axios"
 const ChatItem = (props) => {
   const classes = useStyles();
-  const { name, messageCount, index } = props;
-
+  const { name, messageCount, index, select, selected } = props;
+  const context = useContext(SelectContact);
+  
+  const onChatClick = (event) => {
+    select(event, index)
+    context.setConversation(name)
+  }
   return (
-    <ListItem button className={classes.root}>
+    <ListItem button className={classes.root} onClick={onChatClick} selected={selected === index}>
       <div className={classes.avatarNameContainer} >
         <UserAvatar />
         <div className={classes.nameContainer}>

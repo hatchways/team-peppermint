@@ -11,8 +11,10 @@ module.exports = function (io) {
         })
 
         socket.on('message', (message, callback) => {
+            console.log(message)
             const user = getUser(socket.id);
             io.to(user.room).emit('message', message)
+            
             callback();
         });
         socket.on('disconnect', () => {

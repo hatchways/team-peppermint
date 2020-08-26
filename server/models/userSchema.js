@@ -39,6 +39,10 @@ const UserSchema = new mongoose.Schema({
     type: [contactSchema],
     default:[]
   },
+  groupChats:{
+    type: Array,
+    default:[]
+  },
   language: {
     type: String,
     required: false
