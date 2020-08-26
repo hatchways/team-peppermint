@@ -14,7 +14,7 @@ export const useStyles = makeStyles((theme) => ({
     backgroundColor: "#f5f7fb",
     borderColor: "none",
   },
-  tabPanel:{
+  tabPanel: {
     width: "100%",
     height: "100%",
   },
@@ -25,31 +25,44 @@ export const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
     minWidth: "100%",
-    height: theme.spacing(9),
+    height: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
       width: "auto",
     },
+    display: "flex",
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
     height: "100%",
-    position: "absolute",
     pointerEvents: "none",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
-  inputRoot: {
-    color: "inherit",
-    marginTop: theme.spacing(1),
+  clearIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
+  debounceInput: {
+    border: "none",
+    height: "100%",
+    width: "70%",
+    backgroundColor: "transparent",
+    fontSize: "1.3rem",
+    right: 0,
+    outline: "none",
+  },
+  collapse: {
+    textAlign: "center",
+    marginBottom: theme.spacing(3),
     width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
+  },
+  alert: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 }));

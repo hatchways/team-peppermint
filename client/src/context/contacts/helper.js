@@ -1,4 +1,8 @@
-import { FETCH_CONTACTS_INVITATIONS, UPDATE_INVITATIONS } from "../../types";
+import {
+  FETCH_CONTACTS_INVITATIONS,
+  UPDATE_INVITATIONS,
+  UPDATE_CONTACTS,
+} from "../../types";
 import axios from "axios";
 const jwtDecode = require("jwt-decode");
 
@@ -67,6 +71,25 @@ export const createInvitation = async (userEmail, referrer) => {
       referrer,
     });
     return res.data;
+  } catch (err) {
+    throw Error("Sorry something went wrong ", err.message);
+  }
+};
+
+export const findContacts = async (userEmail, query, dispatch) => {
+  try {
+    const res = await axios.post(`user/${userEmail}/search`, {
+      query,
+    });
+    if (res.data.foundContactsList.length > 0) {
+      dispatch({
+        type: UPDATE_CONTACTS,
+        payload: res.data.foundContactsList,
+      });
+      return true;
+    } else {
+      return false;
+    }
   } catch (err) {
     throw Error("Sorry something went wrong ", err.message);
   }

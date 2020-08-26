@@ -18,8 +18,6 @@ import {
   fetchUserData,
 } from "../../context/user/userContext";
 
-const isOnline = localStorage.getItem("auth-token");
-
 const SidebarNavBar = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -28,6 +26,12 @@ const SidebarNavBar = () => {
 
   const { user } = useUserState();
   const dispatch = useUserDispatch();
+
+  const isOnline = localStorage.getItem("auth-token");
+
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -40,17 +44,14 @@ const SidebarNavBar = () => {
   const handleSave = async (files) => {
     setOpen(false);
     setAnchorEl(null);
-    await uploadUserImage(files[0], userData.pictureURL);
+    console.log('USER DATA ', userData)
+    await uploadUserImage(files[0], userData.pictureURL, userData.email);
     fetchUserData(dispatch);
   };
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
     setAnchorEl(null);
   };
-
-  useEffect(() => {
-    setUserData(user);
-  }, [user]);
 
   return (
     <div className={classes.root}>
