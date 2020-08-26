@@ -1,13 +1,16 @@
 import React, { useState, useContext } from "react";
-import { Typography, Switch, ButtonBase, Badge } from "@material-ui/core";
+import { Typography, Switch, ButtonBase } from "@material-ui/core";
 import { useStyles, StyledBadge } from "./style";
 import { MoreHoriz } from "@material-ui/icons";
+import { useUserState } from "../../context/user/userContext";
 import ToggleLanguage from "../../context/ToggleLanguage";
 
 const MainContentFieldNavBar = () => {
   const [checked, setChecked] = useState(false);
   const classes = useStyles();
   const toggleLanguageContext = useContext(ToggleLanguage);
+  const { user } = useUserState();
+
   const handleChange = () => {
     setChecked(!checked);
     toggleLanguageContext.setOriginal(!checked);
@@ -20,7 +23,7 @@ const MainContentFieldNavBar = () => {
           variant="h6"
           style={{ fontWeight: 600, marginLeft: 20, marginRight: 20 }}
         >
-          Santiago
+          {user.name}
         </Typography>
         <div className={classes.onOfflineStyle}>
           <StyledBadge overlap="circle" variant="dot">
@@ -32,9 +35,29 @@ const MainContentFieldNavBar = () => {
         </div>
       </div>
       <div className={classes.leftRightSideStyle}>
-        <Typography variant="body2" style={{ fontSize: "0.8rem" }}>
-          Original language
-        </Typography>
+        {checked ? (
+          <Typography
+            variant="body2"
+            style={{
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              color: "#3A8DFF",
+            }}
+          >
+            Original language
+          </Typography>
+        ) : (
+          <Typography
+            variant="body2"
+            style={{
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              opacity: 0.5,
+            }}
+          >
+            Original language
+          </Typography>
+        )}
         <Switch
           checked={checked}
           onChange={handleChange}

@@ -2,25 +2,21 @@ import React, { useState } from "react";
 import { useStyles } from "./style";
 import MainContentFieldNavBar from "../MainContentFieldNavBar";
 import MessageField from "../MessageField";
-import UserContext from "../../context/UserContext";
 import ToggleLanguage from "../../context/ToggleLanguage"
+import { useUserState } from "../../context/user/userContext";
+
 const MainContentField = () => {
+  const { user } = useUserState();
+
   const classes = useStyles();
   const [original, setOriginal] = useState(false)
   return (
-
     <section className={classes.root}>
       <ToggleLanguage.Provider value={{original, setOriginal}}>
-        <MainContentFieldNavBar />
-        <UserContext.Consumer>
-          {value => (
-            !!value.userData.user &&
-            <MessageField user={value.userData.user} />
-          )}
-        </UserContext.Consumer>
+        <MainContentFieldNavBar />      
+        {!!user && <MessageField user={user} />}
       </ToggleLanguage.Provider>
     </section>
-
   );
 };
 

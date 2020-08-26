@@ -1,49 +1,50 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
-import { List, Typography, Button } from "@material-ui/core";
+import { List, Typography, ButtonBase } from "@material-ui/core";
 import ContactItem from "../../components/ContactItem";
 import AddIcon from "@material-ui/icons/Add";
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import {
   useContactsDispatch,
   useContactsState,
-  fetchContacts,
   deleteContact,
+  userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
+import { useUserState } from "../../context/user/userContext";
+import axios from "axios";
+import isEmail from "validator/lib/isEmail";
 import CreateGroupChat from "../../components/CreateGroupChat";
 
-const jwt_decode = require("jwt-decode");
-
 const ContactsList = () => {
-  const [contactsList, setContactsList] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [copied, setCopied] = useState(false);
+
   const classes = useStyles();
 
-  const [inviteDiaolog, showInviteDialog] = useState(false);
+  const [inviteDialog, showInviteDialog] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertError, setAlertError] = useState(null);
+
   const openInviteDialog = () => {
     showInviteDialog(true);
+    setAlertError(null);
   };
   const closeInviteDialog = () => {
     showInviteDialog(false);
+    setAlertError(null);
   };
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
-  const userToken = localStorage.getItem("auth-token");
-  const decodedToken = jwt_decode(userToken);
+  const { user } = useUserState();
 
-  useEffect(() => {
-    decodedToken && fetchContacts(decodedToken.id, dispatch);
-  }, []);
+  const userEmail = userEmailFromLocalStorage();
 
-  useEffect(() => {
-    setContactsList(contacts);
-  }, [contacts]);
-
-  const handleDeleteContactButton = (email, index) => {
-    deleteContact(email, index, dispatch);
+  const handleDeleteContactButton = (email) => {
+    deleteContact(userEmail, email, dispatch);
   };
-  const [selectedIndex, setSelectedIndex] = React.useState(-1);
+
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
@@ -55,39 +56,102 @@ const ContactsList = () => {
     setOpenGroupChatForm(false);
   };
 
+  const handleSendEmail = async (email) => {
+    const isEmailValid = isEmail(email);
+    if (!isEmailValid) {
+      setIsAlertOpen(true);
+      setAlertError("Email is not valid. Please verify it is correct.");
+      setTimeout(() => {
+        setIsAlertOpen(false);
+      }, 3000);
+      return;
+    }
+    try {
+      let res = "";
+      if (isEmailValid) {
+        setAlertError(null);
+        res = await axios.post(`/mail/${email}/sendMail`, {
+          referrer: user.id,
+        });
+      }
+      res.data && setIsAlertOpen(true);
+      setTimeout(() => {
+        showInviteDialog(false);
+        setIsAlertOpen(false);
+      }, 3000);
+    } catch (err) {
+      setAlertError(err.message);
+      setTimeout(() => {
+        setIsAlertOpen(false);
+      }, 3000);
+    }
+  };
+
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => {
+      closeInviteDialog();
+    }, 1000);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
 
   return (
     <>
-      <div className={classes.inviteFriendsContainer}>
- 
+      <ButtonBase
+        onClick={() => openInviteDialog()}
+        style={{ marginBottom: 10 }}
+      >
+        <div className={classes.inviteFriendsContainer}>
+          <AddIcon color="primary" />
           <Typography
             variant="body2"
             color="primary"
             className={classes.typography}
             gutterBottom
           >
-            <Button onClick={() => openInviteDialog()}><AddIcon color="primary" /> Invite Friends</Button>
-            <InvitationDialog open={inviteDiaolog} onClose={closeInviteDialog} />
+            Invite Friends
           </Typography>
+        </div>
+      </ButtonBase>
+      <ButtonBase 
+        onClick={() => openChatForm()}
+        style={{ marginBottom: 10 }}
+      >
+        <div className={classes.inviteFriendsContainer}>
+          <GroupAddIcon color="primary" />
           <Typography
             variant="body2"
             color="primary"
             className={classes.typography}
             gutterBottom
-          > 
-          <Button onClick={()=>openChatForm()}>
-          <AddIcon color="primary" /> Create Group Chat</Button>
-          <CreateGroupChat open={openGroupChatForm} onClose={closeChatForm} contactsList={contactsList} />
-        </Typography>
-      </div>
+          >
+            Create Group Chat
+          </Typography>
+        </div>
+      </ButtonBase>
+      <InvitationDialog
+        open={inviteDialog}
+        isAlertOpen={isAlertOpen}
+        alertError={alertError}
+        userId={user.id}
+        copied={copied}
+        setCopied={setCopied}
+        onClose={closeInviteDialog}
+        onCopy={handleCopy}
+        handleSendEmail={handleSendEmail}
+      />
+      <CreateGroupChat open={openGroupChatForm} onClose={closeChatForm} contactsList={contacts} />
       <List className={classes.root}>
-        {!!contactsList.length ? (
-          contactsList.map((contact, index) => (
+        {!!contacts.length ? (
+          contacts.map((contact, index) => (
             <ContactItem
               key={index}
-              name={contact.email}
-              imageUrl={contact.imageUrl}
-              isOnline={contact.isOnline}
+              name={contact.name}
+              email={contact.email}
+              pictureUrl={contact.pictureUrl}
+              isOnline={true}
               index={index}
               handleDeleteContactButton={handleDeleteContactButton}
               contact={contact}

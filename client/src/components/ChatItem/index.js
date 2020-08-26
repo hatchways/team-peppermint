@@ -3,12 +3,12 @@ import { useStyles } from "./style";
 import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
 import { Typography, Chip, ListItem } from "@material-ui/core";
-import SelectContact from "../../context/SelectConversation";
+import SelectConversation from "../../context/SelectConversation";
 import Axios from "axios"
 const ChatItem = (props) => {
   const classes = useStyles();
   const { name, messageCount, index, select, selected } = props;
-  const context = useContext(SelectContact);
+  const context = useContext(SelectConversation);
   
   const onChatClick = (event) => {
     select(event, index)
@@ -47,3 +47,8 @@ const ChatItem = (props) => {
 };
 
 export default memo(ChatItem);
+
+ChatItem.propTypes = {
+  name: PropTypes.string,
+  messageCount: PropTypes.number,
+};

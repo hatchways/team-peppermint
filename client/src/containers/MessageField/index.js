@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext, memo } from "react";
 import { useStyles } from "./style";
-import { Grid, TextField } from "@material-ui/core"
+import { TextField } from "@material-ui/core";
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
 import Axios from 'axios';
@@ -11,7 +11,7 @@ import ToggleLanguage from "../../context/ToggleLanguage";
 
 const getVersion = (versions, language) => {
   return versions.find((version) => version.language === language);
-}
+};
 
 const MessageField = ({ user }) => {
   let currentTime, msgVersion, convo;
@@ -24,12 +24,12 @@ const MessageField = ({ user }) => {
   const [languages, setLanguages] = useState('');
   const messagesEndRef = useRef(null);
   const [users, setUsers] = useState([]);
-  const createMessageObject =async (date, text) => {
+  const createMessageObject = async (date, text) => {
     let newMsg = {
       sender: user.email,
       date: date,
-      textVersions: []
-    }
+      textVersions: [],
+    };
     newMsg.textVersions.push({
       language: user.language,
       text: text
@@ -46,11 +46,11 @@ const MessageField = ({ user }) => {
       }))
     }
     return newMsg;
-  }
+  };
   const loadMessages = async () => {
     convo = null;
     try { convo = await Axios.get(`http://localhost:3001/user/conversation/${room}`) }
-    catch (err) { console.log(err) }
+    catch (err) { console.error(err) }
     if (convo) {
       setMessages(convo.data.conversation.messages)
       setUsers(convo.data.conversation.users)
@@ -58,21 +58,28 @@ const MessageField = ({ user }) => {
   }
   const saveMessage = async (msg) => {
     convo = null;
-    try { convo = await Axios.get(`http://localhost:3001/user/conversation/${room}`) }
-    catch (err) { console.log(err) }
+    try {
+      convo = await Axios.get(
+        `http://localhost:3001/user/conversation/${room}`
+      );
+    } catch (err) {
+      console.error(err);
+    }
     if (!convo) {
       try { await Axios.post(`http://localhost:3001/user/${user.email}/conversation`, context.conversation.split('-')) }
-      catch (err) { console.log(err) }
+      catch (err) { console.error(err) }
     }
-    await Axios.post(`http://localhost:3001/user/${user.email}/conversation/${room}/newMessage`, msg)
-  }
+    await Axios.post(
+      `http://localhost:3001/user/${user.email}/conversation/${room}/newMessage`,
+      msg
+    );
+  };
   const sendMessage = async (event) => {
     event.preventDefault();
     currentTime = new Date().toISOString();
     if (message) {
       createMessageObject(currentTime, message)
         .then((msg) => {
-          console.log(msg)
           socket.emit('message', msg, () => {
             saveMessage(msg)
             setMessage('')
@@ -83,13 +90,13 @@ const MessageField = ({ user }) => {
         .catch((err) => console.log(err))
 
     }
-  }
+  };
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
   useEffect(() => {
     scrollToBottom();
-  }, [messages])
+  }, [messages]);
   useEffect(() => {
     setMessages([]);
     setRoom(context.conversation);
@@ -97,14 +104,13 @@ const MessageField = ({ user }) => {
   useEffect(() => {
     loadMessages();
     socket.on('message', message => {
-      console.log(message)
       setMessages(messages => [...messages, message])
     })
     socket.emit('join', { email: user.email, room }, (error) => {
       if (error) alert(error);
     });
     return () => {
-      socket.emit('disconnect');
+      socket.emit("disconnect");
       socket.off();
     }
   }, [room])
@@ -140,14 +146,13 @@ const MessageField = ({ user }) => {
         placeholder="message..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        onKeyPress={e => (e.key === 'Enter' ? sendMessage(e) : null)}
-        autoComplete='off'
+        onKeyPress={(e) => (e.key === "Enter" ? sendMessage(e) : null)}
+        autoComplete="off"
         fullWidth
-        disabled={Object.keys(context.conversation).length === 0}
+        disabled={context.conversation ? false : true}
       />
     </div>
   );
-
 };
 
-export default MessageField;
+export default memo(MessageField);

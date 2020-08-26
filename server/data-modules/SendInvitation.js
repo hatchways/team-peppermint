@@ -1,21 +1,48 @@
-const sgMail = require('@sendgrid/mail');
+const MailGen = require("mailgen");
+const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SG_API_KEY);
 
-var sendInvite = function(reciever){
-    let msg ={
-        to: reciever,
-        from: "pepperminthw@gmail.com",
-        subject: 'Join to the app',
-        text: 'Chat with people from different contries'
-    }
-    return new Promise((resolve, reject)=>{
-        sgMail.send(msg)
-        .then(()=>{
-            resolve("invitation sent");
-        })
-        .catch((err)=>reject(err));
-    })
+const sendMail = (receiver, referrer) => {
+  const mailGenerator = new MailGen({
+    theme: "salted",
+    product: {
+      name: "Peppermint app",
+      link: "http://localhost:3000",
+    },
+  });
 
-    
-}
-module.exports.sendInvite = sendInvite;
+  const email = {
+    body: {
+      name: receiver,
+      intro: "Chat with people from different countries",
+      action: {
+        instructions: "Please click the button below to create an account",
+        button: {
+          color: "#33b5e5",
+          text: "Create an account",
+          link: `http://localhost:3000/signup?referrer=${referrer}`,
+        },
+      },
+    },
+  };
+
+  const emailTemplate = mailGenerator.generate(email);
+  require("fs").writeFileSync("preview.html", emailTemplate, "utf8");
+
+  let msg = {
+    to: receiver,
+    from: "pepperminthw@gmail.com",
+    subject: "Join to the Peppermint app",
+    // text: "Chat with people from different countries",
+    html: emailTemplate,
+  };
+  return new Promise((resolve, reject) => {
+    sgMail
+      .send(msg)
+      .then((res) => {
+        resolve("invitation sent", res);
+      })
+      .catch((err) => reject(err));
+  });
+};
+module.exports.sendMail = sendMail;

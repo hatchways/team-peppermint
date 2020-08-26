@@ -1,7 +1,4 @@
-import React, { useState, useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Redirect } from "react-router-dom";
-
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -9,47 +6,28 @@ import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import { useStyles } from "./style";
+
+import { useUserDispatch, setUserData } from "../../context/user/userContext";
 
 import { useHistory } from "react-router";
 
 import Axios from "axios";
 
-import UserContext from "../../context/UserContext";
+import {
+  userEmailFromLocalStorage,
+  createInvitation,
+} from "../../context/contacts/contactsContext";
+const capitalize = require("capitalize");
 
+const userEmail = userEmailFromLocalStorage();
+const parseUrl = require("parse-url");
+
+const pageUrl = window.location.href;
+const referrer = parseUrl(pageUrl).search.split("=")[1];
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-
-    display: "flex",
-    flexDirection: "Column",
-    marginTop: "40px",
-  },
-  formField: {
-    width: "80%",
-    marginBottom: "40px",
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "25ch",
-  },
-  header: {
-    marginTop: "80px",
-  },
-  languageHeader: {
-    marginTop: "20px",
-  },
-  ctaBTN: {
-    color: "#fff",
-    backgroundColor: "#3A8DFF",
-    width: "40%",
-    margin: "0 17.5%",
-    padding: "20px 30px",
-  },
-}));
 
 export default function UserAuthForm({ headerText }) {
   const classes = useStyles();
@@ -62,7 +40,7 @@ export default function UserAuthForm({ headerText }) {
   const [error, setError] = useState();
   let validEmail, validPassword, validName;
 
-  const { setUserData } = useContext(UserContext);
+  const dispatch = useUserDispatch();
   const history = useHistory();
 
   const [touched, setTouched] = useState({
@@ -73,6 +51,12 @@ export default function UserAuthForm({ headerText }) {
   const [nameHelperText, setNameHelperText] = useState("");
   const [emailHelperText, setEmailHelperText] = useState("");
   const [passwordHelperText, setPasswordHelperText] = useState("");
+
+  // if user logged in and gets invitation link with referrer then invitaions created automatically for both sides
+  if (userEmail && referrer) {
+    createInvitation(userEmail, referrer);
+    history.push("/");
+  }
 
   function validateInput(name, email, password) {
     // true means invalid, so our conditions got reversed
@@ -140,7 +124,6 @@ export default function UserAuthForm({ headerText }) {
 
   function isFormValid() {
     //check individual
-    //check individual
     validEmail = validateEmail(email);
     validPassword = validatePass(password);
 
@@ -179,10 +162,11 @@ export default function UserAuthForm({ headerText }) {
           setIsAlert(true);
           //set newUser to register and then post to backend, then reset fields
           const newUser = {
-            name: name,
+            name: capitalize(name),
             email: email,
             password: password,
             language: language,
+            referrer: referrer,
           };
           await Axios.post("http://localhost:3001/api/user/signup", newUser);
           const loginRes = await Axios.post(
@@ -192,10 +176,7 @@ export default function UserAuthForm({ headerText }) {
               password,
             }
           );
-          setUserData({
-            token: loginRes.data.token,
-            user: loginRes.data.user,
-          });
+          setUserData(loginRes.data.token, loginRes.data.user, dispatch);
           localStorage.setItem("auth-token", loginRes.data.token);
           resetInputs();
           history.push("/");
@@ -212,10 +193,7 @@ export default function UserAuthForm({ headerText }) {
             "http://localhost:3001/api/user/login",
             user
           );
-          setUserData({
-            token: loginRes.data.token,
-            user: loginRes.data.user,
-          });
+          setUserData(loginRes.data.token, loginRes.data.user, dispatch);
           localStorage.setItem("auth-token", loginRes.data.token);
           resetInputs();
           history.push("/");
@@ -302,11 +280,10 @@ export default function UserAuthForm({ headerText }) {
               <MenuItem value="chinese">Chinese (Mandarin)</MenuItem>
               <MenuItem value="spanish">Spanish</MenuItem>
               <MenuItem value="french">French</MenuItem>
-              <MenuItem value="russian">Russian</MenuItem>              
+              <MenuItem value="russian">Russian</MenuItem>
             </Select>
           </>
         ) : null}
-
 
         <Button
           variant="contained"

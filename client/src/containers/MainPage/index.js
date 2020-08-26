@@ -5,7 +5,7 @@ import MainContentField from "../MainContentField";
 import SelectConversation from "../../context/SelectConversation"
 const MainPage = () => {
   const classes = useStyles();
-  const [conversation, setConversation] = useState({})
+  const [conversation, setConversation] = useState()
   return (
     <main className={classes.root}>
       <SelectConversation.Provider value={{ conversation, setConversation }}>

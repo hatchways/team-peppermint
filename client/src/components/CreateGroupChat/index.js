@@ -7,13 +7,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import Axios from "axios";
-import UserContext from "../../context/UserContext";
+import { useUserState } from "../../context/user/userContext";
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 const CreateGroupChat = ({ open, onClose, contactsList }) => {
-
-  const userContext = useContext(UserContext);
-  const user = userContext.userData.user;
+  const { user } = useUserState();
   const [checkedBoxes, setCheckedBoxes] = useState({});
   const handleChange = (event) => {
     setCheckedBoxes({ ...checkedBoxes, [event.target.name]: event.target.checked })

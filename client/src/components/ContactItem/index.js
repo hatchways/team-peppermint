@@ -8,18 +8,20 @@ import {
   ButtonBase,
   Menu,
   MenuItem,
+  Tooltip,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
 import SelectConversation from "../../context/SelectConversation";
 const ContactItem = ({
-  imageUrl,
+  pictureUrl,
   name,
+  email,
   index,
   isOnline,
   handleDeleteContactButton,
   contact,
   select,
-  selected
+  selected,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -38,9 +40,14 @@ const ContactItem = ({
   };
 
   return (
-    <ListItem button className={classes.root} onClick={onContactClick} selected={selected === index}>
+    <ListItem
+      button
+      className={classes.root}
+      onClick={onContactClick}
+      selected={selected === index}
+    >
       <div className={classes.avatarNameContainer}>
-        <UserAvatar imageUrl={imageUrl} isOnline={isOnline} />
+        <UserAvatar imageUrl={pictureUrl} isOnline={isOnline} />
         <Typography
           variant="body1"
           className={classes.contactName}
@@ -49,14 +56,16 @@ const ContactItem = ({
           {name}
         </Typography>
       </div>
-      <ButtonBase
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-        className={classes.buttonBase}
-      >
-        <MoreHoriz />
-      </ButtonBase>
+      <Tooltip title="Delete contact" placement="bottom" arrow>
+        <ButtonBase
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          className={classes.buttonBase}
+        >
+          <MoreHoriz />
+        </ButtonBase>
+      </Tooltip>
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -64,9 +73,9 @@ const ContactItem = ({
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => handleDeleteContactButton("ya@ya.ru", index)}>
+        <MenuItem onClick={() => handleDeleteContactButton(email)}>
           Delete contact
-        </MenuItem>        
+        </MenuItem>
       </Menu>
     </ListItem>
   );

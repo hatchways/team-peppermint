@@ -4,12 +4,11 @@ import { useStyles } from "./style";
 import ChatItem from "../../components/ChatItem";
 import List from '@material-ui/core/List';
 import Axios from "axios";
-import UserContext from "../../context/UserContext";
+import { useUserState } from "../../context/user/userContext";
 const ChatList = () => {
   const classes = useStyles();
   const [chatList, setChatList] = useState([]);
-  const userContext = useContext(UserContext);
-  const user = userContext.userData.user;
+  const { user } = useUserState();
   const [selectedIndex, setSelectedIndex] = React.useState(-1);
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -18,7 +17,7 @@ const ChatList = () => {
     if(user)
     Axios.get(`user/${user.email}/groupchats`)
       .then((chats) => setChatList(chats.data))
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
   }
   useEffect(()=>{
     loadChats();
@@ -30,7 +29,7 @@ const ChatList = () => {
           <ChatItem
             key={index}
             name={chat}
-            messageCount="10"
+            messageCount={10}
             index={index}
             select={handleListItemClick}
             selected={selectedIndex}

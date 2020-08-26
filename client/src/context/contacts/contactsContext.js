@@ -1,14 +1,24 @@
 import React, { useReducer, useContext } from "react";
-import contactsReducer from "./contactsReducer";
-import { fetchContacts, deleteContact } from "./helper";
+import contactsInvitaitionsReducer from "./contactsInvitationsReducer";
+import {
+  fetchContactsAndInvitations,
+  deleteContact,
+  approveContact,
+  rejectContact,
+  userEmailFromLocalStorage,
+  createInvitation,
+  findContacts,
+} from "./helper";
 
 const ContactsStateContext = React.createContext();
 const ContactsDispatchContext = React.createContext();
 
 function ContactsProvider({ children }) {
-  const [state, dispatch] = useReducer(contactsReducer, {
+  const [state, dispatch] = useReducer(contactsInvitaitionsReducer, {
     contacts: [],
+    invitations: [],
   });
+
   return (
     <ContactsStateContext.Provider value={state}>
       <ContactsDispatchContext.Provider value={dispatch}>
@@ -20,18 +30,10 @@ function ContactsProvider({ children }) {
 
 function useContactsState() {
   const context = useContext(ContactsStateContext);
-  if (context === undefined) {
-    throw new Error("useContactsState must be used within a ContactsProvider");
-  }
   return context;
 }
 function useContactsDispatch() {
   const context = useContext(ContactsDispatchContext);
-  if (context === undefined) {
-    throw new Error(
-      "useContactsDispatch must be used within a ContactsProvider"
-    );
-  }
   return context;
 }
 
@@ -39,6 +41,11 @@ export {
   ContactsProvider,
   useContactsState,
   useContactsDispatch,
-  fetchContacts,
+  fetchContactsAndInvitations,
   deleteContact,
+  approveContact,
+  rejectContact,
+  userEmailFromLocalStorage,
+  createInvitation,
+  findContacts,
 };
