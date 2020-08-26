@@ -85,6 +85,7 @@ export const findContacts = async (userEmail, query, dispatch) => {
       dispatch({
         type: UPDATE_CONTACTS,
         payload: res.data.foundContactsList,
+        search: true,
       });
       return true;
     } else {

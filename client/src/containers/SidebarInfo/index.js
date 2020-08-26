@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useStyles } from "./style";
 import {
@@ -19,9 +19,10 @@ import { DebounceInput } from "react-debounce-input";
 import ClearIcon from "@material-ui/icons/Clear";
 import {
   useContactsDispatch,
+  useContactsState,
   fetchContactsAndInvitations,
-  userEmailFromLocalStorage,
   findContacts,
+  userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
 import Alert from "@material-ui/lab/Alert";
 
@@ -61,8 +62,15 @@ const SidebarInfo = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useContactsDispatch();
+  const { contacts } = useContactsState();
 
   const userEmail = userEmailFromLocalStorage();
+
+  useEffect(() => {
+    userEmail &&
+      !contacts.length &&
+      fetchContactsAndInvitations(userEmail, dispatch);
+  }, [userEmail, contacts.length, dispatch]);
 
   const handleChange = (event, newValue) => {
     setTabNumber(newValue);
@@ -78,7 +86,7 @@ const SidebarInfo = () => {
     }
   };
 
-  const handleSearchClear = (params) => {
+  const handleSearchClear = () => {
     fetchContactsAndInvitations(userEmail, dispatch);
     setQuery("");
   };
@@ -129,10 +137,7 @@ const SidebarInfo = () => {
           minLength={2}
         />
         <Tooltip title="Clear search" placement="bottom" arrow>
-          <ButtonBase
-            onClick={handleSearchClear}
-            className={classes.clearIcon}
-          >
+          <ButtonBase onClick={handleSearchClear} className={classes.clearIcon}>
             <ClearIcon />
           </ButtonBase>
         </Tooltip>

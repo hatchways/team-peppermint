@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
 import { List, Typography, ButtonBase } from "@material-ui/core";
@@ -6,8 +6,7 @@ import ContactItem from "../../components/ContactItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
   useContactsDispatch,
-  useContactsState,
-  fetchContactsAndInvitations,
+  useContactsState,  
   deleteContact,
   userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
@@ -16,7 +15,6 @@ import axios from "axios";
 import isEmail from "validator/lib/isEmail";
 
 const ContactsList = () => {
-  const [contactsList, setContactsList] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [copied, setCopied] = useState(false);
 
@@ -40,16 +38,6 @@ const ContactsList = () => {
   const { user } = useUserState();
 
   const userEmail = userEmailFromLocalStorage();
-
-  useEffect(() => {
-    userEmail &&
-      !contactsList.length &&
-      fetchContactsAndInvitations(userEmail, dispatch);
-  }, [userEmail, contactsList.length, dispatch]);
-
-  useEffect(() => {
-    setContactsList(contacts);
-  }, [contacts]);
 
   const handleDeleteContactButton = (email) => {
     deleteContact(userEmail, email, dispatch);
@@ -130,8 +118,8 @@ const ContactsList = () => {
         handleSendEmail={handleSendEmail}
       />
       <List className={classes.root}>
-        {!!contactsList.length ? (
-          contactsList.map((contact, index) => (
+        {!!contacts.length ? (
+          contacts.map((contact, index) => (
             <ContactItem
               key={index}
               name={contact.name}

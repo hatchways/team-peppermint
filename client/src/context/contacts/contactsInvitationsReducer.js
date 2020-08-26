@@ -1,6 +1,7 @@
 import {
   FETCH_CONTACTS_INVITATIONS,
-  UPDATE_INVITATIONS,UPDATE_CONTACTS
+  UPDATE_INVITATIONS,
+  UPDATE_CONTACTS,
 } from "../../types";
 
 export default function contactsInvitaitionsReducer(state, action) {
@@ -11,7 +12,7 @@ export default function contactsInvitaitionsReducer(state, action) {
         contacts: action.payload.contacts,
         invitations: action.payload.invitations,
       };
-    }    
+    }
     case UPDATE_INVITATIONS: {
       return {
         ...state,
@@ -21,7 +22,7 @@ export default function contactsInvitaitionsReducer(state, action) {
     case UPDATE_CONTACTS: {
       return {
         ...state,
-        contacts: action.payload,
+        contacts: action.payload,        
       };
     }
     default:
