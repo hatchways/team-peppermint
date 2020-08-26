@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useStyles } from "./style";
 import MainContentFieldNavBar from "../MainContentFieldNavBar";
 import MessageField from "../MessageField";
-import UserContext from "../../Context/UserContext";
-import ToggleLanguage from "../../Context/ToggleLanguage"
+import UserContext from "../../context/UserContext";
+import ToggleLanguage from "../../context/ToggleLanguage"
 const MainContentField = () => {
   const classes = useStyles();
   const [original, setOriginal] = useState(false)

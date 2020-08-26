@@ -10,7 +10,7 @@ import {
   useContactsState,
   fetchContacts,
   deleteContact,
-} from "../../Context/contacts/contactsContext";
+} from "../../context/contacts/contactsContext";
 import CreateGroupChat from "../../components/CreateGroupChat";
 
 const jwt_decode = require("jwt-decode");

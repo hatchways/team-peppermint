@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useStyles } from "./style";
 import Sidebar from "../Sidebar";
 import MainContentField from "../MainContentField";
-import SelectConversation from "../../Context/SelectConversation"
+import SelectConversation from "../../context/SelectConversation"
 const MainPage = () => {
   const classes = useStyles();
   const [conversation, setConversation] = useState({})

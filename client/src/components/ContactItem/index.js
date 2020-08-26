@@ -10,7 +10,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
-import SelectConversation from "../../Context/SelectConversation";
+import SelectConversation from "../../context/SelectConversation";
 const ContactItem = ({
   imageUrl,
   name,

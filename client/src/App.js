@@ -7,10 +7,10 @@ import LoginPage from "./pages/loginPage";
 import SignupPage from "./pages/signupPage";
 
 import MainPage from "./containers/MainPage";
-import UserContext from './Context/UserContext';
+import UserContext from './context/UserContext';
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
-import { ContactsProvider } from "./Context/contacts/contactsContext";
+import { ContactsProvider } from "./context/contacts/contactsContext";
 const dotenv = require("dotenv");
 dotenv.config();
 

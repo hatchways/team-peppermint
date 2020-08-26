@@ -4,10 +4,10 @@ import { Grid, TextField } from "@material-ui/core"
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
 import Axios from 'axios';
-import SelectConversation from "../../Context/SelectConversation"
-import { translateText } from "../../Context/messages/helper"
+import SelectConversation from "../../context/SelectConversation"
+import { translateText } from "../../context/messages/helper"
 import ISO6391 from 'iso-639-1';
-import ToggleLanguage from "../../Context/ToggleLanguage";
+import ToggleLanguage from "../../context/ToggleLanguage";
 
 const getVersion = (versions, language) => {
   return versions.find((version) => version.language === language);

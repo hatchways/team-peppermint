@@ -3,7 +3,7 @@ import { useStyles } from "./style";
 import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
 import { Typography, Chip, ListItem } from "@material-ui/core";
-import SelectContact from "../../Context/SelectConversation";
+import SelectContact from "../../context/SelectConversation";
 import Axios from "axios"
 const ChatItem = (props) => {
   const classes = useStyles();

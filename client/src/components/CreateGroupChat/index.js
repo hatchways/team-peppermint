@@ -7,7 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import Axios from "axios";
-import UserContext from "../../Context/UserContext";
+import UserContext from "../../context/UserContext";
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 const CreateGroupChat = ({ open, onClose, contactsList }) => {
@@ -30,9 +30,9 @@ const CreateGroupChat = ({ open, onClose, contactsList }) => {
     Axios.post(`/user/${user.email}/conversation`, [...users, user.email])
       .then((msg) => {
         Axios.post(`/user/${user.email}/groupchat`, [...users, user.email])
-          .then((msg) => console.log(msg))
+          .then((msg) =>onClose())
           .catch((err) => console.log(err))
-
+          
       })
       .catch((err) => {
         if(err.response.data.code===11000){
@@ -74,12 +74,13 @@ const CreateGroupChat = ({ open, onClose, contactsList }) => {
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={createConversation} color="primary">
-          Create
-          </Button>
         <Button onClick={onClose} color="secondary">
           Cancel
-          </Button>
+        </Button>
+        <Button onClick={createConversation} color="primary">
+          Create
+        </Button>
+ 
       </DialogActions>
     </Dialog>
   );

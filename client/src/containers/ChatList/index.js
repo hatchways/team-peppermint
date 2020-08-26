@@ -4,7 +4,7 @@ import { useStyles } from "./style";
 import ChatItem from "../../components/ChatItem";
 import List from '@material-ui/core/List';
 import Axios from "axios";
-import UserContext from "../../Context/UserContext";
+import UserContext from "../../context/UserContext";
 const ChatList = () => {
   const classes = useStyles();
   const [chatList, setChatList] = useState([]);

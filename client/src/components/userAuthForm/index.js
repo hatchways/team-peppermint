@@ -14,7 +14,7 @@ import { useHistory } from "react-router";
 
 import Axios from "axios";
 
-import UserContext from "../../Context/UserContext";
+import UserContext from "../../context/UserContext";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
