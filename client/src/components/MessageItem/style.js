@@ -1,31 +1,44 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) => ({
-    root: {
-      display: "flex",
-      flexDirection: "Column",
-      marginTop: "40px",
+  root: {
+    width: "100%",
+    padding: theme.spacing(2),
+  },
+  messageView: {
+    display: "flex",
+    '&.my': {
+      justifyContent: "flex-end"
     },
-    formField: {
-      width: "80%",
-      marginBottom: "40px",
+    '&.other': {
+      justifyContent: "flex-start"
+    }
+  },
+  messageInfo: {
+    marginLeft: theme.spacing(2),
+  },
+  messageDetails: {
+    fontSize: "0.7em",
+    '&.my': {
+      textAlign: "right"
     },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: "25ch",
+    '&.other': {
+      textAlign: "left"
+    }
+  },
+  messageText: {
+    borderRadius: 10,
+    padding: 10,
+    '&.my': {
+      textAlign: "right",
+      borderBottomRightRadius: 0,
+      background: "lightgrey",
+      color: "black"
     },
-    header: {
-      marginTop: "80px",
-    },
-    languageHeader: {
-      marginTop: "20px",
-    },
-    ctaBTN: {
-      color: "#fff",
-      backgroundColor: "#3A8DFF",
-      width: "40%",
-      margin: "0 17.5%",
-      padding: "20px 30px",
-    },
-  }));
+    '&.other': {
+      borderTopLeftRadius: 0,
+      background: "linear-gradient(130deg, rgba(39,31,208,1) 0%, rgba(32,167,253,1) 75%, rgba(106,194,255,1) 100%)",
+      color: "white"
+    }
+  }
+}));
