@@ -14,7 +14,7 @@ const replaceUserImage = async (newImageData, oldImageData, userEmail) => {
       await desertRef.delete();
     }
   } catch (err) {
-    throw Error("Sorry something went wrong ", err.message);
+    throw Error("Oops, something went wrong ", err.message);
   }
 };
 

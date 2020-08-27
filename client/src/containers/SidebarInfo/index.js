@@ -67,6 +67,12 @@ const SidebarInfo = () => {
   const userEmail = userEmailFromLocalStorage();
 
   useEffect(() => {
+    if (tabNumber === 0 || tabNumber === 2) {
+      setQuery("");
+    }
+  }, [tabNumber]);
+
+  useEffect(() => {
     userEmail &&
       !contacts.length &&
       fetchContactsAndInvitations(userEmail, dispatch);
@@ -144,7 +150,7 @@ const SidebarInfo = () => {
       </div>
       <Collapse in={isOpen} className={classes.collapse}>
         <Alert severity="info" className={classes.alert}>
-          <Typography variant="body1">Contact not found</Typography>
+          <Typography variant="body1">Oops, no contact found</Typography>
         </Alert>
       </Collapse>
       <TabPanel value={tabNumber} index={0} className={classes.tabPanel}>

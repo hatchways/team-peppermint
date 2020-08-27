@@ -1,10 +1,10 @@
-import React, { memo, useState, useContext, useEffect } from "react";
+import React, { memo, useContext } from "react";
 import { useStyles } from "./style";
 import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
 import { Typography, Chip, ListItem } from "@material-ui/core";
 import SelectConversation from "../../context/SelectConversation";
-import Axios from "axios"
+
 const ChatItem = (props) => {
   const classes = useStyles();
   const { name, messageCount, index, select, selected } = props;

@@ -9,7 +9,7 @@ const jwtDecode = require("jwt-decode");
 export const fetchContactsAndInvitations = async (email, dispatch) => {
   const userData = await axios.get(`/user/${email}/contacts`);
   if (!userData.data) {
-    throw Error("Sorry, no contacts found");
+    throw Error("Oops, no contacts found");
   }
 
   dispatch({
@@ -29,7 +29,7 @@ export const deleteContact = async (userEmail, emailToDelete, dispatch) => {
   });
 
   if (!contacts.data) {
-    throw Error("Sorry, failed to delete contact");
+    throw Error("Oops, failed to delete contact");
   }
 
   fetchContactsAndInvitations(userEmail, dispatch);
@@ -45,7 +45,7 @@ export const approveContact = async (userEmail, contactToApprove, dispatch) => {
 
     fetchContactsAndInvitations(userEmail, dispatch);
   } catch (err) {
-    throw Error("Sorry something went wrong ", err.message);
+    throw Error("Oops, something went wrong ", err.message);
   }
 };
 
@@ -61,7 +61,7 @@ export const rejectContact = async (userEmail, emailToReject, dispatch) => {
 
     dispatch({ type: UPDATE_INVITATIONS, payload: newInvitationsList });
   } catch (err) {
-    throw Error("Sorry something went wrong ", err.message);
+    throw Error("Oops, something went wrong ", err.message);
   }
 };
 
@@ -72,7 +72,7 @@ export const createInvitation = async (userEmail, referrer) => {
     });
     return res.data;
   } catch (err) {
-    throw Error("Sorry something went wrong ", err.message);
+    throw Error("Oops, something went wrong ", err.message);
   }
 };
 
@@ -92,13 +92,13 @@ export const findContacts = async (userEmail, query, dispatch) => {
       return false;
     }
   } catch (err) {
-    throw Error("Sorry something went wrong ", err.message);
+    throw Error("Oops, something went wrong ", err.message);
   }
 };
 
 export const userEmailFromLocalStorage = () => {
   const userToken = localStorage.getItem("auth-token");
-  let decodedToken = "Sorry no email found";
+  let decodedToken = "Oops, no email found";
   if (userToken) {
     decodedToken = jwtDecode(userToken);
   }

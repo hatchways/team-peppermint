@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect, useCallback } from "react";
 import { useStyles } from "./style";
 import ChatItem from "../../components/ChatItem";
-import List from '@material-ui/core/List';
+import List from "@material-ui/core/List";
 import Axios from "axios";
 import { useUserState } from "../../context/user/userContext";
+
 const ChatList = () => {
   const classes = useStyles();
   const [chatList, setChatList] = useState([]);
@@ -13,15 +13,16 @@ const ChatList = () => {
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
-  const loadChats = () => {
-    if(user)
-    Axios.get(`user/${user.email}/groupchats`)
-      .then((chats) => setChatList(chats.data))
-      .catch((err) => console.error(err))
-  }
-  useEffect(()=>{
+  const loadChats = useCallback(() => {
+    if (user)
+      Axios.get(`user/${user.email}/groupchats`)
+        .then((chats) => setChatList(chats.data))
+        .catch((err) => console.error(err));
+  }, [user]);
+
+  useEffect(() => {
     loadChats();
-  },[user])
+  }, [loadChats]);
   return (
     <List className={classes.root}>
       {chatList &&
