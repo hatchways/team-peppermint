@@ -41,12 +41,12 @@ const ContactsList = () => {
   const { contacts } = useContactsState();
   const { user } = useUserState();
   const userEmail = userEmailFromLocalStorage();
-  
+
   useEffect(() => {
     socket.on("onlineUsers", (data) => {
       updateContacts(data, contacts, dispatch);
     });
-  }, []);
+  }, [dispatch, contacts]);
 
   const handleDeleteContactButton = (email) => {
     deleteContact(userEmail, email, dispatch);

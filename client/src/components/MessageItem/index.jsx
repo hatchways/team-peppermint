@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 import { useStyles } from "./style";
-import { Typography, Avatar } from "@material-ui/core";
+import { Typography, Avatar, ButtonBase } from "@material-ui/core";
 const MessageItem = (props) => {
   const classes = useStyles();
-  const { name, date, avatar, text, myMessage, image } = props;
+  const { name, date, avatar, text, myMessage, image, handleModalOpen } = props;
   const localDate = new Date(date);
   const dateString = localDate.toLocaleTimeString([], {
     hour: "2-digit",
@@ -29,13 +29,18 @@ const MessageItem = (props) => {
             className={`${classes.messageText} ${myMessage ? "my" : "other"}`}
           >
             {image !== null && (
-              <img
-                src={image.url}
-                alt="picture"
-                width="100px"
-                height="100px"
-                style={{ borderRadius: 10, display: "block" }}
-              ></img>
+              <ButtonBase
+                onClick={() => handleModalOpen(image.url)}
+                style={{ display: "block" }}
+              >
+                <img
+                  src={image.url}
+                  alt="userpicture"
+                  width="150px"
+                  height="150px"
+                  className={classes.image}
+                ></img>
+              </ButtonBase>
             )}
             {text !== undefined && text}
           </Typography>

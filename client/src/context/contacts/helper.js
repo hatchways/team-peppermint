@@ -2,6 +2,7 @@ import {
   FETCH_CONTACTS_INVITATIONS,
   UPDATE_INVITATIONS,
   UPDATE_CONTACTS,
+  RESET_LISTS,
 } from "../../types";
 import axios from "axios";
 
@@ -82,7 +83,7 @@ export const updateContacts = async (
   dispatch
 ) => {
   try {
-    contacts.map((contact) => {
+    contacts.forEach((contact) => {
       const isOnline = onlineContactsList.includes(contact.email);
       contact.isOnline = isOnline;
     });
@@ -114,6 +115,12 @@ export const findContacts = async (userEmail, query, dispatch) => {
   } catch (err) {
     throw Error("Oops, something went wrong ", err.message);
   }
+};
+
+export const resetContactsInvitationsLists = (dispatch) => {
+  dispatch({
+    type: RESET_LISTS,
+  });
 };
 
 export const userEmailFromLocalStorage = () => {

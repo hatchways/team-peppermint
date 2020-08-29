@@ -17,6 +17,10 @@ import {
   useUserDispatch,
   fetchUserData,
 } from "../../context/user/userContext";
+import {
+  resetContactsInvitationsLists,
+  useContactsDispatch,
+} from "../../context/contacts/contactsContext";
 import socket from "../../socket-client/socket";
 
 const SidebarNavBar = () => {
@@ -27,6 +31,7 @@ const SidebarNavBar = () => {
 
   const { user } = useUserState();
   const dispatch = useUserDispatch();
+  const contactsDispatch = useContactsDispatch();
 
   const isOnline = localStorage.getItem("auth-token");
 
@@ -48,12 +53,13 @@ const SidebarNavBar = () => {
     await uploadUserImage(files[0], userData.pictureURL, userData.email);
     fetchUserData(dispatch);
   };
-  
+
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
     setAnchorEl(null);
+    resetContactsInvitationsLists(contactsDispatch);
     socket.emit("logout", userData.email);
-    // socket.off();
+    socket.off();
   };
 
   return (

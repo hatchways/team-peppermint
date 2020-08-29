@@ -16,10 +16,12 @@ import ISO6391 from "iso-639-1";
 import ToggleLanguage from "../../context/ToggleLanguage";
 import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfiedOutlined";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import CloseIcon from "@material-ui/icons/Close";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import { DropzoneDialog } from "material-ui-dropzone";
 import uploadUserImage from "../../services/uploadUserImage";
+import PictureModal from "../../components/PictureModal";
 
 const getVersion = (versions, language) => {
   return versions.find((version) => version.language === language);
@@ -39,6 +41,8 @@ const MessageField = ({ user }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [imageEl, setImageEl] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [largeScreenPicture, setLargeScreenPicture] = useState(null);
 
   const handleSendMessage = (e) => (e.key === "Enter" ? sendMessage(e) : null);
 
@@ -62,7 +66,20 @@ const MessageField = ({ user }) => {
     setImageEl(null);
     const imageData = await uploadUserImage(files[0], null, user.email);
     setImageUrl(imageData);
-    console.log("Image saved...", imageData);
+  };
+
+  const handleCloseSmallImage = () => {
+    setImageUrl(null);
+  };
+
+  const handleModalOpen = (imageUrl) => {
+    setLargeScreenPicture(imageUrl);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setLargeScreenPicture(null);
   };
 
   const createMessageObject = async (date, text) => {
@@ -139,7 +156,6 @@ const MessageField = ({ user }) => {
   const sendMessage = async (event) => {
     event.preventDefault();
     currentTime = new Date().toISOString();
-    console.log("MESSAGE CONTENT ", message);
     if (message || imageUrl) {
       createMessageObject(currentTime, message)
         .then((msg) => {
@@ -191,7 +207,6 @@ const MessageField = ({ user }) => {
       <div className={classes.messegesView}>
         {!!messages.length > 0 &&
           messages.map((msg, i) => {
-            console.log("MSG IMAGE...", msg.image);
             if (msg && (msg.textVersions[0] || msg.image)) {
               msgVersion = getVersion(msg.textVersions, user.language);
               return (
@@ -210,6 +225,8 @@ const MessageField = ({ user }) => {
                     }
                     myMessage={msg.sender === user.email}
                     image={msg.image ? msg.image : null}
+                    handleModalOpen={handleModalOpen}
+                    handleModalClose={handleModalClose}
                   />
                 </div>
               );
@@ -217,6 +234,11 @@ const MessageField = ({ user }) => {
           })}
         <div ref={messagesEndRef} />
       </div>
+      <PictureModal
+        open={modalOpen}
+        handleModalClose={handleModalClose}
+        src={largeScreenPicture && largeScreenPicture}
+      />
       <TextField
         className={classes.messageInput}
         autoFocus={true}
@@ -232,13 +254,34 @@ const MessageField = ({ user }) => {
           startAdornment: (
             <InputAdornment position="start">
               {imageUrl !== null && (
-                <img
-                  src={imageUrl.url}
-                  alt="User"
-                  width="50px"
-                  height="50px"
-                  style={{ borderRadius: 10, display: "block" }}
-                ></img>
+                <div
+                  style={{
+                    borderRadius: 10,
+                    marginRight: 10,
+                  }}
+                >
+                  <ButtonBase
+                    style={{
+                      position: "absolute",
+                      top: -5,
+                      left: 60,
+                    }}
+                    onClick={handleCloseSmallImage}
+                  >
+                    <CloseIcon />
+                  </ButtonBase>
+                  <img
+                    src={imageUrl.url}
+                    alt="userpicture"
+                    width="50px"
+                    height="50px"
+                    style={{
+                      borderRadius: 10,
+                      display: "block",
+                      outline: "none",
+                    }}
+                  ></img>
+                </div>
               )}
             </InputAdornment>
           ),

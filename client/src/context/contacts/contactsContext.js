@@ -9,6 +9,7 @@ import {
   createInvitation,
   findContacts,
   updateContacts,
+  resetContactsInvitationsLists,
 } from "./helper";
 
 const ContactsStateContext = React.createContext();
@@ -50,4 +51,5 @@ export {
   createInvitation,
   findContacts,
   updateContacts,
+  resetContactsInvitationsLists,
 };
