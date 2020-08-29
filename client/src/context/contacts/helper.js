@@ -4,6 +4,7 @@ import {
   UPDATE_CONTACTS,
 } from "../../types";
 import axios from "axios";
+
 const jwtDecode = require("jwt-decode");
 
 export const fetchContactsAndInvitations = async (email, dispatch) => {
@@ -11,7 +12,6 @@ export const fetchContactsAndInvitations = async (email, dispatch) => {
   if (!userData.data) {
     throw Error("Oops, no contacts found");
   }
-
   dispatch({
     type: FETCH_CONTACTS_INVITATIONS,
     payload: {
@@ -76,16 +76,36 @@ export const createInvitation = async (userEmail, referrer) => {
   }
 };
 
+export const updateContacts = async (
+  onlineContactsList,
+  contacts,
+  dispatch
+) => {
+  try {
+    contacts.map((contact) => {
+      const isOnline = onlineContactsList.includes(contact.email);
+      contact.isOnline = isOnline;
+    });
+
+    dispatch({
+      type: UPDATE_CONTACTS,
+      payload: contacts,
+    });
+  } catch (err) {
+    throw Error("Oops, something went wrong ", err.message);
+  }
+};
+
 export const findContacts = async (userEmail, query, dispatch) => {
   try {
     const res = await axios.post(`user/${userEmail}/search`, {
       query,
     });
+
     if (res.data.foundContactsList.length > 0) {
       dispatch({
         type: UPDATE_CONTACTS,
         payload: res.data.foundContactsList,
-        search: true,
       });
       return true;
     } else {

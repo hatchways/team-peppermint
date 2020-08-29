@@ -9,12 +9,16 @@ import { useUserDispatch, fetchUserData } from "./context/user/userContext";
 import MainPage from "./containers/MainPage";
 import { MuiThemeProvider, Container, CssBaseline } from "@material-ui/core";
 import "./App.css";
+import { userEmailFromLocalStorage } from "./context/contacts/helper";
+import socket from "./socket-client/socket";
 
 const dotenv = require("dotenv");
 dotenv.config();
 
 function App() {
   const dispatch = useUserDispatch();
+
+  const email = userEmailFromLocalStorage();
 
   useEffect(() => {
     const checkLoggedIn = async () => {
@@ -33,11 +37,20 @@ function App() {
         }
       );
       if (tokenRes.data) {
+        socket.emit("login", email);
         fetchUserData(dispatch);
       }
-    };    
+    };
     checkLoggedIn();
   }, [dispatch]);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', function (e) { 
+      e.preventDefault(); 
+      e.returnValue = '';
+      socket.emit("logout", email);
+  }); 
+  }, [])
 
   return (
     <MuiThemeProvider theme={theme}>

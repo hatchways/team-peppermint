@@ -13,6 +13,7 @@ import { useUserDispatch, setUserData } from "../../context/user/userContext";
 import { useHistory } from "react-router";
 
 import Axios from "axios";
+import socket from "../../socket-client/socket";
 
 import {
   userEmailFromLocalStorage,
@@ -176,6 +177,7 @@ export default function UserAuthForm({ headerText }) {
               password,
             }
           );
+          socket.emit("login", email);
           setUserData(loginRes.data.token, loginRes.data.user, dispatch);
           localStorage.setItem("auth-token", loginRes.data.token);
           resetInputs();
@@ -193,6 +195,7 @@ export default function UserAuthForm({ headerText }) {
             "http://localhost:3001/api/user/login",
             user
           );
+          socket.emit("login", email);
           setUserData(loginRes.data.token, loginRes.data.user, dispatch);
           localStorage.setItem("auth-token", loginRes.data.token);
           resetInputs();

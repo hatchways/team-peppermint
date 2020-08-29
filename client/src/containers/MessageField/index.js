@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef, useContext, memo } from "react";
 import { useStyles, StyledMenu } from "./style";
-import { TextField, InputAdornment, ButtonBase } from "@material-ui/core";
+import {
+  TextField,
+  InputAdornment,
+  ButtonBase,
+  Tooltip,
+} from "@material-ui/core";
+import PropTypes from "prop-types";
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
 import Axios from "axios";
@@ -12,6 +18,8 @@ import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfie
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
+import { DropzoneDialog } from "material-ui-dropzone";
+import uploadUserImage from "../../services/uploadUserImage";
 
 const getVersion = (versions, language) => {
   return versions.find((version) => version.language === language);
@@ -29,17 +37,32 @@ const MessageField = ({ user }) => {
   const messagesEndRef = useRef(null);
   const [users, setUsers] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [imageEl, setImageEl] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
-  const handleEmojiClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleSendMessage = (e) => (e.key === "Enter" ? sendMessage(e) : null);
+
+  const handleEmojiClick = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const handleSelectedEmoji = () => {
-    setAnchorEl(null);
+  const handleImageSelector = (e) => {
+    setImageEl(e.currentTarget);
+  };
+
+  const handleImageSelectorClose = () => {
+    setImageEl(null);
+  };
+
+  const handleImageSave = async (files) => {
+    setImageEl(null);
+    const imageData = await uploadUserImage(files[0], null, user.email);
+    setImageUrl(imageData);
+    console.log("Image saved...", imageData);
   };
 
   const createMessageObject = async (date, text) => {
@@ -48,22 +71,29 @@ const MessageField = ({ user }) => {
       date: date,
       textVersions: [],
     };
-    newMsg.textVersions.push({
-      language: user.language,
-      text: text,
-    });
-    console.log(languages);
-    if (languages) {
-      await Promise.all(
-        languages.map(async (language) => {
-          if (language !== user.language) {
-            newMsg.textVersions.push({
-              language: language,
-              text: await translateText(text, ISO6391.getCode(language)),
-            });
-          }
-        })
-      );
+
+    if (imageUrl) {
+      newMsg.image = imageUrl;
+    }
+
+    if (text) {
+      newMsg.textVersions.push({
+        language: user.language,
+        text: text,
+      });
+      console.log(languages);
+      if (languages) {
+        await Promise.all(
+          languages.map(async (language) => {
+            if (language !== user.language) {
+              newMsg.textVersions.push({
+                language: language,
+                text: await translateText(text, ISO6391.getCode(language)),
+              });
+            }
+          })
+        );
+      }
     }
     return newMsg;
   };
@@ -105,24 +135,29 @@ const MessageField = ({ user }) => {
       msg
     );
   };
+
   const sendMessage = async (event) => {
     event.preventDefault();
     currentTime = new Date().toISOString();
-    if (message) {
+    console.log("MESSAGE CONTENT ", message);
+    if (message || imageUrl) {
       createMessageObject(currentTime, message)
         .then((msg) => {
           socket.emit("message", msg, () => {
             saveMessage(msg);
             setMessage("");
+            setImageUrl(null);
             scrollToBottom();
           });
         })
         .catch((err) => console.log(err));
     }
   };
+
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -156,7 +191,8 @@ const MessageField = ({ user }) => {
       <div className={classes.messegesView}>
         {!!messages.length > 0 &&
           messages.map((msg, i) => {
-            if (msg && msg.textVersions[0]) {
+            console.log("MSG IMAGE...", msg.image);
+            if (msg && (msg.textVersions[0] || msg.image)) {
               msgVersion = getVersion(msg.textVersions, user.language);
               return (
                 <div key={i}>
@@ -164,13 +200,16 @@ const MessageField = ({ user }) => {
                     name={msg.sender}
                     date={msg.date}
                     text={
-                      ToggleLanguageContext.original
-                        ? msg.textVersions[0].text
-                        : msgVersion
-                        ? msgVersion.text
-                        : msg.textVersions[0].text
+                      msg.textVersions[0]
+                        ? ToggleLanguageContext.original
+                          ? msg.textVersions[0].text
+                          : msgVersion
+                          ? msgVersion.text
+                          : msg.textVersions[0].text
+                        : null
                     }
                     myMessage={msg.sender === user.email}
+                    image={msg.image ? msg.image : null}
                   />
                 </div>
               );
@@ -185,22 +224,39 @@ const MessageField = ({ user }) => {
         placeholder="message..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        onKeyPress={(e) => (e.key === "Enter" ? sendMessage(e) : null)}
+        onKeyPress={(e) => handleSendMessage(e)}
         autoComplete="off"
         fullWidth
         disabled={context.conversation ? false : true}
         InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              {imageUrl !== null && (
+                <img
+                  src={imageUrl.url}
+                  alt="User"
+                  width="50px"
+                  height="50px"
+                  style={{ borderRadius: 10, display: "block" }}
+                ></img>
+              )}
+            </InputAdornment>
+          ),
           endAdornment: (
             <InputAdornment position="end">
-              <ButtonBase
-                aria-controls="customized-menu"
-                aria-haspopup="true"
-                onClick={handleEmojiClick}
-                disabled={context.conversation ? false : true}
-                style={{ marginRight: 15 }}
-              >
-                <SentimentSatisfiedOutlinedIcon />
-              </ButtonBase>
+              <Tooltip title="Choose an emoji" placement="top" arrow>
+                <span>
+                  <ButtonBase
+                    aria-controls="customized-menu"
+                    aria-haspopup="true"
+                    onClick={handleEmojiClick}
+                    disabled={context.conversation ? false : true}
+                    style={{ marginRight: 15 }}
+                  >
+                    <SentimentSatisfiedOutlinedIcon />
+                  </ButtonBase>
+                </span>
+              </Tooltip>
               <StyledMenu
                 id="customized-menu"
                 anchorEl={anchorEl}
@@ -210,18 +266,32 @@ const MessageField = ({ user }) => {
               >
                 <Picker
                   set="google"
+                  title="Peppermint chat"
                   onSelect={(emoji) => setMessage(emoji.native)}
                   emojiSize={20}
-                  onClick={handleSelectedEmoji}
+                  onClick={handleClose}
                 />
               </StyledMenu>
-              <ButtonBase
-                aria-label="select image"
-                onClick={() => console.log("Image selector clicked...")}
-                disabled={context.conversation ? false : true}
-              >
-                <FileCopyOutlinedIcon />
-              </ButtonBase>
+              <Tooltip title="Add photos" placement="top" arrow>
+                <span>
+                  <ButtonBase
+                    aria-label="select image"
+                    onClick={handleImageSelector}
+                    disabled={context.conversation ? false : true}
+                  >
+                    <FileCopyOutlinedIcon />
+                  </ButtonBase>
+                </span>
+              </Tooltip>
+              <DropzoneDialog
+                open={Boolean(imageEl)}
+                onSave={handleImageSave}
+                showPreviews={true}
+                maxFileSize={3000000}
+                onClose={() => {
+                  handleImageSelectorClose();
+                }}
+              />
             </InputAdornment>
           ),
         }}
@@ -231,3 +301,10 @@ const MessageField = ({ user }) => {
 };
 
 export default memo(MessageField);
+
+MessageField.propTypes = {
+  user: PropTypes.shape({
+    language: PropTypes.string,
+    email: PropTypes.string,
+  }),
+};

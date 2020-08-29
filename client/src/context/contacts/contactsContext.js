@@ -8,6 +8,7 @@ import {
   userEmailFromLocalStorage,
   createInvitation,
   findContacts,
+  updateContacts,
 } from "./helper";
 
 const ContactsStateContext = React.createContext();
@@ -48,4 +49,5 @@ export {
   userEmailFromLocalStorage,
   createInvitation,
   findContacts,
+  updateContacts,
 };
