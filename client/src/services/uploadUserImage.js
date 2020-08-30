@@ -1,18 +1,17 @@
 import axios from "axios";
 import firebase from "../lib/fbConfig";
+import { keepTrying } from "./getResizedImageUrl";
+const cryptoRandomString = require("crypto-random-string");
 
 let storageRef = firebase.storage().ref();
 
 const replaceUserImage = async (newImageData, oldImageData, userEmail) => {
   let desertRef;
   try {
-    if (oldImageData !== null) {
-      await axios.put(`user/${userEmail}/image`, {
-        newImageData: { ...newImageData },
-      });
-    } else {
-      console.log("USER PICTURE FOR MESSAGE FIELD UPLOADED TO FIREBASE...");
-    }
+    await axios.put(`user/${userEmail}/image`, {
+      newImageData: { ...newImageData },
+    });
+
     if (
       oldImageData !== null &&
       oldImageData !== undefined &&
@@ -26,17 +25,19 @@ const replaceUserImage = async (newImageData, oldImageData, userEmail) => {
   }
 };
 
-//upload user image to AWS S3
+//upload user image to Firebase Storage
 const uploadUserImage = async (newImage, oldImageData, userEmail) => {
-  // add user email to make user avatar unique
+  let addedImageUrl = "";
+  let fileRef;
+
+  const randomString = cryptoRandomString({ length: 10 });
+  // add random string to make user avatar unique
   Object.defineProperties(newImage, {
     name: {
-      value: userEmail + newImage.name,
+      value: randomString + newImage.name,
       writable: true,
     },
   });
-
-  let fileRef;
 
   if (oldImageData === null) {
     fileRef = storageRef.child(`user-images/${newImage.name}`);
@@ -46,9 +47,27 @@ const uploadUserImage = async (newImage, oldImageData, userEmail) => {
 
   await fileRef.put(newImage, { name: newImage.name });
   const newImageUrl = await fileRef.getDownloadURL();
+
+  const resizedImageNameArray = newImage.name.split(".");
+  resizedImageNameArray.splice(
+    resizedImageNameArray.length - 1,
+    0,
+    "_200x200."
+  );
+  const resizedImageName = resizedImageNameArray.join("");
+  const resizedImageStorageRef = storageRef.child(`photos/${resizedImageName}`);
+
+  const resizedImageUrl = await keepTrying(10, resizedImageStorageRef);
+
+  if (resizedImageUrl) {
+    addedImageUrl = resizedImageUrl;
+  } else {
+    addedImageUrl = newImageUrl;
+  }
+
   const newImageData = {
-    url: newImageUrl,
-    name: newImage.name,
+    url: addedImageUrl,
+    name: resizedImageName,
   };
   await replaceUserImage(newImageData, oldImageData, userEmail);
   return newImageData;

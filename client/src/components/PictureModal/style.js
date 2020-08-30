@@ -8,8 +8,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   image: {
     display: "block",
-    width: "50%",
-    height: "80%",
+    maxWidth: "50%",
+    maxHeight: "80%",
     outline:'none',
     objectFit: "contain",
   },

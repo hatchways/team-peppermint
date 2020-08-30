@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Axios from "axios";
 
@@ -42,16 +42,16 @@ function App() {
       }
     };
     checkLoggedIn();
-        socket.emit("login", email);
-  }, [dispatch,email]);
+    socket.emit("login", email);
+  }, [dispatch, email]);
 
   useEffect(() => {
-    window.addEventListener('beforeunload', function (e) { 
-      e.preventDefault(); 
-      e.returnValue = '';
+    window.addEventListener("beforeunload", function (e) {
+      e.preventDefault();
+      e.returnValue = "";
       socket.emit("logout", email);
-  }); 
-  }, [email])
+    });
+  }, [email]);
 
   return (
     <MuiThemeProvider theme={theme}>

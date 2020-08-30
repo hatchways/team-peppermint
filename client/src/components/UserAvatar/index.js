@@ -8,7 +8,7 @@ const UserAvatar = ({ imageUrl, isOnline }) => {
   const classes = useStyles();
   let userPicture = "";
 
-  if (imageUrl !== undefined && imageUrl.url) {
+  if (imageUrl !== undefined && imageUrl.url.includes("http")) {
     userPicture = imageUrl.url;
   } else {
     userPicture = avatar;
