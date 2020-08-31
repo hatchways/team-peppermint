@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import Axios from "axios";
@@ -19,27 +18,20 @@ const CreateGroupChat = ({ open, onClose, contactsList }) => {
 
   const createConversation = () => {
     let users = Object.entries(checkedBoxes).reduce((emails, [prop, val]) => {
-      if (val === true){ 
+      if (val === true) {
         setCheckedBoxes(prevState => ({ ...prevState, [prop]: false }))
         emails.push(prop)
       }
       return emails;
     }, [])
-    Axios.post(`/user/${user.email}/conversation`, [...users, user.email])
-      .then((msg) => {
-        Axios.post(`/user/${user.email}/groupchat`, [...users, user.email])
-          .then((msg) =>onClose())
-          .catch((err) => console.log(err))
-          
-      })
+    Axios.post(`/user/groupchat`, [...users, user.email])
+      .then((msg) => onClose())
       .catch((err) => {
-        if(err.response.data.code===11000){
-
+        if (err.response.data.code === 11000) {
           alert("chat already exists")
           onClose();
         }
-        
-      });
+      })
   }
   useEffect(() => {
     contactsList.forEach((contact) => {
@@ -78,7 +70,7 @@ const CreateGroupChat = ({ open, onClose, contactsList }) => {
         <Button onClick={createConversation} color="primary">
           Create
         </Button>
- 
+
       </DialogActions>
     </Dialog>
   );

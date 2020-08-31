@@ -5,72 +5,29 @@ import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
 import Axios from 'axios';
 import SelectConversation from "../../context/SelectConversation"
-import { translateText } from "../../context/messages/helper"
-import ISO6391 from 'iso-639-1';
 import ToggleLanguage from "../../context/ToggleLanguage";
-
-const getVersion = (versions, language) => {
-  return versions.find((version) => version.language === language);
-};
+import { useContactsState } from "../../context/contacts/contactsContext";
+import { getVersion, loadMessages, createMessageObject } from "./helper"
 
 const MessageField = ({ user }) => {
-  let currentTime, msgVersion, convo;
+  let currentTime, msgVersion, senderData;
   const classes = useStyles();
+  const { contacts } = useContactsState();
   const context = useContext(SelectConversation);
   const ToggleLanguageContext = useContext(ToggleLanguage);
+
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const [room, setRoom] = useState();
+
+  const [users, setUsers] = useState([]);
+  const [usersData, setUsersData] = useState({});
+
   const [languages, setLanguages] = useState('');
   const messagesEndRef = useRef(null);
-  const [users, setUsers] = useState([]);
-  const createMessageObject = async (date, text) => {
-    let newMsg = {
-      sender: user.email,
-      date: date,
-      textVersions: [],
-    };
-    newMsg.textVersions.push({
-      language: user.language,
-      text: text
-    })
-    console.log(languages)
-    if (languages) {
-      await Promise.all(languages.map(async (language) => {
-        if (language !== user.language) {
-          newMsg.textVersions.push({
-            language: language,
-            text: await translateText(text, ISO6391.getCode(language))
-          })
-        }
-      }))
-    }
-    return newMsg;
-  };
-  const loadMessages = async () => {
-    convo = null;
-    try { convo = await Axios.get(`http://localhost:3001/user/conversation/${room}`) }
-    catch (err) { console.error(err) }
-    if (convo) {
-      setMessages(convo.data.conversation.messages)
-      setUsers(convo.data.conversation.users)
-    }
-  }
+
   const saveMessage = async (msg) => {
-    convo = null;
-    try {
-      convo = await Axios.get(
-        `http://localhost:3001/user/conversation/${room}`
-      );
-    } catch (err) {
-      console.error(err);
-    }
-    if (!convo) {
-      try { await Axios.post(`http://localhost:3001/user/${user.email}/conversation`, context.conversation.split('-')) }
-      catch (err) { console.error(err) }
-    }
     await Axios.post(
-      `http://localhost:3001/user/${user.email}/conversation/${room}/newMessage`,
+      `http://localhost:3001/user/${user.email}/conversation/${context.conversation}/newMessage`,
       msg
     );
   };
@@ -78,63 +35,77 @@ const MessageField = ({ user }) => {
     event.preventDefault();
     currentTime = new Date().toISOString();
     if (message) {
-      createMessageObject(currentTime, message)
+      createMessageObject(currentTime, message, user, languages)
         .then((msg) => {
           socket.emit('message', msg, () => {
             saveMessage(msg)
             setMessage('')
             scrollToBottom()
           })
-
         })
         .catch((err) => console.log(err))
-
     }
   };
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
   useEffect(() => {
-    setMessages([]);
-    setRoom(context.conversation);
-  }, [context.conversation])
-  useEffect(() => {
-    loadMessages();
-    socket.on('message', message => {
-      setMessages(messages => [...messages, message])
-    })
-    socket.emit('join', { email: user.email, room }, (error) => {
-      if (error) alert(error);
+    setUsersData(prevState => {
+      contacts.forEach((contact) => {
+        prevState[contact.email] = {
+          name: contact.name,
+          language: contact.language,
+          pictureUrl: contact.pictureUrl
+        }
+      })
+      return prevState;
     });
+  }, [contacts])
+  useEffect(() => {
+    setMessages([]);
+    if (context.conversation !== undefined) {
+      loadMessages(context.conversation, setMessages, setUsers, usersData, setUsersData, user.email);
+      socket.on('message', message => {
+        setMessages(messages => [...messages, message])
+      })
+      socket.emit('join', { email: user.email, room: context.conversation }, (error) => {
+        if (error) alert(error);
+      });
+    }
     return () => {
       socket.emit("disconnect");
       socket.off();
     }
-  }, [room])
+  }, [context.conversation, user])
   useEffect(() => {
-    if (users)
+    if (users.length > 0) {
       Axios.get(`/api/user/${users.join(',')}/languages`)
         .then((response) => { setLanguages(response.data.languages) })
-        .catch((err) => console.log(err))
-  }, [users])
+        .catch((err) => console.log(err));
+    }
+  }, [users, usersData])
+
+
   return (
     <div className={classes.root}>
       <div className={classes.messegesView}>
         {!!messages.length > 0 && messages.map((msg, i) => {
           if (msg && msg.textVersions[0]) {
-
             msgVersion = getVersion(msg.textVersions, user.language);
+            senderData = usersData ? usersData[msg.sender] : undefined;
             return (
               <div key={i}>
                 <MessageItem
-                  name={msg.sender}
+                  sender={msg.sender === user.email ? user : senderData}
                   date={msg.date}
                   text={ToggleLanguageContext.original ? msg.textVersions[0].text : msgVersion ? msgVersion.text : msg.textVersions[0].text}
                   myMessage={msg.sender === user.email} />
               </div>)
+
           }
           else return null
         })}
@@ -154,5 +125,4 @@ const MessageField = ({ user }) => {
     </div>
   );
 };
-
 export default memo(MessageField);

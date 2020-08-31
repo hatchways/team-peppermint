@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
+//import PropTypes from "prop-types";
 import { useStyles } from "./style";
 import ChatItem from "../../components/ChatItem";
+import Typography from "@material-ui/core/Typography"
 import List from '@material-ui/core/List';
 import Axios from "axios";
 import { useUserState } from "../../context/user/userContext";
@@ -13,18 +14,20 @@ const ChatList = () => {
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
-  const loadChats = () => {
-    if(user)
-    Axios.get(`user/${user.email}/groupchats`)
-      .then((chats) => setChatList(chats.data))
-      .catch((err) => console.error(err))
-  }
-  useEffect(()=>{
-    loadChats();
-  },[user])
+
+  useEffect(() => {
+    if (user.email !== undefined)
+      Axios.get(`/user/${user.email}/groupchats`)
+        .then((chats) => setChatList(chats.data))
+        .catch((err) => {
+          console.log(err)
+          setChatList([]);
+        })
+  }, [user])
+
   return (
     <List className={classes.root}>
-      {chatList &&
+      {chatList.length > 0 ?
         chatList.map((chat, index) => (
           <ChatItem
             key={index}
@@ -34,7 +37,15 @@ const ChatList = () => {
             select={handleListItemClick}
             selected={selectedIndex}
           />
-        ))}
+        )) :
+        <Typography
+          variant="body1"
+          color="primary"
+          gutterBottom
+          style={{ color: "black", textAlign: "center" }}
+        >
+          No group chats
+      </Typography>}
     </List>
   );
 };

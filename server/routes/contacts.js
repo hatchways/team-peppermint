@@ -47,7 +47,8 @@ router.get("/:email/contacts", async (req, res) => {
             email: contact.email,
             name: sortUsersByEmail[index].name,
             pictureUrl: sortUsersByEmail[index].pictureURL,
-            conversationID: contact.conversationID
+            conversationID: contact.conversationID,
+            language: sortUsersByEmail[index].language
           };
         });
     }
@@ -109,17 +110,17 @@ router.post("/:email/search", async (req, res) => {
 });
 
 router.delete("/:email/contacts", async (req, res) => {
-  try {
-    //find user's contacts by user email
-    const contacts = await data.deleteContact(
-      req.body.userEmail,
-      req.params.email
-    );
-    //response with contacts
-    res.status(200).json(contacts);
-  } catch (err) {
-    res.status(400).json(err);
-  }
+  Promise.all([
+    data.updateContact(req.params.email, req.body.emailToDelete, 2),
+    data.updateContact(req.body.emailToDelete, req.params.email, 4)
+  ])
+  .then((msg) => {
+    console.log(msg)
+    res.status(200).json({ message: msg });
+  })
+  .catch((err) => {
+    res.status(500).json({ err });
+  });
 });
 
 router.put("/:email/image", async (req, res) => {
