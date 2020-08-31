@@ -25,6 +25,7 @@ import {
   userEmailFromLocalStorage,
 } from "../../context/contacts/contactsContext";
 import Alert from "@material-ui/lab/Alert";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,6 +61,8 @@ const SidebarInfo = () => {
   const [tabNumber, setTabNumber] = useState(0);
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const { height, width } = useWindowDimensions();
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
@@ -113,6 +116,7 @@ const SidebarInfo = () => {
           onChange={handleChange}
           aria-label="simple tabs example"
           variant="fullWidth"
+          orientation={width > 400 ? "horizontal" : "vertical"}
           className={classes.tabs}
         >
           <Tab
@@ -120,13 +124,18 @@ const SidebarInfo = () => {
             {...a11yProps(0)}
             style={{
               minWidth: "33%",
+              outline: "none",
             }}
           />
-          <Tab label="Contacts" {...a11yProps(1)} style={{ minWidth: "33%" }} />
+          <Tab
+            label="Contacts"
+            {...a11yProps(1)}
+            style={{ minWidth: "33%", outline: "none" }}
+          />
           <Tab
             label="Invitations"
             {...a11yProps(2)}
-            style={{ minWidth: "33%" }}
+            style={{ minWidth: "33%", outline: "none" }}
           />
         </Tabs>
       </AppBar>

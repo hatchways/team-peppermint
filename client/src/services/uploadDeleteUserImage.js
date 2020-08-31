@@ -8,9 +8,11 @@ let storageRef = firebase.storage().ref();
 const replaceUserImage = async (newImageData, oldImageData, userEmail) => {
   let desertRef;
   try {
-    await axios.put(`user/${userEmail}/image`, {
-      newImageData: { ...newImageData },
-    });
+    if (oldImageData !== null) {
+      await axios.put(`user/${userEmail}/image`, {
+        newImageData: { ...newImageData },
+      });
+    }
 
     if (
       oldImageData !== null &&
@@ -26,8 +28,9 @@ const replaceUserImage = async (newImageData, oldImageData, userEmail) => {
 };
 
 //upload user image to Firebase Storage
-const uploadUserImage = async (newImage, oldImageData, userEmail) => {
+export const uploadUserImage = async (newImage, oldImageData, userEmail) => {
   let addedImageUrl = "";
+  let resizedImageName = "";
   let fileRef;
 
   const randomString = cryptoRandomString({ length: 10 });
@@ -46,7 +49,6 @@ const uploadUserImage = async (newImage, oldImageData, userEmail) => {
   }
 
   await fileRef.put(newImage, { name: newImage.name });
-  const newImageUrl = await fileRef.getDownloadURL();
 
   const resizedImageNameArray = newImage.name.split(".");
   resizedImageNameArray.splice(
@@ -54,15 +56,20 @@ const uploadUserImage = async (newImage, oldImageData, userEmail) => {
     0,
     "_200x200."
   );
-  const resizedImageName = resizedImageNameArray.join("");
-  const resizedImageStorageRef = storageRef.child(`photos/${resizedImageName}`);
+  resizedImageName = resizedImageNameArray.join("");
+  let resizedImageStorageRef;
+  if (oldImageData === null) {
+    resizedImageStorageRef = storageRef.child(
+      `user-images/${resizedImageName}`
+    );
+    const resizedImageUrl = await keepTrying(10, resizedImageStorageRef);
 
-  const resizedImageUrl = await keepTrying(10, resizedImageStorageRef);
-
-  if (resizedImageUrl) {
     addedImageUrl = resizedImageUrl;
   } else {
-    addedImageUrl = newImageUrl;
+    resizedImageStorageRef = storageRef.child(`photos/${resizedImageName}`);
+    const resizedImageUrl = await keepTrying(10, resizedImageStorageRef);
+
+    addedImageUrl = resizedImageUrl;
   }
 
   const newImageData = {
@@ -73,4 +80,10 @@ const uploadUserImage = async (newImage, oldImageData, userEmail) => {
   return newImageData;
 };
 
-export default uploadUserImage;
+export const deleteUserImage = async (imageName) => {
+  let fileRef = storageRef.child(`user-images/${imageName}`);
+  await fileRef.delete().catch(function (err) {
+    console.log("Oops, image failed to be deleted ", err.message);
+    new Error(err.message);
+  });
+};

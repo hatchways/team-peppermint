@@ -7,9 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     flexGrow: 1,
     height: "100%",
-    backgroundColor: "#fff",
-    [`@media (max-width:820px)`]: {
-      width: "100%",
-    },
+    width: "100%",
+    backgroundColor: "#fff",   
   },
 }));

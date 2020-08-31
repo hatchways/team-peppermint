@@ -33,4 +33,13 @@ export const useStyles = makeStyles((theme) => ({
     marginBottom: 0,
     fontWeight: 600,
   },
+  [`@media (max-width:400px)`]: {
+    avatarNameContainer: {
+      flexDirection: "column",
+      justifyContent: "center",
+    },
+    contactName: {
+      fontSize: "1.3rem",
+    },
+  },
 }));

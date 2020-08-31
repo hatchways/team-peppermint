@@ -73,7 +73,7 @@ function App() {
               minHeight: "100vh",
             }}
           >
-            <CircularProgress size={70} thickness={4} />
+            <CircularProgress size={50} thickness={4} />
           </Box>
         }
       >

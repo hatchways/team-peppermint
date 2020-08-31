@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    height: "10vh",
+    minHeight: "10vh",
     backgroundColor: "transparent",
   },
   leftRightSideStyle: {
@@ -15,17 +15,27 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: theme.spacing(2),
   },
-  avatar: {
-    width: theme.spacing(5.5),
-    height: theme.spacing(5.5),
-    border: `2px solid ${theme.palette.background.paper}`,
-  },
   badge: { top: 63, right: 5 },
   typography: {
     fontWeight: 600,
+    textAlign: "center",
   },
   logoutStyle: {
     color: "black",
     textDecoration: "none",
+  },
+  [`@media (max-width:400px)`]: {
+    root: {
+      padding: theme.spacing(2),
+    },
+    leftRightSideStyle: {
+      flexDirection: "column",
+      height: "10vh",
+      padding: 0,
+    },
+    typography: {
+      marginBottom: 50,
+      fontSize: "1.3rem",
+    },
   },
 }));

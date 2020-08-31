@@ -10,7 +10,7 @@ import { useStyles } from "./style";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { MoreHoriz } from "@material-ui/icons";
 import UserAvatar from "../../components/UserAvatar/index";
-import uploadUserImage from "../../services/uploadUserImage";
+import { uploadUserImage } from "../../services/uploadDeleteUserImage";
 import { NavLink } from "react-router-dom";
 import {
   useUserState,

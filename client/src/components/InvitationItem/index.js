@@ -1,14 +1,15 @@
 import React, { memo } from "react";
 import { useStyles } from "./style";
 import PropTypes from "prop-types";
-import { Typography, ListItem, Button } from "@material-ui/core";
+import { Typography, ListItem, Button, Box } from "@material-ui/core";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 const InvitationItem = ({
   email,
-  index,
   handleApproveContact,
   handleRejectContact,
 }) => {
+  const { width, height } = useWindowDimensions();
   const classes = useStyles();
 
   return (
@@ -16,10 +17,10 @@ const InvitationItem = ({
       <Typography variant="body2" className={classes.typography} gutterBottom>
         {email}
       </Typography>
-      <span>
+      <Box component="span">
         <Button
           variant="outlined"
-          size="small"
+          size={width > 400 ? "small" : "medium"}
           color="primary"
           onClick={() => handleApproveContact(email)}
         >
@@ -27,14 +28,14 @@ const InvitationItem = ({
         </Button>
         <Button
           variant="outlined"
-          size="small"
+          size={width > 400 ? "small" : "medium"}
           color="secondary"
           style={{ marginLeft: 10 }}
           onClick={() => handleRejectContact(email)}
         >
           Reject
         </Button>
-      </span>
+      </Box>
     </ListItem>
   );
 };

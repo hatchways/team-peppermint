@@ -27,4 +27,9 @@ export const useStyles = makeStyles((theme) => ({
     marginLeft: 10,
     fontWeight: 600,
   },
+  [`@media (max-width:400px)`]: {
+    typography: {
+      fontSize: "1.3rem",
+    },
+  },
 }));

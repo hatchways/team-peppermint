@@ -9,6 +9,7 @@ export const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     backgroundColor: "transparent",
+    overflow: "hidden",
   },
   tabs: {
     backgroundColor: "#f5f7fb",
@@ -64,5 +65,12 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  [`@media (max-width:400px)`]: {
+    tabs: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
   },
 }));
