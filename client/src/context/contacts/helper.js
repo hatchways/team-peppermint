@@ -78,14 +78,14 @@ export const createInvitation = async (userEmail, referrer) => {
 };
 
 export const updateContacts = async (
-  onlineContactsList,
+  contactCurrentStatus,
   contacts,
   dispatch
 ) => {
   try {
     contacts.forEach((contact) => {
-      const isOnline = onlineContactsList.includes(contact.email);
-      contact.isOnline = isOnline;
+      if (contact.email === contactCurrentStatus[0])
+        contact.isOnline = contactCurrentStatus[1];
     });
 
     dispatch({

@@ -8,7 +8,7 @@ const addOnlineUsers = (id, email) => {
       onlineUsers[email].push(id);
     }
   }
-  return Object.keys(onlineUsers);
+  return [email, true];
 };
 
 const removeOnlineUser = (id, email) => {
@@ -20,6 +20,6 @@ const removeOnlineUser = (id, email) => {
       index >= 0 && onlineUsers[email].splice(index, 1);
     }
   }
-  return Object.keys(onlineUsers);
+  return [email, false];
 };
 module.exports = { addOnlineUsers, removeOnlineUser, onlineUsers };
