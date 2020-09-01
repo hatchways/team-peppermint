@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    height: "10vh",
+    minHeight: "10vh",
     backgroundColor: "#fff",
     boxShadow: " 0 15px 15px #f5f7fb",
   },
@@ -22,6 +22,24 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     width: 50,
+  },
+  typography: {
+    fontSize: "0.9rem",
+    fontWeight: 600,
+    color: "#3A8DFF",
+  },
+  [`@media (max-width:510px)`]: {
+    root: {
+      flexDirection: "column",
+      justifyContent: "center",
+      padding: 20,
+    },
+    leftRightSideStyle: {
+      padding: 0,
+    },
+    typography: {
+      fontSize: "1.3rem",
+    },
   },
 }));
 

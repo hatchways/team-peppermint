@@ -19,7 +19,6 @@ const ChatList = () => {
         .then((chats) => setChatList(chats.data))
         .catch((err) => console.error(err));
   }, [user]);
-
   useEffect(() => {
     loadChats();
   }, [loadChats]);

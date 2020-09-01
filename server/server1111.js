@@ -17,20 +17,21 @@ const conversationsRouter = require("./routes/conversations");
 
 const contactRouter = require("./routes/contacts");
 const sendMailRouter = require("./routes/sendMail");
+const imageRouter = require("./routes/image");
 
-const cookieSession = require("cookie-session");
+// const cookieSession = require("cookie-session");
 
 const { json, urlencoded } = express;
 
 const app = express();
 
-app.use(
-  cookieSession({
-    name: "session",
-    keys: [process.env.COOKIE_KEY],
-    maxAge: 24 * 60 * 60 * 1000,
-  })
-);
+// app.use(
+//   cookieSession({
+//     name: "session",
+//     keys: [process.env.COOKIE_KEY],
+//     maxAge: 24 * 60 * 60 * 1000,
+//   })
+// );
 
 app.use(logger("dev"));
 app.use(cors());
@@ -41,7 +42,13 @@ app.use(express.static(join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);
-app.use("/user", invitationsRouter, conversationsRouter, contactRouter);
+app.use(
+  "/user",
+  invitationsRouter,
+  conversationsRouter,
+  contactRouter,
+  imageRouter
+);
 app.use("/api/user", authRouter);
 app.use("/mail", sendMailRouter);
 

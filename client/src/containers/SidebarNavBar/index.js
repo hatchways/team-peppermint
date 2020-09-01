@@ -10,7 +10,7 @@ import { useStyles } from "./style";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { MoreHoriz } from "@material-ui/icons";
 import UserAvatar from "../../components/UserAvatar/index";
-import uploadUserImage from "../../services/uploadUserImage";
+import { uploadUserImage } from "../../services/uploadDeleteUserImage";
 import { NavLink } from "react-router-dom";
 import {
   useUserState,
@@ -99,7 +99,7 @@ const SidebarNavBar = () => {
           open={open}
           onSave={handleSave}
           showPreviews={true}
-          maxFileSize={300000}
+          maxFileSize={1500000}
           onClose={() => {
             setOpen(false);
             handleClose();

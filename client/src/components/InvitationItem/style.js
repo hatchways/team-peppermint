@@ -18,4 +18,14 @@ export const useStyles = makeStyles((theme) => ({
     marginBottom: 0,
     fontWeight: 600,
   },
+  [`@media (max-width:400px)`]: {
+    root: {
+      flexDirection: "column",
+      justifyContent: "center",
+    },
+    typography: {
+      fontSize: "1.3rem",
+      marginBottom: theme.spacing(1),
+    },
+  },
 }));
