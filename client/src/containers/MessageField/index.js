@@ -12,9 +12,7 @@ import socket from "../../socket-client/socket";
 import Axios from "axios";
 import SelectConversation from "../../context/SelectConversation";
 import ToggleLanguage from "../../context/ToggleLanguage";
-import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfiedOutlined";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
-import CloseIcon from "@material-ui/icons/Close";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import { DropzoneDialog } from "material-ui-dropzone";
@@ -25,7 +23,9 @@ import {
 import PictureModal from "../../components/PictureModal";
 import { useContactsState } from "../../context/contacts/contactsContext";
 import { getVersion, loadMessages, createMessageObject } from "./helper";
-
+import ImageInputView from "../../components/ImageInputView";
+import EmojiButton from "../../components/EmojiButton";
+import AddPhotoButton from "../../components/AddPhotoButton";
 const MessageField = ({ user }) => {
   let currentTime, msgVersion, senderData;
   const classes = useStyles();
@@ -39,46 +39,32 @@ const MessageField = ({ user }) => {
   const [languages, setLanguages] = useState("");
   const messagesEndRef = useRef(null);
   const [users, setUsers] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
+ 
   const [imageEl, setImageEl] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [largeScreenPicture, setLargeScreenPicture] = useState(null);
-
   const handleSendMessage = (e) => (e.key === "Enter" ? sendMessage(e) : null);
-
-  const handleEmojiClick = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleImageSelector = (e) => {
     setImageEl(e.currentTarget);
   };
-
   const handleImageSelectorClose = () => {
     setImageEl(null);
   };
-
   const handleImageSave = async (files) => {
     setImageEl(null);
     const imageData = await uploadUserImage(files[0], null, user.email);
     setImageUrl(imageData);
   };
-
   const handleCloseSmallImage = async () => {
     await deleteUserImage(imageUrl.name);
     setImageUrl(null);
   };
-
   const handleModalOpen = (imageUrl) => {
     setLargeScreenPicture(imageUrl);
     setModalOpen(true);
   };
-
   const handleModalClose = () => {
     setModalOpen(false);
     setLargeScreenPicture(null);
@@ -89,7 +75,6 @@ const MessageField = ({ user }) => {
       msg
     );
   };
-
   const sendMessage = async (event) => {
     event.preventDefault();
     currentTime = new Date().toISOString();
@@ -106,11 +91,9 @@ const MessageField = ({ user }) => {
         .catch((err) => console.log(err))
     }
   };
-
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
-
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -149,8 +132,6 @@ const MessageField = ({ user }) => {
         .catch((err) => console.log(err));
     }
   }, [users, usersData])
-
-
   return (
     <div className={classes.root}>
       <div className={classes.messegesView}>
@@ -201,87 +182,21 @@ const MessageField = ({ user }) => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              {imageUrl !== null && (
-                <div
-                  style={{
-                    borderRadius: 10,
-                    marginRight: 10,
-                  }}
-                >
-                  <ButtonBase
-                    style={{
-                      position: "absolute",
-                      top: -5,
-                      left: 60,
-                    }}
-                    onClick={handleCloseSmallImage}
-                  >
-                    <CloseIcon />
-                  </ButtonBase>
-                  <img
-                    src={imageUrl.url}
-                    alt="userpicture"
-                    width="50px"
-                    height="50px"
-                    style={{
-                      borderRadius: 10,
-                      display: "block",
-                      outline: "none",
-                    }}
-                  ></img>
-                </div>
-              )}
+              {imageUrl !== null && (<ImageInputView imageUrl={imageUrl} handleClose={handleCloseSmallImage} />)}
             </InputAdornment>
           ),
           endAdornment: (
             <InputAdornment position="end">
-              <Tooltip title="Choose an emoji" placement="top" arrow>
-                <span>
-                  <ButtonBase
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    onClick={handleEmojiClick}
-                    disabled={context.conversation ? false : true}
-                    style={{ marginRight: 15 }}
-                  >
-                    <SentimentSatisfiedOutlinedIcon />
-                  </ButtonBase>
-                </span>
-              </Tooltip>
-              <StyledMenu
-                id="customized-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <Picker
-                  set="google"
-                  title="Peppermint chat"
-                  onSelect={(emoji) => setMessage(emoji.native)}
-                  emojiSize={20}
-                  onClick={handleClose}
-                />
-              </StyledMenu>
-              <Tooltip title="Add photos" placement="top" arrow>
-                <span>
-                  <ButtonBase
-                    aria-label="select image"
-                    onClick={handleImageSelector}
-                    disabled={context.conversation ? false : true}
-                  >
-                    <FileCopyOutlinedIcon />
-                  </ButtonBase>
-                </span>
-              </Tooltip>
-              <DropzoneDialog
-                open={Boolean(imageEl)}
-                onSave={handleImageSave}
-                showPreviews={true}
-                maxFileSize={3000000}
-                onClose={() => {
-                  handleImageSelectorClose();
-                }}
+              <EmojiButton
+                conversation={context.conversation}
+                setMessage={setMessage}
+              />
+              <AddPhotoButton
+                handleImageSelector={handleImageSelector}
+                conversation={context.conversation}
+                imageEl={imageEl}
+                handleImageSave={handleImageSave}
+                handleClose={handleImageSelectorClose}
               />
             </InputAdornment>
           ),
@@ -291,7 +206,6 @@ const MessageField = ({ user }) => {
   );
 };
 export default memo(MessageField);
-
 MessageField.propTypes = {
   user: PropTypes.shape({
     language: PropTypes.string,
