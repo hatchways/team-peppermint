@@ -61,7 +61,7 @@ router.post("/signup", async (req, res) => {
         if (referrer) {
           // Data of the user who sent a referral link
           const userData = await data.getUserById(referrer);
-          await data.addContact(user.email, userData.email);
+          await data.addContact(userData.email, user.email);
         }
         newUser._id = user._id;
         res.status(200).json({ token, newUser });
@@ -194,12 +194,15 @@ router.get("/:users/languages", (req, res) => {
 router.get("/:email", (req, res) => {
   data.getUserByEmail(req.params.email)
     .then((user) => {
+      if(user)
       res.status(200).json({
         email: user.email,
         name: user.name,
         pictureUrl: user.pictureURL,
         language: user.language
       })
+      else
+      res.status(404).send("User not found");
     })
     .catch((err) => res.status(400).json({ error: err }))
 })

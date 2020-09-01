@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef, useContext, memo } from "react";
-import { useStyles, StyledMenu } from "./style";
+import { useStyles } from "./style";
 import {
   TextField,
   InputAdornment,
-  ButtonBase,
-  Tooltip,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import MessageItem from "../../components/MessageItem";
@@ -12,17 +10,14 @@ import socket from "../../socket-client/socket";
 import Axios from "axios";
 import SelectConversation from "../../context/SelectConversation";
 import ToggleLanguage from "../../context/ToggleLanguage";
-import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import "emoji-mart/css/emoji-mart.css";
-import { Picker } from "emoji-mart";
-import { DropzoneDialog } from "material-ui-dropzone";
 import {
   uploadUserImage,
   deleteUserImage,
 } from "../../services/uploadDeleteUserImage";
 import PictureModal from "../../components/PictureModal";
 import { useContactsState } from "../../context/contacts/contactsContext";
-import { getVersion, loadMessages, createMessageObject } from "./helper";
+import { loadMessages, createMessageObject } from "./helper";
 import ImageInputView from "../../components/ImageInputView";
 import EmojiButton from "../../components/EmojiButton";
 import AddPhotoButton from "../../components/AddPhotoButton";
@@ -39,7 +34,7 @@ const MessageField = ({ user }) => {
   const [languages, setLanguages] = useState("");
   const messagesEndRef = useRef(null);
   const [users, setUsers] = useState([]);
- 
+
   const [imageEl, setImageEl] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -136,8 +131,7 @@ const MessageField = ({ user }) => {
     <div className={classes.root}>
       <div className={classes.messegesView}>
         {!!messages.length > 0 && messages.map((msg, i) => {
-          if (msg && (msg.textVersions[0] || msg.image)) {
-            msgVersion = getVersion(msg.textVersions, user.language);
+          if (msg && (msg.textVersions || msg.image)) {
             senderData = usersData ? usersData[msg.sender] : undefined;
             return (
               <div key={i}>
@@ -145,12 +139,10 @@ const MessageField = ({ user }) => {
                   sender={msg.sender === user.email ? user : senderData}
                   date={msg.date}
                   text={
-                    msg.textVersions[0]
+                    msg.textVersions 
                       ? ToggleLanguageContext.original
-                        ? msg.textVersions[0].text
-                        : msgVersion
-                          ? msgVersion.text
-                          : msg.textVersions[0].text
+                        ? msg.textVersions[Object.keys(msg.textVersions)[0]]
+                        : msg.textVersions[user.language]
                       : null}
                   myMessage={msg.sender === user.email}
                   image={msg.image ? msg.image : null}

@@ -1,17 +1,4 @@
 const mongoose = require("mongoose");
-const textSchema = new mongoose.Schema(
-  {
-    language: {
-      type: String,
-      required: true,
-    },
-    text: {
-      type: String,
-      // required: true
-    },
-  },
-  { _id: false }
-);
 const MessageSchema = new mongoose.Schema(
   {
     sender: {
@@ -23,8 +10,8 @@ const MessageSchema = new mongoose.Schema(
       required: true,
     },
     textVersions: {
-      type: [textSchema],
-      default: [],
+      type: Object,
+      default: {},
     },
     image: {
       url: {

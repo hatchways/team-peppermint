@@ -17,11 +17,14 @@ const sortByEmail = (a, b) => {
 
 router.get("/:email/contacts", async (req, res) => {
   try {
-    //find user's contacts by user email
-    const contacts = await data.getContacts(req.params.email);
 
+    // select approved contacts with status === 1
+    const approvedContacts = await data.getContactsByStatus(
+      req.params.email,
+      1
+    );
     // create only contacts emails array
-    const contactsEmails = contacts.map((contact) => contact.email);
+    const contactsEmails = approvedContacts.map((contact) => contact.email);
 
     // find users by their email
     const usersByEmail = await data.getUsers(contactsEmails);
@@ -30,11 +33,7 @@ router.get("/:email/contacts", async (req, res) => {
     // find all contacts with pending status
     const invitationsList = await data.getContactsByStatus(req.params.email, 0);
 
-    // select approved contacts with status === 1
-    const approvedContacts = await data.getContactsByStatus(
-      req.params.email,
-      1
-    );
+
 
     // create contacts list
     let contactsList = [];

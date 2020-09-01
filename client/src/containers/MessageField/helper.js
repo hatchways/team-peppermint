@@ -1,9 +1,6 @@
 import Axios from 'axios';
 import { translateText } from "../../context/messages/helper"
 import ISO6391 from 'iso-639-1';
-const getVersion = (versions, language) => {
-    return versions.find((version) => version.language === language);
-};
 const loadMessages = (room, setMessages, setUsers, usersData, setUsersData, email) => {
     Axios.get(`/user/conversation/${room}`)
         .then((response) => {
@@ -31,10 +28,7 @@ const loadMessages = (room, setMessages, setUsers, usersData, setUsersData, emai
 const addTextVersion = (newMsg, language, text) => {
     return new Promise(async (resolve, reject) => {
         try {
-            newMsg.textVersions.push({
-                language: language,
-                text: await translateText(text, ISO6391.getCode(language))
-            })
+            newMsg.textVersions[language]= await translateText(text, ISO6391.getCode(language))
             resolve(newMsg)
         }
         catch (err) { reject(err); }
@@ -45,16 +39,14 @@ const createMessageObject = async (date, text, user, languages, imageUrl) => {
     let newMsg = {
         sender: user.email,
         date: date,
-        textVersions: [],
+        textVersions: {},
     };
     if (imageUrl) {
         newMsg.image = imageUrl;
     }
     if (text) {
-        newMsg.textVersions.push({
-            language: user.language,
-            text: text
-        })
+        newMsg.textVersions[user.language] = text
+
         if (languages) {
             let promises = languages.map(async (language) => {
                 if (language !== user.language) {
@@ -69,7 +61,6 @@ const createMessageObject = async (date, text, user, languages, imageUrl) => {
     return newMsg;
 };
 export {
-    getVersion,
     loadMessages,
     createMessageObject
 }
