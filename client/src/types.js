@@ -5,3 +5,4 @@ export const UPDATE_CONTACTS = "UPDATE_CONTACTS";
 export const FETCH_USER_DATA = "FETCH_USER_DATA";
 export const UPDATE_USER_IMAGE = "UPDATE_USER_IMAGE";
 export const SET_USER_DATA = "SET_USER_DATA";
+export const RESET_LISTS = "RESET_LISTS";

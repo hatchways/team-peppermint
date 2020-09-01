@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const data = require("../data-modules/dataService")();
-// const sortByEmail = require("../helper/sortByEmail");
+const { onlineUsers } = require("../socket/socket-online-users");
 
 const sortByEmail = (a, b) => {
   let emailA = a.email.toLowerCase(); // ignore upper and lowercase
@@ -43,17 +43,22 @@ router.get("/:email/contacts", async (req, res) => {
       contactsList = approvedContacts
         .sort((a, b) => sortByEmail(a, b))
         .map((contact, index) => {
+          const isOnline = Object.keys(onlineUsers).includes(contact.email);
           return {
             email: contact.email,
             name: sortUsersByEmail[index].name,
             pictureUrl: sortUsersByEmail[index].pictureURL,
-            conversationID: contact.conversationID
+            conversationID: contact.conversationID,
+            isOnline: isOnline,
           };
         });
     }
 
     //response with contacts and invitations lists
-    res.status(200).json({ invitationsList, contactsList });
+    res.status(200).json({
+      invitationsList,
+      contactsList,
+    });
   } catch (err) {
     res.status(400).json(err);
   }
@@ -86,11 +91,13 @@ router.post("/:email/search", async (req, res) => {
       contactsList = approvedContacts
         .sort((a, b) => sortByEmail(a, b))
         .map((contact, index) => {
+          const isOnline = Object.keys(onlineUsers).includes(contact.email);
           return {
             email: contact.email,
             name: sortUsersByEmail[index].name,
             pictureUrl: sortUsersByEmail[index].pictureURL,
-            conversationID: contact.conversationID
+            conversationID: contact.conversationID,
+            isOnline: isOnline,
           };
         });
     }

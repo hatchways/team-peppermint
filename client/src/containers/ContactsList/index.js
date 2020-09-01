@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
 import { List, Typography, ButtonBase } from "@material-ui/core";
 import ContactItem from "../../components/ContactItem";
 import AddIcon from "@material-ui/icons/Add";
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import {
   useContactsDispatch,
   useContactsState,
   deleteContact,
   userEmailFromLocalStorage,
+  updateContacts,
 } from "../../context/contacts/contactsContext";
 import { useUserState } from "../../context/user/userContext";
 import axios from "axios";
 import isEmail from "validator/lib/isEmail";
 import CreateGroupChat from "../../components/CreateGroupChat";
+import socket from "../../socket-client/socket";
 
 const ContactsList = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -38,8 +40,13 @@ const ContactsList = () => {
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
   const { user } = useUserState();
-
   const userEmail = userEmailFromLocalStorage();
+
+  useEffect(() => {
+    socket.on("onlineUsers", (data) => {
+      updateContacts(data, contacts, dispatch);
+    });
+  }, [dispatch, contacts]);
 
   const handleDeleteContactButton = (email) => {
     deleteContact(userEmail, email, dispatch);
@@ -115,10 +122,7 @@ const ContactsList = () => {
           </Typography>
         </div>
       </ButtonBase>
-      <ButtonBase 
-        onClick={() => openChatForm()}
-        style={{ marginBottom: 10 }}
-      >
+      <ButtonBase onClick={() => openChatForm()} style={{ marginBottom: 10 }}>
         <div className={classes.inviteFriendsContainer}>
           <GroupAddIcon color="primary" />
           <Typography
@@ -142,7 +146,11 @@ const ContactsList = () => {
         onCopy={handleCopy}
         handleSendEmail={handleSendEmail}
       />
-      <CreateGroupChat open={openGroupChatForm} onClose={closeChatForm} contactsList={contacts} />
+      <CreateGroupChat
+        open={openGroupChatForm}
+        onClose={closeChatForm}
+        contactsList={contacts}
+      />
       <List className={classes.root}>
         {!!contacts.length ? (
           contacts.map((contact, index) => (
@@ -151,7 +159,7 @@ const ContactsList = () => {
               name={contact.name}
               email={contact.email}
               pictureUrl={contact.pictureUrl}
-              isOnline={true}
+              isOnline={contact.isOnline}
               index={index}
               handleDeleteContactButton={handleDeleteContactButton}
               contact={contact}
@@ -160,15 +168,15 @@ const ContactsList = () => {
             />
           ))
         ) : (
-            <Typography
-              variant="body1"
-              color="primary"
-              gutterBottom
-              style={{ color: "black", textAlign: "center" }}
-            >
-              No contacts
-            </Typography>
-          )}
+          <Typography
+            variant="body1"
+            color="primary"
+            gutterBottom
+            style={{ color: "black", textAlign: "center" }}
+          >
+            No contacts
+          </Typography>
+        )}
       </List>
     </>
   );
