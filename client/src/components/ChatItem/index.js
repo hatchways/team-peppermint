@@ -9,14 +9,18 @@ const ChatItem = (props) => {
   const classes = useStyles();
   const { name, messageCount, index, select, selected } = props;
   const context = useContext(SelectConversation);
-  
   const onChatClick = (event) => {
-    select(event, index)
-    context.setConversation(name)
-  }
+    select(event, index);
+    context.setConversation(name);
+  };
   return (
-    <ListItem button className={classes.root} onClick={onChatClick} selected={selected === index}>
-      <div className={classes.avatarNameContainer} >
+    <ListItem
+      button
+      className={classes.root}
+      onClick={onChatClick}
+      selected={selected === index}
+    >
+      <div className={classes.avatarNameContainer}>
         <UserAvatar />
         <div className={classes.nameContainer}>
           <Typography
@@ -49,6 +53,6 @@ const ChatItem = (props) => {
 export default memo(ChatItem);
 
 ChatItem.propTypes = {
-  name: PropTypes.string,
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   messageCount: PropTypes.number,
 };

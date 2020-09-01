@@ -36,22 +36,15 @@ const MainContentFieldNavBar = () => {
       </div>
       <div className={classes.leftRightSideStyle}>
         {checked ? (
-          <Typography
-            variant="body2"
-            style={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              color: "#3A8DFF",
-            }}
-          >
+          <Typography variant="body2" className={classes.typography}>
             Original language
           </Typography>
         ) : (
           <Typography
             variant="body2"
+            className={classes.typography}
             style={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
+              color:'grey',
               opacity: 0.5,
             }}
           >

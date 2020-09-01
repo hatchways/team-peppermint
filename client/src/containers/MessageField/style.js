@@ -25,6 +25,11 @@ export const useStyles = makeStyles((theme) => ({
   messageInput: {
     justifyContent: "flex-end",
   },
+  [`@media (max-width:820px)`]: {
+    root: {
+      height: "45vh",
+    },
+  },
 }));
 
 export const StyledMenu = withStyles({

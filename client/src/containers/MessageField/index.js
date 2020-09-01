@@ -18,7 +18,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import { DropzoneDialog } from "material-ui-dropzone";
-import uploadUserImage from "../../services/uploadUserImage";
+import {
+  uploadUserImage,
+  deleteUserImage,
+} from "../../services/uploadDeleteUserImage";
 import PictureModal from "../../components/PictureModal";
 import { useContactsState } from "../../context/contacts/contactsContext";
 import { getVersion, loadMessages, createMessageObject } from "./helper";
@@ -66,7 +69,8 @@ const MessageField = ({ user }) => {
     setImageUrl(imageData);
   };
 
-  const handleCloseSmallImage = () => {
+  const handleCloseSmallImage = async () => {
+    await deleteUserImage(imageUrl.name);
     setImageUrl(null);
   };
 

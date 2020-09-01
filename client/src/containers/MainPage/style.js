@@ -8,8 +8,8 @@ export const useStyles = makeStyles((theme) => ({
     height: "100vh",
     padding: theme.spacing(1),
     [`@media (max-width:820px)`]: {
-      flexDirection: "column-reverse",
-      justifyContent: "flex-end",
+      flexDirection: "column",
+      justifyContent: "flex-start",
       alignItems: "center",
     },
   },

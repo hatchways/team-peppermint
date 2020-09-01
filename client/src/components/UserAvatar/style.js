@@ -10,8 +10,8 @@ export const OfflineBadge = withStyles((theme) => ({
     height: theme.spacing(1.4),
     borderRadius: "50%",
     top: theme.spacing(5),
-    right: theme.spacing(0.5),    
-  }, 
+    right: theme.spacing(0.5),
+  },
 }))(Badge);
 
 export const OnlineBadge = withStyles((theme) => ({
@@ -48,7 +48,6 @@ export const OnlineBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-
 export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -60,5 +59,13 @@ export const useStyles = makeStyles((theme) => ({
   avatar: {
     width: theme.spacing(6.5),
     height: theme.spacing(6.5),
+  },
+  [`@media (max-width:400px)`]: {
+    root: {
+      "& > *": {
+        marginRight: theme.spacing(1),
+      },
+      marginTop: 50,
+    },
   },
 }));
