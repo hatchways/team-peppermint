@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-//import PropTypes from "prop-types";
+import React, { useState, useEffect, useCallback } from "react";
 import { useStyles } from "./style";
 import ChatItem from "../../components/ChatItem";
 import Typography from "@material-ui/core/Typography"
-import List from '@material-ui/core/List';
+import List from "@material-ui/core/List";
 import Axios from "axios";
 import { useUserState } from "../../context/user/userContext";
+
 const ChatList = () => {
   const classes = useStyles();
   const [chatList, setChatList] = useState([]);
@@ -14,7 +14,6 @@ const ChatList = () => {
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
-
   useEffect(() => {
     if (user.email !== undefined)
       Axios.get(`/user/${user.email}/groupchats`)
@@ -24,7 +23,6 @@ const ChatList = () => {
           setChatList([]);
         })
   }, [user])
-
   return (
     <List className={classes.root}>
       {chatList.length > 0 ?

@@ -8,6 +8,8 @@ import {
   userEmailFromLocalStorage,
   createInvitation,
   findContacts,
+  updateContacts,
+  resetContactsInvitationsLists,
 } from "./helper";
 
 const ContactsStateContext = React.createContext();
@@ -48,4 +50,6 @@ export {
   userEmailFromLocalStorage,
   createInvitation,
   findContacts,
+  updateContacts,
+  resetContactsInvitationsLists,
 };

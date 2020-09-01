@@ -7,38 +7,47 @@ export const useStyles = makeStyles((theme) => ({
   },
   messageView: {
     display: "flex",
-    '&.my': {
-      justifyContent: "flex-end"
+    "&.my": {
+      justifyContent: "flex-end",
     },
-    '&.other': {
-      justifyContent: "flex-start"
-    }
+    "&.other": {
+      justifyContent: "flex-start",
+    },
   },
   messageInfo: {
     marginLeft: theme.spacing(2),
   },
   messageDetails: {
     fontSize: "0.7em",
-    '&.my': {
-      textAlign: "right"
+    "&.my": {
+      textAlign: "right",
     },
-    '&.other': {
-      textAlign: "left"
-    }
+    "&.other": {
+      textAlign: "left",
+    },
   },
   messageText: {
     borderRadius: 10,
     padding: 10,
-    '&.my': {
+    "&.my": {
       textAlign: "right",
       borderBottomRightRadius: 0,
       background: "lightgrey",
-      color: "black"
+      color: "black",
     },
-    '&.other': {
+    "&.other": {
       borderTopLeftRadius: 0,
-      background: "linear-gradient(130deg, rgba(39,31,208,1) 0%, rgba(32,167,253,1) 75%, rgba(106,194,255,1) 100%)",
-      color: "white"
-    }
-  }
+      background:
+        "linear-gradient(130deg, rgba(39,31,208,1) 0%, rgba(32,167,253,1) 75%, rgba(106,194,255,1) 100%)",
+      color: "white",
+    },
+  },
+  image: {
+    borderRadius: 10,
+    display: "block",
+    objectFit: "contain",
+    marginLeft: "auto",
+    marginRight: "auto",
+    outline: "none",
+  },
 }));

@@ -16,7 +16,7 @@ export const fetchUserData = async (dispatch) => {
   });
 };
 
-export const setUserData = async (token, user, dispatch) => {
+export const setUserData = (token, user, dispatch) => {
   dispatch({
     type: SET_USER_DATA,
     payload: {
@@ -26,7 +26,7 @@ export const setUserData = async (token, user, dispatch) => {
   });
 };
 
-export const updateUserImage = async (imageUrl, dispatch) => {
+export const updateUserImage = (imageUrl, dispatch) => {
   dispatch({
     type: UPDATE_USER_IMAGE,
     payload: imageUrl,

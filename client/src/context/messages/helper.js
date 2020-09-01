@@ -7,6 +7,6 @@ export const translateText = async (text, language) => {
     );
     return res.data.data.translations[0].translatedText;
   } catch (err) {
-    throw Error("Sorry, failed to translate");
+    throw Error("Oops, failed to translate");
   }
 };

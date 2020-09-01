@@ -41,23 +41,29 @@ const addTextVersion = (newMsg, language, text) => {
     })
 
 }
-const createMessageObject = async (date, text, user, languages) => {
+const createMessageObject = async (date, text, user, languages, imageUrl) => {
     let newMsg = {
         sender: user.email,
         date: date,
         textVersions: [],
     };
-    newMsg.textVersions.push({
-        language: user.language,
-        text: text
-    })
-    if (languages) {
-        let promises = languages.map(async (language) => {
-            if (language !== user.language) {
-                return addTextVersion(newMsg, language, text);
-            }
+    if (imageUrl) {
+        newMsg.image = imageUrl;
+    }
+    if (text) {
+        newMsg.textVersions.push({
+            language: user.language,
+            text: text
         })
-        await Promise.all(promises);
+        if (languages) {
+            let promises = languages.map(async (language) => {
+                if (language !== user.language) {
+                    return addTextVersion(newMsg, language, text);
+                }
+            })
+            await Promise.all(promises);
+        }
+
     }
     console.log(newMsg)
     return newMsg;

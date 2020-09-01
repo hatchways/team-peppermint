@@ -1,9 +1,9 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
 
-import BackgroundImage from '../components/bgImage';
-import UserAuthForm from '../components/userAuthForm';
-import FormPageHeader from '../components/formPageHeader';
+import BackgroundImage from '../../components/bgImage';
+import UserAuthForm from '../../components/userAuthForm';
+import FormPageHeader from '../../components/formPageHeader';
 
 
 function LoginPage() {

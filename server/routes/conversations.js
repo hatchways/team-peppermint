@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const data = require("../data-modules/dataService")();
-const checkAuth = require('../middleware/checkAuth');
+const checkAuth = require("../middleware/checkAuth");
 //conversation route
 router.get("/:email/conversations", checkAuth, async (req, res) => {
   try {
@@ -30,20 +30,24 @@ router.get("/conversation/:convID", async (req, res) => {
   try {
     let conversation = await data.getConversationById(req.params.convID);
 
-    if (!conversation) return res.status(404).json({ found: false, msg: 'conversation not found' })
-    return res.status(200).json({ conversation })
+    if (!conversation)
+      return res
+        .status(404)
+        .json({ found: false, msg: "conversation not found" });
+    return res.status(200).json({ conversation });
   } catch (err) {
     return res.status(500).json({ msg: err });
   }
-})
+});
 router.post("/:email/conversation/:convID/newMessage", async (req, res) => {
   let newMessage = req.body;
   data.addMessage(req.params.convID, newMessage)
     .then((msg) => res.status(200).json(msg))
-    .catch((err) => res.status(500).json(err))
-})
+    .catch((err) => res.status(500).json(err));
+});
 router.get("/:email/groupchats", (req, res) => {
-  data.getUserByEmail(req.params.email)
+  data
+    .getUserByEmail(req.params.email)
     .then((user) => {
       res.status(200).send(user.groupChats)
     })
@@ -59,6 +63,6 @@ router.post("/groupchat", (req, res) => {
     data.createConversation(users)
   ])
     .then((msg) => res.status(200).json(msg))
-    .catch((err) => res.status(500).json(err))
-})
+    .catch((err) => res.status(500).json(err));
+});
 module.exports = router;

@@ -101,7 +101,6 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       // secure: true -> uncomment in production?
     });
-    console.log(`${user.email} from backnd`);
     res.status(200).json({
       token,
       user: {
