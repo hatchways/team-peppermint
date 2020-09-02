@@ -11,23 +11,21 @@ router.get("/:email/conversations", checkAuth, async (req, res) => {
     res.status(400).json(err);
   }
 });
-router.post("/:email/conversation", async (req, res) => {
+router.post("/conversation", async (req, res) => {
   let users = req.body;
-  users.sort();
-  let conversation = {
-    conversationID: users.join("-"),
-    users: users,
-  };
-  data
-    .createConversation(conversation)
-    .then((msg) => res.status(200).json(msg))
-    .catch((err) => {
-      if (err.code === 11000) {
-        return res.status(400).json({ error: err, code: err.code });
-      }
-      return res.status(500).json(err);
-    });
-});
+  if (users.length > 1)
+    data.createConversation(users)
+      .then((msg) => res.status(200).json(msg))
+      .catch((err) => {
+
+        if (err.code === 11000) {
+          return res.status(400).json({ error: err, code: err.code })
+        }
+        return res.status(500).json(err)
+      })
+  else
+    res.status(400).json({ message: "More than one user required to create conversation" })
+})
 router.get("/conversation/:convID", async (req, res) => {
   try {
     let conversation = await data.getConversationById(req.params.convID);
@@ -43,9 +41,7 @@ router.get("/conversation/:convID", async (req, res) => {
 });
 router.post("/:email/conversation/:convID/newMessage", async (req, res) => {
   let newMessage = req.body;
-
-  data
-    .addMessage(req.params.convID, newMessage)
+  data.addMessage(req.params.convID, newMessage)
     .then((msg) => res.status(200).json(msg))
     .catch((err) => res.status(500).json(err));
 });
@@ -53,17 +49,19 @@ router.get("/:email/groupchats", (req, res) => {
   data
     .getUserByEmail(req.params.email)
     .then((user) => {
-      if (user.groupChats.length > 0) res.status(200).send(user.groupChats);
-      else res.status(400).send("No group chats");
+      res.status(200).send(user.groupChats)
     })
     .catch((err) => res.status(400).send(err));
-});
-router.get("/:email/groupchat/:groupid", (req, res) => {});
-router.post("/:email/groupchat", (req, res) => {
+})
+router.get("/:email/groupchat/:groupid", (req, res) => {
+
+})
+router.post("/groupchat", (req, res) => {
   let users = req.body;
-  console.log(req.body);
-  data
-    .addGroupChat(users, users.sort().join("-"))
+  Promise.all([
+    data.addGroupChat(users),
+    data.createConversation(users)
+  ])
     .then((msg) => res.status(200).json(msg))
     .catch((err) => res.status(500).json(err));
 });

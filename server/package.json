@@ -23,7 +23,8 @@
     "mongoose": "^5.9.28",
     "morgan": "~1.9.1",
     "nodemon": "^1.19.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "string-hash": "^1.1.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",

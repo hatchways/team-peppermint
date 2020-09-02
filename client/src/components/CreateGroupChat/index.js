@@ -22,25 +22,20 @@ const CreateGroupChat = ({ open, onClose, contactsList }) => {
   const createConversation = () => {
     let users = Object.entries(checkedBoxes).reduce((emails, [prop, val]) => {
       if (val === true) {
-        setCheckedBoxes((prevState) => ({ ...prevState, [prop]: false }));
-        emails.push(prop);
+        setCheckedBoxes(prevState => ({ ...prevState, [prop]: false }))
+        emails.push(prop)
       }
       return emails;
-    }, []);
-
-    Axios.post(`/user/${user.email}/conversation`, [...users, user.email])
-      .then((msg) => {
-        Axios.post(`/user/${user.email}/groupchat`, [...users, user.email])
-          .then((msg) => onClose())
-          .catch((err) => console.log(err));
-      })
+    }, [])
+    Axios.post(`/user/groupchat`, [...users, user.email])
+      .then((msg) => onClose())
       .catch((err) => {
         if (err.response.data.code === 11000) {
-          alert("chat already exists");
+          alert("chat already exists")
           onClose();
         }
-      });
-  };
+      })
+  }
   useEffect(() => {
     contactsList.forEach((contact) => {
       setCheckedBoxes((prevState) => ({

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const stringHash = require("string-hash");
 mongoose.Promise = global.Promise;
 const uri = process.env.URI;
 const UserSchema = require("../models/userSchema");
@@ -146,44 +147,43 @@ module.exports = function () {
           .catch((err) => reject(err));
       });
     },
-    addContact: function (currentEmail, emailToAdd) {
-      let conversationID = [currentEmail, emailToAdd].sort().join('-');
+    addContactToEmail: function (currentEmail, emailToAdd, status) {
+      let conversationID = [currentEmail, emailToAdd].sort().join();
       return new Promise((resolve, reject) => {
         User.updateOne(
           {
             email: currentEmail,
+            'contacts.email': { $ne: emailToAdd }
           },
           {
             $push: {
               contacts: {
                 email: emailToAdd,
-                status: 0,
-                conversationID: conversationID,
+                status: status,
+                conversationID: stringHash(conversationID),
               },
             },
           }
-        )
-          .exec()
-          .then(() => {
-            User.updateOne(
-              {
-                email: emailToAdd,
-              },
-              {
-                $push: {
-                  contacts: {
-                    email: currentEmail,
-                    status: 1,
-                    conversationID: conversationID,
-                  },
-                },
-              }
-            )
-              .exec()
-              .then(() => resolve())
-              .catch((err) => reject(err));
+        ).exec()
+          .then(() => resolve(`Contact ${emailToAdd} added to ${currentEmail} with status ${status}`))
+          .catch((err) => reject(err))
+      })
+    },
+    addContact: function (currentEmail, emailToAdd) {
+      return new Promise((resolve, reject) => {
+        Promise.all([
+          this.addContactToEmail(currentEmail, emailToAdd, 4),
+          this.addContactToEmail(emailToAdd, currentEmail, 0)
+        ])
+          .then((results) => {
+            console.log(results)
+            resolve(`${emailToAdd} contact added to ${currentEmail}`);
           })
-          .catch((err) => reject(err));
+          .catch((error) => {
+            console.log("Error addContact:", error)
+            reject(error);
+          })
+
       });
     },
     deleteContact: function (email, contactToDelete) {
@@ -203,21 +203,43 @@ module.exports = function () {
           .catch((err) => reject(err));
       });
     },
-    respondToInvite: function (email, emailToApprove, status) {
+    updateContact: function (email, contactEmail, status, conversationID) {
+      let updateBlock={};
+
+      if (status)
+        updateBlock["contacts.$.status"] = status;
+      if (conversationID)
+        updateBlock["contacts.$.conversationID"] = conversationID;
       return new Promise((resolve, reject) => {
         User.updateOne(
           {
             email: email,
-            "contacts.email": emailToApprove,
+            "contacts.email": contactEmail,
+          },
+          {
+            $set: updateBlock
+          }
+        )
+          .exec()
+          .then(() => resolve(`${contactEmail}'s status changed`))
+          .catch((err) => reject(err));
+      });
+    },
+    updateContactConversationID: function (email, contactEmail, conversationID) {
+      return new Promise((resolve, reject) => {
+        User.updateOne(
+          {
+            email: email,
+            "contacts.email": contactEmail,
           },
           {
             $set: {
-              "contacts.$.status": status,
+              "contacts.$.conversationID": conversationID,
             },
           }
         )
           .exec()
-          .then(() => resolve(`${emailToApprove}'s status changed`))
+          .then(() => resolve(`${contactEmail}'s status changed`))
           .catch((err) => reject(err));
       });
     },
@@ -262,7 +284,11 @@ module.exports = function () {
           .catch((err) => reject(err));
       });
     },
-    createConversation: function (conversationObject) {
+    createConversation: async function (users) {
+      let conversationObject = {
+        conversationID: stringHash(users.sort().join()),
+        users: users
+      }
       return new Promise((resolve, reject) => {
         let newConversation = new Conversation(conversationObject);
         newConversation.save((err) => {
@@ -281,8 +307,9 @@ module.exports = function () {
           .catch((err) => reject(err));
       });
     },
-    addGroupChat: function (users, conversationID) {
+    addGroupChat: function (users) {
       console.log(users)
+      let conversationID = stringHash(users.sort().join())
       return new Promise((resolve, reject) => {
         User.updateMany(
           {

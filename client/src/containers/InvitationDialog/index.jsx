@@ -106,7 +106,7 @@ const InvitationDialog = ({
               severity="success"
               style={{ textAlign: "center", marginBottom: 20 }}
             >
-              Email request successfuly sent
+              User invited
             </Alert>
           )}
         </Collapse>

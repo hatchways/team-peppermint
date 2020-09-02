@@ -62,7 +62,13 @@ const ContactsList = () => {
   const closeChatForm = () => {
     setOpenGroupChatForm(false);
   };
-
+  const alertSuccess=()=>{
+    setIsAlertOpen(true);
+    setTimeout(() => {
+      showInviteDialog(false);
+      setIsAlertOpen(false);
+    }, 3000);
+  }
   const handleSendEmail = async (email) => {
     const isEmailValid = isEmail(email);
     if (!isEmailValid) {
@@ -77,15 +83,27 @@ const ContactsList = () => {
       let res = "";
       if (isEmailValid) {
         setAlertError(null);
-        res = await axios.post(`/mail/${email}/sendMail`, {
-          referrer: user.id,
-        });
+        axios.get(`/api/user/${email}`)
+          .then(async (response) => {
+            res = await axios.post(`/user/${userEmail}/invite`, { contact: email });
+            alertSuccess();
+          })
+          .catch(async (err) => {
+            if (err.response.status === 404) {
+              res = await axios.post(`/mail/${email}/sendMail`, {
+                referrer: user.id,
+              });
+              res.data && alertSuccess();
+            }
+            else {
+              setAlertError(err.message);
+              setTimeout(() => {
+                setIsAlertOpen(false);
+              }, 3000);
+            }
+          })
       }
-      res.data && setIsAlertOpen(true);
-      setTimeout(() => {
-        showInviteDialog(false);
-        setIsAlertOpen(false);
-      }, 3000);
+
     } catch (err) {
       setAlertError(err.message);
       setTimeout(() => {
@@ -168,15 +186,15 @@ const ContactsList = () => {
             />
           ))
         ) : (
-          <Typography
-            variant="body1"
-            color="primary"
-            gutterBottom
-            style={{ color: "black", textAlign: "center" }}
-          >
-            No contacts
-          </Typography>
-        )}
+            <Typography
+              variant="body1"
+              color="primary"
+              gutterBottom
+              style={{ color: "black", textAlign: "center" }}
+            >
+              No contacts
+            </Typography>
+          )}
       </List>
     </>
   );

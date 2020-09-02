@@ -18,6 +18,7 @@
     "firebase": "^7.19.0",
     "iso-639-1": "^2.1.4",
     "jwt-decode": "^2.2.0",
+    "language-icons": "^0.3.0",
     "material-ui-dropzone": "^3.3.1",
     "parse-url": "^5.0.2",
     "react": "^16.13.1",

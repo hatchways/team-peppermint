@@ -23,16 +23,14 @@ export const fetchContactsAndInvitations = async (email, dispatch) => {
 };
 
 export const deleteContact = async (userEmail, emailToDelete, dispatch) => {
-  const contacts = await axios.delete(`user/${emailToDelete}/contacts`, {
+  const contacts = await axios.delete(`user/${userEmail}/contacts`, {
     data: {
-      userEmail,
+      emailToDelete,
     },
   });
-
   if (!contacts.data) {
     throw Error("Oops, failed to delete contact");
   }
-
   fetchContactsAndInvitations(userEmail, dispatch);
 };
 
