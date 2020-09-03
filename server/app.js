@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
-const cors = require("cors");
+var cors = require("cors");
 
 //Import Routes
 const indexRouter = require("./routes/index");
@@ -22,10 +22,15 @@ const { json, urlencoded } = express;
 
 const app = express();
 
+corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 app.use(logger("dev"));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(json());
-app.use(urlencoded({ extended: false }));
+app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
 

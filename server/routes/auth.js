@@ -97,7 +97,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user.email }, process.env.TOKEN_SECRET);
     //create httpOnly cookie
     res.cookie("auth_token", token, {
-      maxAge: 3600, // sets 1 hour in length
+      maxAge: 2 * 60 * 60 * 1000, // sets 1 hour in length
       httpOnly: true,
       // secure: true -> uncomment in production?
     });

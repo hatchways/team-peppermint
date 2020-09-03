@@ -16,8 +16,9 @@ const sortByEmail = (a, b) => {
 };
 
 router.get("/:email/contacts", async (req, res) => {
+  const cookies = req.cookies;
+  console.log("COOKIESSSSS ", cookies);
   try {
-
     // select approved contacts with status === 1
     const approvedContacts = await data.getContactsByStatus(
       req.params.email,
@@ -32,8 +33,6 @@ router.get("/:email/contacts", async (req, res) => {
 
     // find all contacts with pending status
     const invitationsList = await data.getContactsByStatus(req.params.email, 0);
-
-
 
     // create contacts list
     let contactsList = [];
@@ -119,15 +118,15 @@ router.post("/:email/search", async (req, res) => {
 router.delete("/:email/contacts", async (req, res) => {
   Promise.all([
     data.updateContact(req.params.email, req.body.emailToDelete, 2),
-    data.updateContact(req.body.emailToDelete, req.params.email, 4)
+    data.updateContact(req.body.emailToDelete, req.params.email, 4),
   ])
-  .then((msg) => {
-    console.log(msg)
-    res.status(200).json({ message: msg });
-  })
-  .catch((err) => {
-    res.status(500).json({ err });
-  });
+    .then((msg) => {
+      console.log(msg);
+      res.status(200).json({ message: msg });
+    })
+    .catch((err) => {
+      res.status(500).json({ err });
+    });
 });
 
 router.put("/:email/image", async (req, res) => {

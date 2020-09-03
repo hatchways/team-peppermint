@@ -9,7 +9,9 @@ import axios from "axios";
 const jwtDecode = require("jwt-decode");
 
 export const fetchContactsAndInvitations = async (email, dispatch) => {
-  const userData = await axios.get(`/user/${email}/contacts`);
+  const userData = await axios.get(`/user/${email}/contacts`, {
+    withCredentials: true,
+  });
   if (!userData.data) {
     throw Error("Oops, no contacts found");
   }
