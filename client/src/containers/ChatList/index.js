@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useStyles } from "./style";
 import ChatItem from "../../components/ChatItem";
 import Typography from "@material-ui/core/Typography"

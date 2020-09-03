@@ -34,7 +34,6 @@ export const useStyles = makeStyles((theme) => ({
       padding: 0,
     },
     typography: {
-      marginBottom: 50,
       fontSize: "1.3rem",
     },
   },
