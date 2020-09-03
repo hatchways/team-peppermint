@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, memo } from "react";
 import { useStyles } from "./style";
-import {
-  TextField,
-  InputAdornment,
-} from "@material-ui/core";
+import { TextField, InputAdornment } from "@material-ui/core";
 import PropTypes from "prop-types";
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
@@ -22,7 +19,7 @@ import ImageInputView from "../../components/ImageInputView";
 import EmojiButton from "../../components/EmojiButton";
 import AddPhotoButton from "../../components/AddPhotoButton";
 const MessageField = ({ user }) => {
-  let currentTime, msgVersion, senderData;
+  let currentTime, senderData;
   const classes = useStyles();
   const { contacts } = useContactsState();
   const context = useContext(SelectConversation);
@@ -76,14 +73,14 @@ const MessageField = ({ user }) => {
     if (message || imageUrl) {
       createMessageObject(currentTime, message, user, languages, imageUrl)
         .then((msg) => {
-          socket.emit('message', msg, () => {
-            saveMessage(msg)
-            setMessage('')
+          socket.emit("message", msg, () => {
+            saveMessage(msg);
+            setMessage("");
             setImageUrl(null);
-            scrollToBottom()
-          })
+            scrollToBottom();
+          });
         })
-        .catch((err) => console.log(err))
+        .catch((err) => console.log(err));
     }
   };
   const scrollToBottom = () => {
@@ -93,66 +90,81 @@ const MessageField = ({ user }) => {
     scrollToBottom();
   }, [messages]);
   useEffect(() => {
-    setUsersData(prevState => {
+    setUsersData((prevState) => {
       contacts.forEach((contact) => {
         prevState[contact.email] = {
           name: contact.name,
           language: contact.language,
-          pictureUrl: contact.pictureUrl
-        }
-      })
+          pictureUrl: contact.pictureUrl,
+        };
+      });
       return prevState;
     });
-  }, [contacts])
+  }, [contacts]);
   useEffect(() => {
     setMessages([]);
     if (context.conversation !== undefined) {
-      loadMessages(context.conversation, setMessages, setUsers, usersData, setUsersData, user.email);
-      socket.on('message', message => {
-        setMessages(messages => [...messages, message])
-      })
-      socket.emit('join', { email: user.email, room: context.conversation }, (error) => {
-        if (error) alert(error);
+      loadMessages(
+        context.conversation,
+        setMessages,
+        setUsers,
+        usersData,
+        setUsersData,
+        user.email
+      );
+      socket.on("message", (message) => {
+        setMessages((messages) => [...messages, message]);
       });
+      socket.emit(
+        "join",
+        { email: user.email, room: context.conversation },
+        (error) => {
+          if (error) alert(error);
+        }
+      );
     }
     return () => {
       socket.emit("disconnect");
       socket.off();
-    }
-  }, [context.conversation, user])
+    };
+  }, [context.conversation, user, usersData]);
   useEffect(() => {
     if (users.length > 0) {
-      Axios.get(`/api/user/${users.join(',')}/languages`)
-        .then((response) => { setLanguages(response.data.languages) })
+      Axios.get(`/api/user/${users.join(",")}/languages`)
+        .then((response) => {
+          setLanguages(response.data.languages);
+        })
         .catch((err) => console.log(err));
     }
-  }, [users, usersData])
+  }, [users, usersData]);
   return (
     <div className={classes.root}>
       <div className={classes.messegesView}>
-        {!!messages.length > 0 && messages.map((msg, i) => {
-          if (msg && (msg.textVersions || msg.image)) {
-            senderData = usersData ? usersData[msg.sender] : undefined;
-            return (
-              <div key={i}>
-                <MessageItem
-                  sender={msg.sender === user.email ? user : senderData}
-                  date={msg.date}
-                  text={
-                    msg.textVersions 
-                      ? ToggleLanguageContext.original
-                        ? msg.textVersions[Object.keys(msg.textVersions)[0]]
-                        : msg.textVersions[user.language]
-                      : null}
-                  myMessage={msg.sender === user.email}
-                  image={msg.image ? msg.image : null}
-                  handleModalOpen={handleModalOpen}
-                  handleModalClose={handleModalClose} />
-              </div>)
-
-          }
-          else return null
-        })}
+        {!!messages.length > 0 &&
+          messages.map((msg, i) => {
+            if (msg && (msg.textVersions || msg.image)) {
+              senderData = usersData ? usersData[msg.sender] : undefined;
+              return (
+                <div key={i}>
+                  <MessageItem
+                    sender={msg.sender === user.email ? user : senderData}
+                    date={msg.date}
+                    text={
+                      msg.textVersions
+                        ? ToggleLanguageContext.original
+                          ? msg.textVersions[Object.keys(msg.textVersions)[0]]
+                          : msg.textVersions[user.language]
+                        : null
+                    }
+                    myMessage={msg.sender === user.email}
+                    image={msg.image ? msg.image : null}
+                    handleModalOpen={handleModalOpen}
+                    handleModalClose={handleModalClose}
+                  />
+                </div>
+              );
+            } else return null;
+          })}
         <div ref={messagesEndRef} />
       </div>
       <PictureModal
@@ -174,7 +186,12 @@ const MessageField = ({ user }) => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              {imageUrl !== null && (<ImageInputView imageUrl={imageUrl} handleClose={handleCloseSmallImage} />)}
+              {imageUrl !== null && (
+                <ImageInputView
+                  imageUrl={imageUrl}
+                  handleClose={handleCloseSmallImage}
+                />
+              )}
             </InputAdornment>
           ),
           endAdornment: (

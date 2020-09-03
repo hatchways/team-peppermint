@@ -55,4 +55,7 @@ export default memo(ChatItem);
 ChatItem.propTypes = {
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   messageCount: PropTypes.number,
+  select: PropTypes.func,
+  index: PropTypes.number,
+  selected: PropTypes.number,
 };

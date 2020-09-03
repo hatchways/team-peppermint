@@ -4,7 +4,6 @@ import bgImage from "../../assets/login-signup-bgImage.png";
 import SmsRoundedIcon from "@material-ui/icons/SmsRounded";
 import TranslateRoundedIcon from "@material-ui/icons/TranslateRounded";
 
-
 const useStyles = makeStyles({
   imageContainer: {
     backgroundImage: `url(${bgImage})`,
@@ -34,6 +33,19 @@ const useStyles = makeStyles({
     textAlign: "center",
     marginBottom: -80,
     marginTop: -80,
+  },
+  [`@media (max-width:560px)`]: {
+    imageContainer: {
+      height: "20vh",
+      width: "100vw",
+    },
+    gradientContainer: {
+      height: "20vh",
+      width: "100vw",
+    },
+    textStyle: {
+      fontSize: 25,
+    },
   },
 });
 

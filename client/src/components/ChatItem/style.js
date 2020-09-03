@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     alignItems: "center",
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
@@ -13,7 +13,8 @@ export const useStyles = makeStyles((theme) => ({
     boxShadow: "0 0 1px 0 grey",
   },
   avatarNameContainer: {
-    display: "flex",    
+    display: "flex",
+    justifyContent: "space-between",
     alignItems: "center",
     width: "75%",
     height: "100%",
@@ -25,7 +26,14 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   chip: {
+    display: "block",
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+  },
+  [`@media (max-width:360px)`]: {
+    avatarNameContainer: {
+      flexDirection: "column",
+      justifyContent:'center'
+    },
   },
 }));

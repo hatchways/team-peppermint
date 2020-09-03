@@ -20,7 +20,8 @@ export const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   search: {
-    position: "relative",
+    display: "flex",
+    justifyContent: "center",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: "#e9eef9",
     marginTop: theme.spacing(2),
@@ -30,7 +31,6 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       width: "auto",
     },
-    display: "flex",
   },
   searchIcon: {
     padding: theme.spacing(0, 2),

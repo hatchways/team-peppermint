@@ -62,7 +62,7 @@ const SidebarInfo = () => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const { height, width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const dispatch = useContactsDispatch();
   const { contacts } = useContactsState();
