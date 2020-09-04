@@ -23,7 +23,7 @@ import {
   fetchContactsAndInvitations,
   findContacts,
   userEmailFromLocalStorage,
-  updateContacts
+  
 } from "../../context/contacts/contactsContext";
 import {
   useConversationsState,
@@ -32,7 +32,6 @@ import {
 } from "../../context/conversations/conversationsContext";
 import Alert from "@material-ui/lab/Alert";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import socket from "../../socket-client/socket";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -95,7 +94,9 @@ const SidebarInfo = () => {
     userEmail &&
       !conversations.length &&
       fetchConversations(userEmail, conversationsDispatch);
+
   }, [userEmail, conversations.length, conversationsDispatch]);
+
   const handleChange = (event, newValue) => {
     setTabNumber(newValue);
   };

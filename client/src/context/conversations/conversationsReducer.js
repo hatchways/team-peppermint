@@ -9,7 +9,7 @@ export default function conversationsReducer(state, action) {
         }
         case RESET_CONVERSATIONS: {
             return {
-                conversations: []
+                conversations: {}
             }
         }
         default:

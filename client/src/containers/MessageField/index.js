@@ -84,6 +84,8 @@ const MessageField = ({ user }) => {
             setMessage('')
             setImageUrl(null);
             scrollToBottom();
+            if (messages.length === 0)
+              fetchConversations(user.email, dispatchConv);
           })
         })
         .catch((err) => console.log(err));
@@ -108,18 +110,18 @@ const MessageField = ({ user }) => {
     socket.on("onlineUsers", (data) => {
       updateContacts(data, contacts, dispatch);
     });
+    socket.on('message', message => {
+      setMessages(messages => [...messages, message])
+      fetchConversations(user.email, dispatchConv);
+    })
     if (context.conversation !== undefined) {
       loadMessages(user.email, context.conversation, setMessages, setUsers, usersData, unknownUsers, dispatch);
-
-      socket.on('message', message => {
-        setMessages(messages => [...messages, message])
-      })
     }
     return () => {
       socket.emit("disconnect");
       socket.off();
     }
-  }, [context.conversation, user, unknownUsers, dispatch, usersData])
+  }, [context.conversation, user, unknownUsers, dispatch, usersData, contacts])
   useEffect(() => {
     if (users.length > 0) {
       Axios.get(`/api/user/${users.join(",")}/languages`)

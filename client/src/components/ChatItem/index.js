@@ -27,7 +27,7 @@ const ChatItem = (props) => {
   useEffect(() => {
     if (lastMessage)
       setMessage(lastMessage[ToggleLanguageContext.original ? Object.keys(lastMessage)[0] : user.language])
-  }, [ToggleLanguageContext])
+  }, [ToggleLanguageContext, lastMessage, user.language])
   useEffect(() => {
     let fetch = false;
     if (Object.keys(contacts).length) {

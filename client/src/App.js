@@ -23,7 +23,6 @@ dotenv.config();
 
 function App() {
   const dispatch = useUserDispatch();
-
   const email = userEmailFromLocalStorage();
 
   useEffect(() => {
@@ -49,6 +48,7 @@ function App() {
     };
     checkLoggedIn();
     socket.emit("login", email);
+
   }, [dispatch, email]);
 
   useEffect(() => {

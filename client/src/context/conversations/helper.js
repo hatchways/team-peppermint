@@ -1,4 +1,4 @@
-import { FETCH_CONVERSATIONS } from "../../types";
+import { FETCH_CONVERSATIONS, RESET_CONVERSATIONS } from "../../types";
 import axios from "axios";
 
 export const fetchConversations = async (email, dispatch) => {
@@ -14,3 +14,8 @@ export const fetchConversations = async (email, dispatch) => {
     });
 };
 
+export const resetConversations = (dispatch) => {
+    dispatch({
+        type: RESET_CONVERSATIONS,
+    });
+};

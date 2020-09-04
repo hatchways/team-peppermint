@@ -21,6 +21,10 @@ import {
   resetContactsInvitationsLists,
   useContactsDispatch,
 } from "../../context/contacts/contactsContext";
+import {
+  useConversationsDispatch,
+  resetConversations
+} from "../../context/conversations/conversationsContext";
 import socket from "../../socket-client/socket";
 
 const SidebarNavBar = () => {
@@ -32,7 +36,7 @@ const SidebarNavBar = () => {
   const { user } = useUserState();
   const dispatch = useUserDispatch();
   const contactsDispatch = useContactsDispatch();
-
+  const conversationsDispatch = useConversationsDispatch();
   const isOnline = localStorage.getItem("auth-token");
 
   useEffect(() => {
@@ -58,6 +62,7 @@ const SidebarNavBar = () => {
     localStorage.removeItem("auth-token");
     setAnchorEl(null);
     resetContactsInvitationsLists(contactsDispatch);
+    resetConversations(conversationsDispatch);
     socket.emit("logout", userData.email);
     socket.off();
   };

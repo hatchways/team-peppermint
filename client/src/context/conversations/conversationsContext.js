@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from "react";
 import conversationsReducer from "./conversationsReducer";
-import { fetchConversations } from "./helper";
+import { fetchConversations, resetConversations } from "./helper";
 
 const ConversationsStateContext = React.createContext();
 const ConversationsDispatchContext = React.createContext();
@@ -33,4 +33,5 @@ export {
   useConversationsState,
   useConversationsDispatch,
   fetchConversations,
+  resetConversations
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import InvitationDialog from "../InvitationDialog";
 import { useStyles } from "./style";
 import { List, Typography, ButtonBase } from "@material-ui/core";
