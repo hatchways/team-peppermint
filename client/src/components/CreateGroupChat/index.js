@@ -9,9 +9,14 @@ import Axios from "axios";
 import { useUserState } from "../../context/user/userContext";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import {
+  useConversationsDispatch,
+  fetchConversations,
+} from "../../context/conversations/conversationsContext";
 const CreateGroupChat = ({ open, onClose, contactsList }) => {
   const { user } = useUserState();
   const [checkedBoxes, setCheckedBoxes] = useState({});
+  const dispatch = useConversationsDispatch();
   const handleChange = (event) => {
     setCheckedBoxes({
       ...checkedBoxes,
@@ -28,7 +33,10 @@ const CreateGroupChat = ({ open, onClose, contactsList }) => {
       return emails;
     }, [])
     Axios.post(`/user/groupchat`, [...users, user.email])
-      .then((msg) => onClose())
+      .then((msg) => {
+        fetchConversations(user.email, dispatch);
+        onClose()
+      })
       .catch((err) => {
         if (err.response.data.code === 11000) {
           alert("chat already exists")
@@ -37,10 +45,10 @@ const CreateGroupChat = ({ open, onClose, contactsList }) => {
       })
   }
   useEffect(() => {
-    contactsList.forEach((contact) => {
+    Object.keys(contactsList).forEach((contact) => {
       setCheckedBoxes((prevState) => ({
         ...prevState,
-        [contact.email]: false,
+        [contact]: false,
       }));
     });
   }, [contactsList]);
@@ -50,19 +58,19 @@ const CreateGroupChat = ({ open, onClose, contactsList }) => {
       <DialogTitle id="form-dialog-title">Create Group Chat</DialogTitle>
       <DialogContent>
         <FormGroup>
-          {!!contactsList.length &&
-            contactsList.map((contact, i) => (
+          {!!Object.keys(contactsList).length &&
+            Object.keys(contactsList).map((contact, i) => (
               <FormControlLabel
                 key={i}
                 control={
                   <Checkbox
-                    checked={checkedBoxes[contact.email]}
-                    name={contact.email}
+                    checked={checkedBoxes[contact]}
+                    name={contact}
                     color="primary"
                     onChange={handleChange}
                   />
                 }
-                label={contact.email}
+                label={contact}
               />
             ))}
         </FormGroup>

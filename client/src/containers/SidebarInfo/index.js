@@ -23,9 +23,16 @@ import {
   fetchContactsAndInvitations,
   findContacts,
   userEmailFromLocalStorage,
+  updateContacts
 } from "../../context/contacts/contactsContext";
+import {
+  useConversationsState,
+  useConversationsDispatch,
+  fetchConversations,
+} from "../../context/conversations/conversationsContext";
 import Alert from "@material-ui/lab/Alert";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import socket from "../../socket-client/socket";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,12 +68,13 @@ const SidebarInfo = () => {
   const [tabNumber, setTabNumber] = useState(0);
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
   const { width } = useWindowDimensions();
 
   const dispatch = useContactsDispatch();
-  const { contacts } = useContactsState();
-
+  const { contacts, unknownUsers } = useContactsState();
+  const [usersData, setUsersData] = useState();
+  const conversationsDispatch = useConversationsDispatch();
+  const { conversations } = useConversationsState();
   const userEmail = userEmailFromLocalStorage();
 
   useEffect(() => {
@@ -74,13 +82,20 @@ const SidebarInfo = () => {
       setQuery("");
     }
   }, [tabNumber]);
-
+  useEffect(() => {
+    Object.keys(contacts).length &&
+      setUsersData({ ...contacts, ...unknownUsers })
+  }, [contacts, unknownUsers])
   useEffect(() => {
     userEmail &&
-      !contacts.length &&
+      !Object.keys(contacts).length &&
       fetchContactsAndInvitations(userEmail, dispatch);
-  }, [userEmail, contacts.length, dispatch]);
-
+  }, [userEmail, contacts, dispatch]);
+  useEffect(() => {
+    userEmail &&
+      !conversations.length &&
+      fetchConversations(userEmail, conversationsDispatch);
+  }, [userEmail, conversations.length, conversationsDispatch]);
   const handleChange = (event, newValue) => {
     setTabNumber(newValue);
   };
@@ -163,7 +178,7 @@ const SidebarInfo = () => {
         </Alert>
       </Collapse>
       <TabPanel value={tabNumber} index={0} className={classes.tabPanel}>
-        <ChatList />
+        <ChatList usersData={usersData} />
       </TabPanel>
       <TabPanel value={tabNumber} index={1} className={classes.tabPanel}>
         <ContactsList />

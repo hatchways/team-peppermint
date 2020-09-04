@@ -1,8 +1,6 @@
 const {
   addUser,
   removeUser,
-  getUser,
-  getUsersInRoom,
 } = require("./socket-helper");
 const { addOnlineUsers, removeOnlineUser } = require("./socket-online-users");
 
@@ -19,16 +17,16 @@ module.exports = function (io) {
       callback();
     });
 
-    socket.on("message", (message, callback) => {
-      console.log(message);
-      const user = getUser(socket.id);
-      io.to(user.room).emit("message", message);
+    socket.on("message", (message, room, callback) => {
+      // const user = getUser(socket.id);
+      io.to(room).emit("message", message);
       callback();
     });
     socket.on("disconnect", () => {
-      removeUser(socket.id);      
+
     });
     socket.on("logout", (email) => {
+      removeUser(socket.id);
       socket.broadcast.emit("onlineUsers", removeOnlineUser(socket.id, email));
     });
   });

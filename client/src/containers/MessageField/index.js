@@ -13,16 +13,22 @@ import {
   deleteUserImage,
 } from "../../services/uploadDeleteUserImage";
 import PictureModal from "../../components/PictureModal";
-import { useContactsState } from "../../context/contacts/contactsContext";
+import { useContactsState, useContactsDispatch, updateContacts } from "../../context/contacts/contactsContext";
+import { fetchConversations, useConversationsDispatch } from "../../context/conversations/conversationsContext"
 import { loadMessages, createMessageObject } from "./helper";
 import ImageInputView from "../../components/ImageInputView";
 import EmojiButton from "../../components/EmojiButton";
 import AddPhotoButton from "../../components/AddPhotoButton";
+
+
 const MessageField = ({ user }) => {
   let currentTime, senderData;
   const classes = useStyles();
-  const { contacts } = useContactsState();
+  const dispatch = useContactsDispatch();
+  const dispatchConv = useConversationsDispatch();
+  const { contacts, unknownUsers } = useContactsState();
   const context = useContext(SelectConversation);
+
   const ToggleLanguageContext = useContext(ToggleLanguage);
 
   const [messages, setMessages] = useState([]);
@@ -73,12 +79,12 @@ const MessageField = ({ user }) => {
     if (message || imageUrl) {
       createMessageObject(currentTime, message, user, languages, imageUrl)
         .then((msg) => {
-          socket.emit("message", msg, () => {
-            saveMessage(msg);
-            setMessage("");
+          socket.emit('message', msg, context.conversation, () => {
+            saveMessage(msg)
+            setMessage('')
             setImageUrl(null);
             scrollToBottom();
-          });
+          })
         })
         .catch((err) => console.log(err));
     }
@@ -90,44 +96,30 @@ const MessageField = ({ user }) => {
     scrollToBottom();
   }, [messages]);
   useEffect(() => {
-    setUsersData((prevState) => {
-      contacts.forEach((contact) => {
-        prevState[contact.email] = {
-          name: contact.name,
-          language: contact.language,
-          pictureUrl: contact.pictureUrl,
-        };
-      });
-      return prevState;
+    setUsersData({ ...contacts, ...unknownUsers });
+  }, [contacts, unknownUsers])
+  useEffect(() => {
+    socket.emit('join', { email: user.email, room: context.conversation }, (error) => {
+      if (error) alert(error);
     });
-  }, [contacts]);
+  }, [context.conversation, user.email])
   useEffect(() => {
     setMessages([]);
+    socket.on("onlineUsers", (data) => {
+      updateContacts(data, contacts, dispatch);
+    });
     if (context.conversation !== undefined) {
-      loadMessages(
-        context.conversation,
-        setMessages,
-        setUsers,
-        usersData,
-        setUsersData,
-        user.email
-      );
-      socket.on("message", (message) => {
-        setMessages((messages) => [...messages, message]);
-      });
-      socket.emit(
-        "join",
-        { email: user.email, room: context.conversation },
-        (error) => {
-          if (error) alert(error);
-        }
-      );
+      loadMessages(user.email, context.conversation, setMessages, setUsers, usersData, unknownUsers, dispatch);
+
+      socket.on('message', message => {
+        setMessages(messages => [...messages, message])
+      })
     }
     return () => {
       socket.emit("disconnect");
       socket.off();
-    };
-  }, [context.conversation, user, usersData]);
+    }
+  }, [context.conversation, user, unknownUsers, dispatch, usersData])
   useEffect(() => {
     if (users.length > 0) {
       Axios.get(`/api/user/${users.join(",")}/languages`)
@@ -140,31 +132,29 @@ const MessageField = ({ user }) => {
   return (
     <div className={classes.root}>
       <div className={classes.messegesView}>
-        {!!messages.length > 0 &&
-          messages.map((msg, i) => {
-            if (msg && (msg.textVersions || msg.image)) {
-              senderData = usersData ? usersData[msg.sender] : undefined;
-              return (
-                <div key={i}>
-                  <MessageItem
-                    sender={msg.sender === user.email ? user : senderData}
-                    date={msg.date}
-                    text={
-                      msg.textVersions
-                        ? ToggleLanguageContext.original
-                          ? msg.textVersions[Object.keys(msg.textVersions)[0]]
-                          : msg.textVersions[user.language]
-                        : null
-                    }
-                    myMessage={msg.sender === user.email}
-                    image={msg.image ? msg.image : null}
-                    handleModalOpen={handleModalOpen}
-                    handleModalClose={handleModalClose}
-                  />
-                </div>
-              );
-            } else return null;
-          })}
+        {!!messages.length > 0 && messages.map((msg, i) => {
+          if (msg && (msg.textVersions || msg.image)) {
+            senderData = usersData ? usersData[msg.sender] : undefined;
+            return (
+              <div key={i}>
+                <MessageItem
+                  sender={msg.sender === user.email ? user : senderData}
+                  date={msg.date}
+                  text={
+                    msg.textVersions
+                      ? ToggleLanguageContext.original
+                        ? msg.textVersions[Object.keys(msg.textVersions)[0]]
+                        : msg.textVersions[user.language]
+                      : null}
+                  myMessage={msg.sender === user.email}
+                  image={msg.image ? msg.image : null}
+                  handleModalOpen={handleModalOpen}
+                  handleModalClose={handleModalClose} />
+              </div>)
+
+          }
+          else return null
+        })}
         <div ref={messagesEndRef} />
       </div>
       <PictureModal

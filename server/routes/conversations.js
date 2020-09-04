@@ -2,14 +2,10 @@ const router = require("express").Router();
 const data = require("../data-modules/dataService")();
 const checkAuth = require("../middleware/checkAuth");
 //conversation route
-router.get("/:email/conversations", checkAuth, async (req, res) => {
-  try {
-    const conversations = await data.getConversations(req.params.email);
-    if (conversations.length === 0) res.send("You do not have conversations");
-    else res.json(conversations);
-  } catch (err) {
-    res.status(400).json(err);
-  }
+router.get("/:email/conversations", async (req, res) => {
+  data.getConversations(req.params.email)
+    .then((conversations)=>res.status(200).send(conversations))
+    .catch((err)=>res.status(400).send(err))
 });
 router.post("/conversation", async (req, res) => {
   let users = req.body;

@@ -131,11 +131,35 @@ module.exports = function () {
       });
     },
     getConversations: function (userEmail) {
-      return new Promise((resolve, reject) => {
-        Conversation.find({ usersEmail: { $in: userEmail } })
-          .exec()
-          .then((conversations) => resolve(conversations))
-          .catch((err) => reject(err));
+      return new Promise(async (resolve, reject) => {
+        try {
+          let user = await this.getUserByEmail(userEmail);
+          let chatsIds = [];
+          user.groupChats.forEach((chat) => {
+            chatsIds.push(chat);
+          })
+          user.contacts.forEach((contact) => {
+            chatsIds.push(contact.conversationID)
+          })
+          Conversation.find({
+            conversationID: { $in: chatsIds }
+          }).exec()
+            .then((conversations) => {
+              resolve(conversations.reduce((filtered, convo) => {
+                  filtered.push({
+                    users: convo.users,
+                    conversationID: convo.conversationID,
+                    lastMessage: convo.messages.length > 0 ? convo.messages[convo.messages.length - 1] : undefined,
+                    messageCount: convo.messages.length
+                  })
+                return filtered;
+              },[]))
+            })
+
+        }
+        catch (err) {
+          reject(err);
+        }
       });
     },
     getContacts: function (userEmail) {
@@ -172,7 +196,7 @@ module.exports = function () {
     addContact: function (currentEmail, emailToAdd) {
       return new Promise((resolve, reject) => {
         Promise.all([
-          this.addContactToEmail(currentEmail, emailToAdd, 4),
+          this.addContactToEmail(currentEmail, emailToAdd, 3),
           this.addContactToEmail(emailToAdd, currentEmail, 0)
         ])
           .then((results) => {
@@ -204,7 +228,7 @@ module.exports = function () {
       });
     },
     updateContact: function (email, contactEmail, status, conversationID) {
-      let updateBlock={};
+      let updateBlock = {};
 
       if (status)
         updateBlock["contacts.$.status"] = status;

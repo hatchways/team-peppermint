@@ -1,23 +1,17 @@
 import Axios from 'axios';
 import { translateText } from "../../context/messages/helper"
 import ISO6391 from 'iso-639-1';
-const loadMessages = (room, setMessages, setUsers, usersData, setUsersData, email) => {
+import { addUknownUser } from "../../context/contacts/contactsContext";
+const loadMessages = (email, room, setMessages, setUsers, usersData, unknownUsers, dispatch) => {
     Axios.get(`/user/conversation/${room}`)
         .then((response) => {
             setMessages(response.data.conversation.messages)
             setUsers(response.data.conversation.users)
             response.data.conversation.users.forEach((userEmail) => {
-                if (!Object.keys(usersData).includes(userEmail) && userEmail !== email) {
+                if (!usersData[userEmail] && userEmail!==email) {
                     Axios.get(`/api/user/${userEmail}`)
                         .then((response) => {
-                            setUsersData(prevState => {
-                                prevState[userEmail] = {
-                                    name: response.data.name,
-                                    language: response.data.language,
-                                    pictureUrl: response.data.pictureUrl
-                                }
-                                return prevState;
-                            })
+                            addUknownUser(userEmail, unknownUsers, dispatch)
                         })
                         .catch((err) => console.log(err))
                 }
@@ -28,7 +22,7 @@ const loadMessages = (room, setMessages, setUsers, usersData, setUsersData, emai
 const addTextVersion = (newMsg, language, text) => {
     return new Promise(async (resolve, reject) => {
         try {
-            newMsg.textVersions[language]= await translateText(text, ISO6391.getCode(language))
+            newMsg.textVersions[language] = await translateText(text, ISO6391.getCode(language))
             resolve(newMsg)
         }
         catch (err) { reject(err); }
@@ -57,7 +51,6 @@ const createMessageObject = async (date, text, user, languages, imageUrl) => {
         }
 
     }
-    console.log(newMsg)
     return newMsg;
 };
 export {

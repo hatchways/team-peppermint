@@ -194,15 +194,16 @@ router.get("/:users/languages", (req, res) => {
 router.get("/:email", (req, res) => {
   data.getUserByEmail(req.params.email)
     .then((user) => {
-      if(user)
-      res.status(200).json({
-        email: user.email,
-        name: user.name,
-        pictureUrl: user.pictureURL,
-        language: user.language
-      })
+      if (user)
+        res.status(200).send({
+          [user.email]: {
+            name: user.name,
+            pictureUrl: user.pictureURL,
+            language: user.language
+          }
+        })
       else
-      res.status(404).send("User not found");
+        res.status(404).send("User not found");
     })
     .catch((err) => res.status(400).json({ error: err }))
 })

@@ -10,13 +10,12 @@ import {
   useContactsState,
   deleteContact,
   userEmailFromLocalStorage,
-  updateContacts,
 } from "../../context/contacts/contactsContext";
 import { useUserState } from "../../context/user/userContext";
 import axios from "axios";
 import isEmail from "validator/lib/isEmail";
 import CreateGroupChat from "../../components/CreateGroupChat";
-import socket from "../../socket-client/socket";
+
 
 const ContactsList = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -42,12 +41,6 @@ const ContactsList = () => {
   const { user } = useUserState();
   const userEmail = userEmailFromLocalStorage();
 
-  useEffect(() => {
-    socket.on("onlineUsers", (data) => {
-      updateContacts(data, contacts, dispatch);
-    });
-  }, [dispatch, contacts]);
-
   const handleDeleteContactButton = (email) => {
     deleteContact(userEmail, email, dispatch);
   };
@@ -62,7 +55,7 @@ const ContactsList = () => {
   const closeChatForm = () => {
     setOpenGroupChatForm(false);
   };
-  const alertSuccess=()=>{
+  const alertSuccess = () => {
     setIsAlertOpen(true);
     setTimeout(() => {
       showInviteDialog(false);
@@ -170,17 +163,17 @@ const ContactsList = () => {
         contactsList={contacts}
       />
       <List className={classes.root}>
-        {!!contacts.length ? (
-          contacts.map((contact, index) => (
+        {!!contacts ? (
+          Object.keys(contacts).map((key, index) => (
             <ContactItem
               key={index}
-              name={contact.name}
-              email={contact.email}
-              pictureUrl={contact.pictureUrl}
-              isOnline={contact.isOnline}
+              name={contacts[key].name}
+              email={key}
+              pictureUrl={contacts[key].pictureUrl}
+              isOnline={contacts[key].isOnline}
               index={index}
               handleDeleteContactButton={handleDeleteContactButton}
-              contact={contact}
+              contact={contacts[key]}
               select={handleListItemClick}
               selected={selectedIndex}
             />
