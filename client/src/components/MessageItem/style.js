@@ -16,6 +16,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   messageInfo: {
     marginLeft: theme.spacing(2),
+    maxWidth: "60%"
   },
   messageDetails: {
     fontSize: "0.7em",

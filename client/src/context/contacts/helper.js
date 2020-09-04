@@ -3,6 +3,7 @@ import {
   UPDATE_INVITATIONS,
   UPDATE_CONTACTS,
   RESET_LISTS,
+  ADD_UKNOWN_USER
 } from "../../types";
 import axios from "axios";
 
@@ -81,16 +82,15 @@ export const updateContacts = async (
   dispatch
 ) => {
   try {
-    contacts.forEach((contact) => {
-      if (contact.email === contactCurrentStatus[0])
-        contact.isOnline = contactCurrentStatus[1];
-    });
-
-    dispatch({
-      type: UPDATE_CONTACTS,
-      payload: contacts,
-    });
+    if (contacts[contactCurrentStatus[0]]) {
+      contacts[contactCurrentStatus[0]].isOnline = contactCurrentStatus[1];
+      dispatch({
+        type: UPDATE_CONTACTS,
+        payload: contacts,
+      });
+    }
   } catch (err) {
+    console.log(err);
     throw Error("Oops, something went wrong ", err.message);
   }
 };
@@ -101,7 +101,7 @@ export const findContacts = async (userEmail, query, dispatch) => {
       query,
     });
 
-    if (res.data.foundContactsList.length > 0) {
+    if (Object.keys(res.data.foundContactsList).length > 0) {
       dispatch({
         type: UPDATE_CONTACTS,
         payload: res.data.foundContactsList,
@@ -111,9 +111,26 @@ export const findContacts = async (userEmail, query, dispatch) => {
       return false;
     }
   } catch (err) {
+    console.log(err)
     throw Error("Oops, something went wrong ", err.message);
   }
 };
+export const addUknownUser = async (unknownEmail, unknownUsers, dispatch) => {
+  try {
+    const res = await axios.get(`/api/user/${unknownEmail}/`);
+    if (res.data) {
+      unknownUsers[unknownEmail] = res.data[unknownEmail];
+      dispatch({
+        type: ADD_UKNOWN_USER,
+        payload: unknownUsers
+      })
+    }
+  }
+  catch (err) {
+    console.log(err)
+    throw Error("Oops, something went wrong ", err.message);
+  }
+}
 
 export const resetContactsInvitationsLists = (dispatch) => {
   dispatch({

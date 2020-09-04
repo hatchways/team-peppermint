@@ -5,11 +5,14 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { UserProvider } from "./context/user/userContext";
 import { ContactsProvider } from "./context/contacts/contactsContext";
+import { ConversationsProvider } from "./context/conversations/conversationsContext";
 
 ReactDOM.render(
   <UserProvider>
     <ContactsProvider>
-      <App />
+      <ConversationsProvider>
+        <App />
+      </ConversationsProvider>
     </ContactsProvider>
   </UserProvider>,
   document.getElementById("root")

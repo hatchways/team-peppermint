@@ -1,18 +1,55 @@
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useState, useEffect } from "react";
 import { useStyles } from "./style";
 import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
-import { Typography, Chip, ListItem } from "@material-ui/core";
+import { Typography, ListItem } from "@material-ui/core";
 import SelectConversation from "../../context/SelectConversation";
-
+import { useUserState } from "../../context/user/userContext";
+import { useContactsState, useContactsDispatch, fetchContactsAndInvitations, addUknownUser } from "../../context/contacts/contactsContext";
+import ToggleLanguage from "../../context/ToggleLanguage";
 const ChatItem = (props) => {
   const classes = useStyles();
-  const { name, messageCount, index, select, selected } = props;
+  const { user } = useUserState();
+  const dispatch = useContactsDispatch();
+  const { contacts, unknownUsers } = useContactsState();
+  const { conversation, index, select, selected, lastMessage, usersData } = props;
+  const users = conversation.users.filter((cUser) => cUser !== user.email);
+  const ToggleLanguageContext = useContext(ToggleLanguage);
   const context = useContext(SelectConversation);
+  const [chatTitle, setChatTitle] = useState();
+  const [message, setMessage] = useState("");
+
+
   const onChatClick = (event) => {
     select(event, index);
-    context.setConversation(name);
+    context.setConversation(conversation.conversationID);
   };
+  useEffect(() => {
+    if (lastMessage)
+      setMessage(lastMessage[ToggleLanguageContext.original ? Object.keys(lastMessage)[0] : user.language])
+  }, [ToggleLanguageContext])
+  useEffect(() => {
+    let fetch = false;
+    if (Object.keys(contacts).length) {
+      users.forEach((cUser) => {
+        if (!contacts[cUser] && cUser !== user.email && !unknownUsers[cUser]) {
+          addUknownUser(cUser, unknownUsers, dispatch);
+          fetch = true;
+        }
+      })
+    }
+    if (fetch) {
+      fetchContactsAndInvitations(user.email, dispatch);
+    }
+  }, [conversation, users, dispatch, contacts, unknownUsers, user.email])
+  useEffect(() => {
+    Object.keys(usersData).length &&
+      setChatTitle(users.reduce((arr, cUser) => {
+        if (usersData[cUser])
+          arr.push(usersData[cUser].name)
+        return arr
+      }, []).join())
+  }, [usersData, users])
   return (
     <ListItem
       button
@@ -21,31 +58,31 @@ const ChatItem = (props) => {
       selected={selected === index}
     >
       <div className={classes.avatarNameContainer}>
-        <UserAvatar />
+        {users.length === 1 && <UserAvatar imageUrl={usersData[users[0]].pictureUrl} isOnline={usersData[users[0]].isOnline} />}
         <div className={classes.nameContainer}>
           <Typography
             variant="body1"
             style={{ marginBottom: 0, fontWeight: 600 }}
             gutterBottom
           >
-            {name}
+            {chatTitle}
           </Typography>
           <Typography
             variant="body2"
             style={{ marginBottom: 0, fontWeight: 600, fontSize: "0.8rem" }}
             gutterBottom
           >
-            Sure, what time?
+            {message}
           </Typography>
         </div>
       </div>
 
-      <Chip
+      {/* <Chip
         label={messageCount}
         color="primary"
         size="small"
         className={classes.chip}
-      />
+      /> */}
     </ListItem>
   );
 };

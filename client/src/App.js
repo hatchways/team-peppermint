@@ -54,7 +54,7 @@ function App() {
   useEffect(() => {
     window.addEventListener("beforeunload", function (e) {
       e.preventDefault();
-      e.returnValue = "";
+      // e.returnValue = null;
       socket.emit("logout", email);
     });
   }, [email]);

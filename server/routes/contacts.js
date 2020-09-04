@@ -36,22 +36,22 @@ router.get("/:email/contacts", async (req, res) => {
 
 
     // create contacts list
-    let contactsList = [];
+    let contactsList = {};
 
     if (approvedContacts.length) {
       contactsList = approvedContacts
         .sort((a, b) => sortByEmail(a, b))
-        .map((contact, index) => {
+        .reduce((list, contact, index) => {
           const isOnline = Object.keys(onlineUsers).includes(contact.email);
-          return {
-            email: contact.email,
+          list[contact.email] = {
             name: sortUsersByEmail[index].name,
             pictureUrl: sortUsersByEmail[index].pictureURL,
             conversationID: contact.conversationID,
             language: sortUsersByEmail[index].language,
             isOnline: isOnline,
-          };
-        });
+          }
+          return list;
+        }, {});
     }
 
     //response with contacts and invitations lists
@@ -85,33 +85,38 @@ router.post("/:email/search", async (req, res) => {
     );
 
     // create contacts list
-    let contactsList = [];
+    let contactsList = {};
+
 
     if (approvedContacts.length) {
       contactsList = approvedContacts
         .sort((a, b) => sortByEmail(a, b))
-        .map((contact, index) => {
+        .reduce((list, contact, index) => {
           const isOnline = Object.keys(onlineUsers).includes(contact.email);
-          return {
-            email: contact.email,
+          list[contact.email] = {
             name: sortUsersByEmail[index].name,
             pictureUrl: sortUsersByEmail[index].pictureURL,
             conversationID: contact.conversationID,
             language: sortUsersByEmail[index].language,
             isOnline: isOnline,
-          };
-        });
+          }
+          return list;
+        }, {});
     }
 
-    const foundContactsList = contactsList.filter(
-      (contact) =>
-        contact.name.toLowerCase().includes(query.toLowerCase()) ||
-        contact.email.toLowerCase().includes(query.toLowerCase())
-    );
-
+    const foundContactsList = Object.keys(contactsList)
+      .filter((contact) =>
+        contact.toLowerCase().includes(query.toLowerCase()) ||
+        contactsList[contact].name.toLowerCase().includes(query.toLowerCase())
+      )
+      .reduce((obj, key) => {
+        obj[key] = contactsList[key];
+        return obj;
+      }, {})
     //response with contacts and invitations lists
     res.status(200).json({ foundContactsList });
   } catch (err) {
+    console.log(err)
     res.status(400).json(err);
   }
 });
@@ -121,13 +126,13 @@ router.delete("/:email/contacts", async (req, res) => {
     data.updateContact(req.params.email, req.body.emailToDelete, 2),
     data.updateContact(req.body.emailToDelete, req.params.email, 4)
   ])
-  .then((msg) => {
-    console.log(msg)
-    res.status(200).json({ message: msg });
-  })
-  .catch((err) => {
-    res.status(500).json({ err });
-  });
+    .then((msg) => {
+      console.log(msg)
+      res.status(200).json({ message: msg });
+    })
+    .catch((err) => {
+      res.status(500).json({ err });
+    });
 });
 
 router.put("/:email/image", async (req, res) => {

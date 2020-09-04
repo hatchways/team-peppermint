@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { useStyles } from "./style";
 import { Typography, Avatar, ButtonBase } from "@material-ui/core";
 import ISO6391 from 'iso-639-1';
+import defaultAvatar from "../UserAvatar/avatar.png";
 const MessageItem = (props) => {
   const classes = useStyles();
   const { sender, date, text, myMessage, image, handleModalOpen } = props;
@@ -14,7 +15,7 @@ const MessageItem = (props) => {
         {!myMessage && <Avatar
           variant="circle"
           alt="Remy Sharp"
-          src={sender.pictureUrl ? sender.pictureUrl.url : undefined}
+          src={sender.pictureUrl ? sender.pictureUrl.url : defaultAvatar}
         />
         }
         <div className={classes.messageInfo}>
@@ -23,8 +24,8 @@ const MessageItem = (props) => {
               <img
                 alt={sender.language} 
                 src={`https://unpkg.com/language-icons/icons/${ISO6391.getCode(sender.language)}.svg`} 
-                width={"10%"} 
-                height={"10%"} 
+                width={"20px"} 
+                height={"20px"} 
                 style={{borderRadius:'10px', marginRight:'5px'}}></img>}
             {!myMessage ? sender.name : ''} {dateString}
           </Typography>

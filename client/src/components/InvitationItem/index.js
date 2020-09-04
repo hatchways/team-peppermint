@@ -9,7 +9,7 @@ const InvitationItem = ({
   handleApproveContact,
   handleRejectContact,
 }) => {
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const classes = useStyles();
 
   return (
