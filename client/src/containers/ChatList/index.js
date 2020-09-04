@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React from "react";
+=======
+import React, { useState, useEffect } from "react";
+>>>>>>> dev
 import { useStyles } from "./style";
 import ChatItem from "../../components/ChatItem";
 import Typography from "@material-ui/core/Typography"

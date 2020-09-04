@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, memo } from "react";
 import { useStyles } from "./style";
-import {
-  TextField,
-  InputAdornment,
-} from "@material-ui/core";
+import { TextField, InputAdornment } from "@material-ui/core";
 import PropTypes from "prop-types";
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
@@ -89,7 +86,7 @@ const MessageField = ({ user }) => {
             scrollToBottom();
           })
         })
-        .catch((err) => console.log(err))
+        .catch((err) => console.log(err));
     }
   };
   const scrollToBottom = () => {
@@ -125,11 +122,13 @@ const MessageField = ({ user }) => {
   }, [context.conversation, user, unknownUsers, dispatch, usersData])
   useEffect(() => {
     if (users.length > 0) {
-      Axios.get(`/api/user/${users.join(',')}/languages`)
-        .then((response) => { setLanguages(response.data.languages) })
+      Axios.get(`/api/user/${users.join(",")}/languages`)
+        .then((response) => {
+          setLanguages(response.data.languages);
+        })
         .catch((err) => console.log(err));
     }
-  }, [users, usersData])
+  }, [users, usersData]);
   return (
     <div className={classes.root}>
       <div className={classes.messegesView}>
@@ -177,7 +176,12 @@ const MessageField = ({ user }) => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              {imageUrl !== null && (<ImageInputView imageUrl={imageUrl} handleClose={handleCloseSmallImage} />)}
+              {imageUrl !== null && (
+                <ImageInputView
+                  imageUrl={imageUrl}
+                  handleClose={handleCloseSmallImage}
+                />
+              )}
             </InputAdornment>
           ),
           endAdornment: (

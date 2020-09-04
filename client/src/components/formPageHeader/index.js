@@ -25,6 +25,14 @@ const useStyles = makeStyles((theme) => ({
     color: "#3A8DFF",
     textDecoration: "none",
   },
+  [`@media (max-width:560px)`]: {
+    container: {
+      justifyContent: "center",
+    },
+    button: {
+      marginRight: 0,
+    },
+  },
 }));
 
 export default function FormPageHeader({ questionText, buttonText }) {

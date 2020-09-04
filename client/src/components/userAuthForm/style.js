@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    flexDirection: "Column",
+    flexDirection: "column",
     marginTop: "40px",
   },
   formField: {
@@ -27,5 +27,15 @@ export const useStyles = makeStyles((theme) => ({
     width: "40%",
     margin: "0 17.5%",
     padding: "20px 30px",
+  },
+  [`@media (max-width:560px)`]: {
+    root: {
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    header: {
+      textAlign: "center",
+      fontSize:'1.5em'
+    },
   },
 }));
