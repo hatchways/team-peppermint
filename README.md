@@ -38,7 +38,31 @@ npm run start
 
 ### Login/Signup Page
 
-!["Login/Signup Page"](https://media.giphy.com/media/ZBbs2P4a8zPsKFGM9m/giphy.gifd)
+!["Login/Signup Page"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/signup-page.png?raw=true)
+
+### Chats list
+
+!["Chats list"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/chats.png?raw=true)
+
+### Contacts list
+
+!["Contacts list"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/contacts.png?raw=true)
+
+### Invitation window
+
+!["Invitation window"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/invitation-window.png?raw=true)
+
+### User avatar replacing
+
+!["User avatar replacing"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/user-image-replace-window.png?raw=true)
+
+### Image upload window to send to another user
+
+!["Image upload window to send to another user"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/upload-window.png?raw=true)
+
+### Mobile friendly design
+
+!["Mobile friendly design"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/mobile-friendly-design.png?raw=true)
 
 ## Dependencies
 
