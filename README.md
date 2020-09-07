@@ -17,7 +17,7 @@ User can login/signup with email address. User can email invitation or referral 
 
 Fork and clone this repo.
 
-## Running the project localy
+## Running the project locally
 
 ### The back-end server
 
@@ -34,7 +34,7 @@ npm install
 npm run start
 ```
 
-## Screenshot of Peppermint chat app in action
+## Screenshots of a Peppermint chat app in action
 
 ### Login/Signup Page
 
