@@ -151,11 +151,8 @@ router.post("/tokenIsValid", async (req, res) => {
   try {
     const token = req.header("x-auth-token");
     if (!token) return res.json(false);
-    console.log("token: " + token);
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-    console.log("verified: ", verified);
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET);    
     if (!verified) return res.json(false);
-
     const user = await data.getUserByEmail(verified.id);
     if (!user) return res.json(false);
     return res.json(true);
@@ -179,33 +176,34 @@ router.get("/", checkAuth, async (req, res) => {
     .catch((err) => res.json(err));
 });
 router.get("/:users/languages", (req, res) => {
-  let users = req.params.users.split(',');
-  data.getUsers(users)
+  let users = req.params.users.split(",");
+  data
+    .getUsers(users)
     .then((users) => {
-      let languages = users.map((user) => {
-        return user.language
-      }).filter((value, index, self) => {
-        return self.indexOf(value) === index;
-      })
-      res.status(200).json({ languages: languages })
-    })
-    .catch((err) => res.status(400).json(err))
-})
-router.get("/:email", (req, res) => {
-  data.getUserByEmail(req.params.email)
-    .then((user) => {
-      if (user)
-        res.status(200).send({
-          [user.email]: {
-            name: user.name,
-            pictureUrl: user.pictureURL,
-            language: user.language
-          }
+      let languages = users
+        .map((user) => {
+          return user.language;
         })
-      else
-        res.status(404).send("User not found");
+        .filter((value, index, self) => {
+          return self.indexOf(value) === index;
+        });
+      res.status(200).json({ languages: languages });
     })
-    .catch((err) => res.status(400).json({ error: err }))
-})
+    .catch((err) => res.status(400).json(err));
+});
+router.get("/:email", (req, res) => {
+  data
+    .getUserByEmail(req.params.email)
+    .then((user) => {
+      res.status(200).send({
+        [user.email]: {
+          name: user.name,
+          pictureUrl: user.pictureURL,
+          language: user.language,
+        },
+      });
+    })
+    .catch((err) => res.status(400).json({ error: err }));
+});
 
 module.exports = router;

@@ -8,7 +8,11 @@ const UserAvatar = ({ imageUrl, isOnline }) => {
   const classes = useStyles();
   let userPicture = "";
 
-  if (imageUrl !== undefined && imageUrl.url.includes("http")) {
+  if (
+    imageUrl !== undefined &&
+    imageUrl.url !== undefined &&
+    imageUrl.url.includes("http")
+  ) {
     userPicture = imageUrl.url;
   } else {
     userPicture = avatar;
@@ -56,9 +60,12 @@ const UserAvatar = ({ imageUrl, isOnline }) => {
 export default memo(UserAvatar);
 
 UserAvatar.propTypes = {
-  imageUrl: PropTypes.shape({
-    url: PropTypes.string,
-    name: PropTypes.string,
-  }),
+  imageUrl: PropTypes.oneOfType([
+    PropTypes.shape({
+      url: PropTypes.string,
+      name: PropTypes.string,
+    }),
+    PropTypes.bool,
+  ]),
   isOnline: PropTypes.bool,
 };
