@@ -159,7 +159,7 @@ const MessageField = ({ user }) => {
   }, [users, usersData]);
   return (
     <div className={classes.root}>
-      <div className={classes.messegesView}>
+      <div className={classes.messegesView}> const { contacts, unknownUsers } = useContactsState();
         {!!messages.length > 0 &&
           messages.map((msg, i) => {
             if (msg && (msg.textVersions || msg.image)) {

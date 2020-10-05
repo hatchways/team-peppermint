@@ -8,14 +8,19 @@ const UserDispatchContext = React.createContext();
 function UserProvider({ children }) {
   const [state, dispatch] = useReducer(userReducer, {
     token: "",
-    user: {},
+    user: {
+      id: "",
+      name: "",
+      email: "",
+      language: "",
+      pictureURL: { url: "" },
+    },
   });
-
   return (
     <UserStateContext.Provider value={state}>
       <UserDispatchContext.Provider value={dispatch}>
         {children}
-      </UserDispatchContext.Provider>
+      </UserDispatchContext.Provider>{" "}
     </UserStateContext.Provider>
   );
 }
@@ -24,6 +29,7 @@ function useUserState() {
   const context = useContext(UserStateContext);
   return context;
 }
+
 function useUserDispatch() {
   const context = useContext(UserDispatchContext);
   return context;

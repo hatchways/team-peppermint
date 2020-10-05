@@ -15,8 +15,11 @@ import ToggleLanguage from "../../context/ToggleLanguage";
 const ChatItem = (props) => {
   const classes = useStyles();
   const { user } = useUserState();
+  // const user = {};
   const dispatch = useContactsDispatch();
   const { contacts, unknownUsers } = useContactsState();
+  // const contacts = [];
+  // const unknownUsers = [];
   const {
     conversation,
     index,
