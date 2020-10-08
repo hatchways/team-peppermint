@@ -159,7 +159,8 @@ const MessageField = ({ user }) => {
   }, [users, usersData]);
   return (
     <div className={classes.root}>
-      <div className={classes.messegesView}> const { contacts, unknownUsers } = useContactsState();
+      <div className={classes.messegesView}> 
+      
         {!!messages.length > 0 &&
           messages.map((msg, i) => {
             if (msg && (msg.textVersions || msg.image)) {
@@ -167,7 +168,7 @@ const MessageField = ({ user }) => {
               return (
                 <div key={i}>
                   <MessageItem
-                    sender={msg.sender === user.email ? user : senderData}
+                    sender={msg.sender === user.email ? user : senderData}contactsContext
                     date={msg.date}
                     text={
                       msg.textVersions
