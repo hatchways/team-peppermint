@@ -23,7 +23,6 @@ import {
   fetchContactsAndInvitations,
   findContacts,
   userEmailFromLocalStorage,
-  
 } from "../../context/contacts/contactsContext";
 import {
   useConversationsState,
@@ -77,24 +76,21 @@ const SidebarInfo = () => {
   const userEmail = userEmailFromLocalStorage();
 
   useEffect(() => {
+    userEmail && fetchContactsAndInvitations(userEmail, dispatch);
+  }, [fetchContactsAndInvitations]);
+  useEffect(() => {
     if (tabNumber === 0 || tabNumber === 2) {
       setQuery("");
     }
   }, [tabNumber]);
   useEffect(() => {
     Object.keys(contacts).length &&
-      setUsersData({ ...contacts, ...unknownUsers })
-  }, [contacts, unknownUsers])
-  useEffect(() => {
-    userEmail &&
-      !Object.keys(contacts).length &&
-      fetchContactsAndInvitations(userEmail, dispatch);
-  }, [userEmail, contacts, dispatch]);
+      setUsersData({ ...contacts, ...unknownUsers });
+  }, [contacts, unknownUsers]);
   useEffect(() => {
     userEmail &&
       !conversations.length &&
       fetchConversations(userEmail, conversationsDispatch);
-
   }, [userEmail, conversations.length, conversationsDispatch]);
 
   const handleChange = (event, newValue) => {

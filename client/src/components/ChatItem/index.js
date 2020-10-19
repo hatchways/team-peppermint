@@ -61,7 +61,15 @@ const ChatItem = (props) => {
     if (fetch) {
       fetchContactsAndInvitations(user.email, dispatch);
     }
-  }, [conversation, users, dispatch, contacts, unknownUsers, user.email]);
+  }, [
+    conversation,
+    users,
+    dispatch,
+    contacts,
+    unknownUsers,
+    user.email,
+    fetchContactsAndInvitations,
+  ]);
   useEffect(() => {
     Object.keys(usersData).length &&
       setChatTitle(

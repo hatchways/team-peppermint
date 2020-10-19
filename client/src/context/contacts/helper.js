@@ -3,7 +3,7 @@ import {
   UPDATE_INVITATIONS,
   UPDATE_CONTACTS,
   RESET_LISTS,
-  ADD_UKNOWN_USER
+  ADD_UKNOWN_USER,
 } from "../../types";
 import axios from "axios";
 
@@ -14,6 +14,7 @@ export const fetchContactsAndInvitations = async (email, dispatch) => {
   if (!userData.data) {
     throw Error("Oops, no contacts found");
   }
+
   dispatch({
     type: FETCH_CONTACTS_INVITATIONS,
     payload: {
@@ -111,7 +112,7 @@ export const findContacts = async (userEmail, query, dispatch) => {
       return false;
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
     throw Error("Oops, something went wrong ", err.message);
   }
 };
@@ -122,15 +123,14 @@ export const addUknownUser = async (unknownEmail, unknownUsers, dispatch) => {
       unknownUsers[unknownEmail] = res.data[unknownEmail];
       dispatch({
         type: ADD_UKNOWN_USER,
-        payload: unknownUsers
-      })
+        payload: unknownUsers,
+      });
     }
-  }
-  catch (err) {
-    console.log(err)
+  } catch (err) {
+    console.log(err);
     throw Error("Oops, something went wrong ", err.message);
   }
-}
+};
 
 export const resetContactsInvitationsLists = (dispatch) => {
   dispatch({
