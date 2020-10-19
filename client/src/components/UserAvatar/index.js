@@ -31,7 +31,8 @@ const UserAvatar = ({ imageUrl, isOnline }) => {
         >
           <Avatar
             variant="circle"
-            alt="Remy Sharp"
+            alt="Online Badge"
+            data-testid='online'
             src={userPicture}
             className={classes.avatar}
           />
@@ -47,7 +48,8 @@ const UserAvatar = ({ imageUrl, isOnline }) => {
         >
           <Avatar
             variant="circle"
-            alt="Remy Sharp"
+            alt="Offline Badge"
+            data-testid='offline'
             src={userPicture}
             className={classes.avatar}
           />
