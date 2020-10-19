@@ -15,8 +15,11 @@ import ToggleLanguage from "../../context/ToggleLanguage";
 const ChatItem = (props) => {
   const classes = useStyles();
   const { user } = useUserState();
+  // const user = {};
   const dispatch = useContactsDispatch();
   const { contacts, unknownUsers } = useContactsState();
+  // const contacts = [];
+  // const unknownUsers = [];
   const {
     conversation,
     index,
@@ -58,7 +61,15 @@ const ChatItem = (props) => {
     if (fetch) {
       fetchContactsAndInvitations(user.email, dispatch);
     }
-  }, [conversation, users, dispatch, contacts, unknownUsers, user.email]);
+  }, [
+    conversation,
+    users,
+    dispatch,
+    contacts,
+    unknownUsers,
+    user.email,
+    fetchContactsAndInvitations,
+  ]);
   useEffect(() => {
     Object.keys(usersData).length &&
       setChatTitle(

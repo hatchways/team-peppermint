@@ -41,6 +41,7 @@ router.get("/:email/invitations", (req, res) => {
 });
 router.post("/:email/approve", (req, res) => {
   let users = [req.params.email, req.body.data.contactToApprove];
+  console.log('CONTACTS TO APPROVE... ', users)
   let conversationId = users.sort().join()
   Promise.all([
     data.updateContact(req.params.email, req.body.data.contactToApprove, 1, stringHash(conversationId)),
