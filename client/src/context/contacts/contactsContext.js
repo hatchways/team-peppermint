@@ -10,7 +10,7 @@ import {
   findContacts,
   updateContacts,
   resetContactsInvitationsLists,
-  addUknownUser
+  addUknownUser,
 } from "./helper";
 
 const ContactsStateContext = React.createContext();
@@ -20,7 +20,7 @@ function ContactsProvider({ children }) {
   const [state, dispatch] = useReducer(contactsInvitaitionsReducer, {
     contacts: {},
     invitations: [],
-    unknownUsers: []
+    unknownUsers: [],
   });
 
   return (
@@ -54,5 +54,5 @@ export {
   findContacts,
   updateContacts,
   resetContactsInvitationsLists,
-  addUknownUser
+  addUknownUser,
 };

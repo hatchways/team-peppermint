@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MainPage /> match to snapshot 1`] = `
+<main
+  className="makeStyles-root-1"
+>
+  <ContextProvider
+    value={
+      Object {
+        "conversation": undefined,
+        "setConversation": [Function],
+      }
+    }
+  >
+    <ContextProvider
+      value={
+        Object {
+          "original": false,
+          "setOriginal": [Function],
+        }
+      }
+    >
+      <Sidebar />
+      <MainContentField />
+    </ContextProvider>
+  </ContextProvider>
+</main>
+`;

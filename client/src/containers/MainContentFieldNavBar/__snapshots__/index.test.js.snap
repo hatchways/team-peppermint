@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MainContentFieldNavBar /> match to snapshot 1`] = `
+<div
+  className="makeStyles-root-1"
+>
+  <div
+    className="makeStyles-leftRightSideStyle-2"
+  >
+    <WithStyles(ForwardRef(Typography))
+      style={
+        Object {
+          "fontWeight": 600,
+          "marginLeft": 20,
+          "marginRight": 20,
+        }
+      }
+      variant="h6"
+    >
+      Jane
+    </WithStyles(ForwardRef(Typography))>
+    <div
+      className="makeStyles-onOfflineStyle-3"
+    >
+      <WithStyles(WithStyles(ForwardRef(Badge)))
+        overlap="circle"
+        variant="dot"
+      >
+        <span />
+      </WithStyles(WithStyles(ForwardRef(Badge)))>
+      <WithStyles(ForwardRef(Typography))
+        style={
+          Object {
+            "fontSize": "0.8rem",
+          }
+        }
+        variant="body2"
+      >
+        Online
+      </WithStyles(ForwardRef(Typography))>
+    </div>
+  </div>
+  <div
+    className="makeStyles-leftRightSideStyle-2"
+  >
+    <WithStyles(ForwardRef(Typography))
+      className="makeStyles-typography-4"
+      style={
+        Object {
+          "color": "grey",
+          "opacity": 0.5,
+        }
+      }
+      variant="body2"
+    >
+      Original language
+    </WithStyles(ForwardRef(Typography))>
+    <WithStyles(ForwardRef(Switch))
+      checked={false}
+      color="primary"
+      inputProps={
+        Object {
+          "aria-label": "secondary checkbox",
+        }
+      }
+      name="checked"
+      onChange={[Function]}
+    />
+    <WithStyles(ForwardRef(ButtonBase))
+      onClick={[Function]}
+      style={
+        Object {
+          "marginLeft": 20,
+        }
+      }
+    >
+      <MoreHorizIcon />
+    </WithStyles(ForwardRef(ButtonBase))>
+  </div>
+</div>
+`;
