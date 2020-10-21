@@ -34,7 +34,7 @@ jobs:
       - checkout
       - run:
           name: Push Dev to Production
-          command: |
+          command: 
             git push https://github.com/hatchways/team-peppermint.git dev:production
 
 workflows:
@@ -52,5 +52,5 @@ workflows:
             branches:
               ignore: production              
           requires:
-            - cypress-io/run          
+            - cypress/run          
 
