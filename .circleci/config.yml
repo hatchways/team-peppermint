@@ -10,7 +10,7 @@ jobs:
     
     steps:
       - checkout:
-        path: ~/client
+        path: ~/
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
@@ -25,7 +25,7 @@ jobs:
     machine:
       enabled: true
 
-    working_directory: ~/client
+    working_directory: ~/
 
     steps:
       - add_ssh_keys:
@@ -34,7 +34,7 @@ jobs:
       - checkout
       - run:
           name: Push Dev to Production
-          command: 
+          command: |
             git push https://github.com/hatchways/team-peppermint.git dev:production
 
 workflows:
@@ -43,7 +43,7 @@ workflows:
       - cypress/run:
           start: npm start
           wait-on: 'https://peppermint-chat-server.herokuapp.com/'
-          working_directory: ~/client
+          working_directory: client
           filters:
             branches:
               only: dev
