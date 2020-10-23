@@ -53,7 +53,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://peppermint-chat-server.herokuapp.com/",
+  "proxy": "http://localhost:3001",
   "browserslist": {
     "production": [
       ">0.2%",
