@@ -58,4 +58,9 @@ app.use(function (err, req, res, next) {
   res.json({ error: err });
 });
 
+// Landing route
+app.get('/', (req, res) => res.json({
+  message: "This is the backend of Olzhas and Andrey",
+}));
+
 module.exports = app;
