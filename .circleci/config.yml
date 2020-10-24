@@ -42,7 +42,7 @@ workflows:
     jobs:
       - cypress/run:
           start: npm start
-          wait-on: 'https://peppermint-chat-server.herokuapp.com/'
+          wait-on: 'https://peppermint-chat-backend.herokuapp.com/'
           working_directory: ~/client
           filters:
             branches:
