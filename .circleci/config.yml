@@ -34,7 +34,7 @@ jobs:
       - checkout:
       - run:
           name: Push Dev to Production
-          command: 
+          command: |
             git push https://github.com/hatchways/team-peppermint.git dev:production
 
 workflows:
@@ -43,7 +43,7 @@ workflows:
       - cypress/run:
           start: npm start
           wait-on: 'https://peppermint-chat-backend.herokuapp.com/'
-          working_directory: ~/team-peppermint/client
+          working_directory: client
           filters:
             branches:
               only: dev
