@@ -1,1 +1,1 @@
-http://peppermint-chat-server.herokuapp.com/
+https://peppermint-chat-server.herokuapp.com/

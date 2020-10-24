@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  cypress: cypress-io/cypress@1
+  cypress: cypress-io/cypress@1.26.0
 jobs:
   build:
     docker:
@@ -10,7 +10,7 @@ jobs:
     
     steps:
       - checkout:
-        path: ~/
+        path: 
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
@@ -31,10 +31,10 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "4c:48:eb:76:fb:5c:7a:99:15:14:c1:06:71:d2:2c:70"
-      - checkout
+      - checkout:
       - run:
           name: Push Dev to Production
-          command: |
+          command: 
             git push https://github.com/hatchways/team-peppermint.git dev:production
 
 workflows:
@@ -43,7 +43,7 @@ workflows:
       - cypress/run:
           start: npm start
           wait-on: 'https://peppermint-chat-server.herokuapp.com/'
-          working_directory: client
+          working_directory: ~/client
           filters:
             branches:
               only: dev
