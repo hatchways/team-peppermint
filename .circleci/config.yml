@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  cypress: cypress-io/cypress@1.26.0
+  cypress: cypress-io/cypress@1
 jobs:
   build:
     docker:
@@ -34,5 +34,5 @@ jobs:
       - checkout:
       - run:
           name: Push Dev to Production
-          command: |
+          command: 
             git push https://github.com/hatchways/team-peppermint.git dev:production
