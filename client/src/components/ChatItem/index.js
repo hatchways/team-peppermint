@@ -67,8 +67,7 @@ const ChatItem = (props) => {
     dispatch,
     contacts,
     unknownUsers,
-    user.email,
-    fetchContactsAndInvitations,
+    user.email,    
   ]);
   useEffect(() => {
     Object.keys(usersData).length &&
