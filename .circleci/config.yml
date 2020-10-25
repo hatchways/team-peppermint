@@ -1,38 +1,44 @@
-version: 2.1
-orbs:
-  cypress: cypress-io/cypress@1
-jobs:
-  build:
-    docker:
-      - image: circleci/node:10.16
-
-    working_directory: ~/team-peppermint/client
-    
-    steps:
-      - checkout:
-          path: ~/team-peppermint
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: npm install
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm test
-  deploy:
-    machine:
-      enabled: true
-
-    working_directory: ~/team-peppermint
-
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "4c:48:eb:76:fb:5c:7a:99:15:14:c1:06:71:d2:2c:70"
-      - checkout:
-      - run:
-          name: Push Dev to Production
-          command: 
-            git push https://github.com/hatchways/team-peppermint.git dev:production
+--- 
+  jobs: 
+    build: 
+      docker: 
+        - 
+          image: "circleci/node:10.16"
+      steps: 
+        - 
+          checkout: 
+            path: ~/team-peppermint
+        - 
+          restore_cache: 
+            keys: 
+              - "v1-dependencies-{{ checksum \"package.json\" }}"
+              - v1-dependencies-
+        - 
+          run: "npm install"
+        - 
+          save_cache: 
+            key: "v1-dependencies-{{ checksum \"package.json\" }}"
+            paths: 
+              - node_modules
+        - 
+          run: "npm test"
+      working_directory: ~/team-peppermint/client
+    deploy: 
+      machine: 
+        enabled: true
+      steps: 
+        - 
+          add_ssh_keys: 
+            fingerprints: 
+              - "4c:48:eb:76:fb:5c:7a:99:15:14:c1:06:71:d2:2c:70"
+        - 
+          checkout: ~
+        - 
+          run: 
+            command: "git push https://github.com/hatchways/team-peppermint.git dev:production"
+            name: "Push Dev to Production"
+      working_directory: ~/team-peppermint
+  orbs: 
+    cypress: cypress-io/cypress@1
+  version: 2.1
+  
