@@ -9,7 +9,7 @@ function SignupPage() {
   return (
     <div style={{ flexGrow: 1 }}>
       <Grid container spacing={1}>
-        <Grid item xs-12>
+        <Grid item xs-12='true'>
           <BackgroundImage />
         </Grid>
         <Grid item xs>
