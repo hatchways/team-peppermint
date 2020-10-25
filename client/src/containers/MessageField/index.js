@@ -75,7 +75,7 @@ const MessageField = ({ user }) => {
   };
   const saveMessage = async (msg) => {
     await Axios.post(
-      `https://peppermint-chat-backend.herokuapp.com/user/${user.email}/conversation/${context.conversation}/newMessage`,
+      `${process.env.REACT_APP_BACKEND_URL}/user/${user.email}/conversation/${context.conversation}/newMessage`,
       msg
     );
   };
