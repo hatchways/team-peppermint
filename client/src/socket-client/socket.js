@@ -1,4 +1,4 @@
 import openSocket from 'socket.io-client';
 
-const socket = openSocket("https://peppermint-chat-backend.herokuapp.com/");
+const socket = openSocket(`${process.env.REACT_APP_BACKEND_URL}`);
 export default socket;
