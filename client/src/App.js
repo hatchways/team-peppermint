@@ -35,7 +35,7 @@ function App() {
       }
 
       const tokenRes = await Axios.post(
-        "http://localhost:3001/api/user/tokenIsValid",
+        "https://peppermint-chat-backend.herokuapp.com/api/user/tokenIsValid",
         null,
         {
           headers: { "x-auth-token": token },

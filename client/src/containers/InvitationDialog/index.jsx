@@ -29,7 +29,7 @@ const InvitationDialog = ({
 }) => {
   const [email, setEmail] = useState("");
 
-  const linkToCopy = `localhost:3000/signup?referrer=${userId}`;
+  const linkToCopy = `https://peppermint-chat-backend.herokuapp.com/signup?referrer=${userId}`;
 
   return (
     <Dialog

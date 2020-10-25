@@ -169,9 +169,9 @@ export default function UserAuthForm({ headerText }) {
             language: language,
             referrer: referrer,
           };
-          await Axios.post("http://localhost:3001/api/user/signup", newUser);
+          await Axios.post("https://peppermint-chat-backend.herokuapp.com/api/user/signup", newUser);
           const loginRes = await Axios.post(
-            "http://localhost:3001/api/user/login",
+            "https://peppermint-chat-backend.herokuapp.com/api/user/login",
             {
               email,
               password,
@@ -192,7 +192,7 @@ export default function UserAuthForm({ headerText }) {
             password: password,
           };
           const loginRes = await Axios.post(
-            "http://localhost:3001/api/user/login",
+            "https://peppermint-chat-backend.herokuapp.com/api/user/login",
             user
           );
           socket.emit("login", email);
