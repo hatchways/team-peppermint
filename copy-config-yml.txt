@@ -4,7 +4,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/node:10.16
+      - image: circleci/node:13.7.0
 
     working_directory: ~/team-peppermint/client
     
