@@ -7,7 +7,7 @@ const sendMail = (receiver) => {
     theme: "salted",
     product: {
       name: "Peppermint app",
-      link: "http://localhost:3000/",
+      link: "https://peppermint-chat.netlify.app/",
     },
   });
 
@@ -20,7 +20,7 @@ const sendMail = (receiver) => {
         button: {
           color: "#33b5e5",
           text: "Create an account",
-          link: `http://localhost:3000/signup`,
+          link: `https://peppermint-chat.netlify.app/signup`,
         },
       },
     },
