@@ -77,7 +77,7 @@ const SidebarInfo = () => {
 
   useEffect(() => {
     userEmail && fetchContactsAndInvitations(userEmail, dispatch);
-  }, [fetchContactsAndInvitations]);
+  }, [userEmail, dispatch]);
   useEffect(() => {
     if (tabNumber === 0 || tabNumber === 2) {
       setQuery("");
