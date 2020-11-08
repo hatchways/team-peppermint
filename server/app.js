@@ -59,8 +59,8 @@ app.use(function (err, req, res, next) {
 });
 
 // Landing route
-app.get('/', (req, res) => res.json({
-  message: "This is the backend of Olzhas and Andrey",
-}));
+app.get("/", (req, res) => {
+  res.send("Hello from Express!");
+});
 
 module.exports = app;
