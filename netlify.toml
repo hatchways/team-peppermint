@@ -12,7 +12,7 @@ publish = "build/"
 command = "CI=false npm run build"
 
 [build.environment]
-REACT_APP_BACKEND_URL="https://peppermint-chat-server.herokuapp.com/"
+REACT_APP_BACKEND_URL="https://peppermint-chat-server.herokuapp.com"
 REACT_APP_TRANSLATE_URL="https://translation.googleapis.com/language/translate"
 REACT_APP_API_KEY="AIzaSyDmRsbKL5PDqf1L4raB0xBP6U5o4RXwRCk"
 REACT_APP_FB_KEY="AIzaSyDhQ5ZB6cnKP0uIKA2SXWCbIWJGTjl_wEs"

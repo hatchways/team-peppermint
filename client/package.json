@@ -83,5 +83,5 @@
     "jest": "^24.9.0",
     "jest-enzyme": "^7.1.2"
   },
-  "proxy": "https://peppermint-chat-server.herokuapp.com/"
+  "proxy": "https://peppermint-chat-server.herokuapp.com"
 }
