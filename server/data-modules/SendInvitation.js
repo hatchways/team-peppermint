@@ -7,7 +7,7 @@ const sendMail = (receiver) => {
     theme: "salted",
     product: {
       name: "Peppermint app",
-      link: "https://peppermint-chat.netlify.app/",
+      link: "https://peppermint-chat.netlify.app",
     },
   });
 
