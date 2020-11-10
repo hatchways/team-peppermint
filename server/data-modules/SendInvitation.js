@@ -20,7 +20,7 @@ const sendMail = (receiver) => {
         button: {
           color: "#33b5e5",
           text: "Create an account",
-          link: `https://peppermint-chat.netlify.app/signup`,
+          link: "https://peppermint-chat.netlify.app/signup",
         },
       },
     },
