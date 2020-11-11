@@ -25,10 +25,10 @@ function App() {
   const dispatch = useUserDispatch();
   const email = userEmailFromLocalStorage();
 
+  let token = localStorage.getItem("auth-token");
+
   useEffect(() => {
     const checkLoggedIn = async () => {
-      let token = localStorage.getItem("auth-token");
-
       if (token === null) {
         localStorage.setItem("auth-token", "");
         token = "";
@@ -48,7 +48,6 @@ function App() {
     };
     checkLoggedIn();
     socket.emit("login", email);
-
   }, [dispatch, email]);
 
   useEffect(() => {
@@ -82,7 +81,9 @@ function App() {
           <Container maxWidth="lg" style={{ margin: "auto" }}>
             <Switch>
               <Route exact path="/" component={MainPage} />
-              <Route path="/login" component={LoginPage} />
+              <Route path="/login" component={LoginPage}>
+                {token ? <Redirect to="/" /> : <Login />}
+              </Route>
               <Route path="/signup" component={SignupPage} />
             </Switch>
           </Container>
