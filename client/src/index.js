@@ -6,9 +6,10 @@ import * as serviceWorker from "./serviceWorker";
 import { UserProvider } from "./context/user/userContext";
 import { ContactsProvider } from "./context/contacts/contactsContext";
 import { ConversationsProvider } from "./context/conversations/conversationsContext";
+import Axios from "axios";
 
 if (process.env.REACT_APP_BACKEND_URL) {
-  axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+  Axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 }
 
 ReactDOM.render(
