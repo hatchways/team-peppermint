@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, lazy } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Axios from "axios";
 import { theme } from "./themes/theme";
 import { useUserDispatch, fetchUserData } from "./context/user/userContext";
@@ -81,8 +81,8 @@ function App() {
           <Container maxWidth="lg" style={{ margin: "auto" }}>
             <Switch>
               <Route exact path="/" component={MainPage} />
-              <Route path="/login" component={LoginPage}>
-                {token ? <Redirect to="/" /> : <Login />}
+              <Route path="/login">
+                {token ? <Redirect to="/" /> : <LoginPage />}
               </Route>
               <Route path="/signup" component={SignupPage} />
             </Switch>
