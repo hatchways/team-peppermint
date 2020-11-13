@@ -169,7 +169,10 @@ export default function UserAuthForm({ headerText }) {
             language: language,
             referrer: referrer,
           };
-          await Axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/user/signup`, newUser);
+          await Axios.post(
+            `${process.env.REACT_APP_BACKEND_URL}/api/user/signup`,
+            newUser
+          );
           const loginRes = await Axios.post(
             `${process.env.REACT_APP_BACKEND_URL}/api/user/login`,
             {
