@@ -1,5 +1,10 @@
-import React, { useEffect, Suspense, lazy } from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import React, { useEffect, useRef, Suspense, lazy } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Axios from "axios";
 import { theme } from "./themes/theme";
 import { useUserDispatch, fetchUserData } from "./context/user/userContext";
@@ -25,20 +30,22 @@ function App() {
   const dispatch = useUserDispatch();
   const email = userEmailFromLocalStorage();
 
-  let token = localStorage.getItem("auth-token");
+  const ref = useRef({
+    token: localStorage.getItem("auth-token"),
+  });
 
   useEffect(() => {
     const checkLoggedIn = async () => {
-      if (token === null) {
+      if (!ref.current.token) {
         localStorage.setItem("auth-token", "");
-        token = "";
+        ref.current.token = "";
       }
 
       const tokenRes = await Axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/user/tokenIsValid`,
         null,
         {
-          headers: { "x-auth-token": token },
+          headers: { "x-auth-token": ref.current.token },
         }
       );
       if (tokenRes.data) {
@@ -48,7 +55,7 @@ function App() {
     };
     checkLoggedIn();
     socket.emit("login", email);
-  }, [dispatch, email]);
+  }, [dispatch, email, ref.current.token]);
 
   useEffect(() => {
     window.addEventListener("beforeunload", function (e) {
@@ -80,11 +87,13 @@ function App() {
           <CssBaseline />
           <Container maxWidth="lg" style={{ margin: "auto" }}>
             <Switch>
-              <Route exact path="/" component={MainPage} />
+              <Route exact path="/" component={MainPage} />              
               <Route path="/login">
-                {token ? <Redirect to="/" /> : <LoginPage />}
+                {ref.current.token ? <Redirect to="/" /> : <LoginPage />}
               </Route>
-              <Route path="/signup" component={SignupPage} />
+              <Route path="/signup">
+                {ref.current.token ? <Redirect to="/" /> : <SignupPage />}
+              </Route>
             </Switch>
           </Container>
         </Router>
