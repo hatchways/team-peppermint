@@ -1,1 +1,3 @@
-/*    /index.html   200
+/login    https://peppermint-chat.netlify.app/login   200
+/signup   https://peppermint-chat.netlify.app/signup   200
+/*        https://peppermint-chat.netlify.app 200
