@@ -2,6 +2,16 @@
 
 The app designed to exchange messages between two people who speak completely different languages. Think: FB Messenger with a built-in automatic translator. If we could more easily speak to others from around the world, we would be a more inclusive and connected world!
 
+To see the app on Netlify please click 👉 [Peppermint chat](https://peppermint-chat.netlify.app)
+
+You can use the following user credentials(or create new user accounts):
+
+email: andrey@mail.com<br />
+password: qwerty123
+
+email: aziz@mail.com<br />
+password: qwerty123
+
 ## Synopsis
 
 There are two main users:

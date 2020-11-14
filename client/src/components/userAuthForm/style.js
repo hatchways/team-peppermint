@@ -4,11 +4,16 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: "40px",
   },
   formField: {
     width: "80%",
     marginBottom: "40px",
+    "& .MuiInputBase-input": {
+      padding: "6px 0 20px",
+    },
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -35,7 +40,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     header: {
       textAlign: "center",
-      fontSize:'1.5em'
+      fontSize: "1.5em",
     },
   },
 }));
