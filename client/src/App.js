@@ -87,7 +87,7 @@ function App() {
           <CssBaseline />
           <Container maxWidth="lg" style={{ margin: "auto" }}>
             <Switch>
-              <Route exact path="/" component={MainPage} />              
+              <Route exact path="/" component={MainPage} />
               <Route path="/login">
                 {ref.current.token ? <Redirect to="/" /> : <LoginPage />}
               </Route>
