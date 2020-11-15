@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, memo } from "react";
 import { useStyles } from "./style";
-import { TextField, InputAdornment } from "@material-ui/core";
+import { TextField, InputAdornment, Button } from "@material-ui/core";
 import PropTypes from "prop-types";
 import MessageItem from "../../components/MessageItem";
 import socket from "../../socket-client/socket";
@@ -159,8 +159,7 @@ const MessageField = ({ user }) => {
   }, [users, usersData]);
   return (
     <div className={classes.root}>
-      <div className={classes.messegesView}> 
-      
+      <div className={classes.messagesView}>
         {!!messages.length > 0 &&
           messages.map((msg, i) => {
             if (msg && (msg.textVersions || msg.image)) {
@@ -168,7 +167,8 @@ const MessageField = ({ user }) => {
               return (
                 <div key={i}>
                   <MessageItem
-                    sender={msg.sender === user.email ? user : senderData}contactsContext
+                    sender={msg.sender === user.email ? user : senderData}
+                    contactsContext
                     date={msg.date}
                     text={
                       msg.textVersions
@@ -229,6 +229,16 @@ const MessageField = ({ user }) => {
                 handleImageSave={handleImageSave}
                 handleClose={handleImageSelectorClose}
               />
+              <Button
+                className={classes.buttonStyle}
+                size="small"
+                variant="contained"
+                color="primary"
+                disabled={context.conversation ? false : true}
+                onClick={(e) => sendMessage(e)}
+              >
+                Send
+              </Button>
             </InputAdornment>
           ),
         }}
