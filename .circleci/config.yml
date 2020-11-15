@@ -6,14 +6,13 @@ jobs:
     docker:
       - image: circleci/node:10.16
 
-    working_directory: ~/team-peppermint/client
+    working_directory: ~/client
 
     steps:
       - checkout:
-          path: ~/team-peppermint
+          path: ~/*
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
       - run: npm install
       - save_cache:
@@ -25,7 +24,7 @@ jobs:
     machine:
       enabled: true
 
-    working_directory: ~/team-peppermint
+    working_directory: ~/*
 
     steps:      
       - add_ssh_keys:
@@ -41,7 +40,7 @@ workflows:
     jobs:
       - cypress/run:
           start: npm start
-          wait-on: 'https://peppermint-chat-server.herokuapp.com/'
+          wait-on: 'https://peppermint-chat-server.herokuapp.com'
           working_directory: client
           filters:
             branches:
