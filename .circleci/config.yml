@@ -8,18 +8,16 @@ jobs:
 
     working_directory: ~/client
 
-    steps:
-      - checkout:
-          path: ~/*
+    steps:      
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "/client/package.json" }}
+            - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
       - run: npm install
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "/client/package.json" }}
+          key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
   deploy:
     machine:
@@ -34,8 +32,7 @@ jobs:
       - checkout
       - run:
           name: Push Dev to Production
-          command: |
-            git push https://github.com/hatchways/team-peppermint.git dev:production
+          command: git push https://github.com/hatchways/team-peppermint.git dev:production
 
 workflows:
   test_and_deploy:
