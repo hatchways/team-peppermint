@@ -9,7 +9,8 @@ jobs:
     working_directory: ~/client
 
     steps:
-      - checkout
+      - checkout:
+          path: ~/*
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
@@ -24,7 +25,7 @@ jobs:
     machine:
       enabled: true
 
-    working_directory: ~/client
+    working_directory: ~/*
 
     steps:      
       - add_ssh_keys:
