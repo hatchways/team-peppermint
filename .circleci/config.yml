@@ -24,10 +24,9 @@ jobs:
     machine:
       enabled: true
 
-    working_directory: ~/team-peppermint/client
+    working_directory: ~/team-peppermint
 
-    steps:
-      - checkout
+    steps:      
       - add_ssh_keys:
           fingerprints:
             - "4c:48:eb:76:fb:5c:7a:99:15:14:c1:06:71:d2:2c:70"
