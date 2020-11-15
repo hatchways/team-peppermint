@@ -28,7 +28,8 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.4.3",
     "socket.io-client": "^2.3.0",
-    "validator": "^13.1.1"
+    "validator": "^13.1.1",
+    "cypress": "^5.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -75,7 +76,6 @@
     "@testing-library/user-event": "^7.1.2",
     "babel-jest": "^24.9.0",
     "babel-plugin-add-module-exports": "^1.0.2",
-    "cypress": "^5.2.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.3",
     "enzyme-to-json": "^3.5.0",
