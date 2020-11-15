@@ -41,7 +41,7 @@ workflows:
     jobs:
       - cypress/run:
           start: npm start          
-          working_directory: ~/client
+          working_directory: client
           filters:
             branches:
               only: dev
