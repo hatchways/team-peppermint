@@ -32,7 +32,7 @@ export const useStyles = makeStyles((theme) => ({
     root: {
       flexDirection: "column",
       justifyContent: "center",
-      padding: 20,
+      padding: 10,
     },
     leftRightSideStyle: {
       padding: 0,

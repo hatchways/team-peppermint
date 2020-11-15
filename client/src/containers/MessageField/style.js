@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2.5),
     paddingTop: 0,
   },
-  messegesView: {
+  messagesView: {
     width: "100%",
     flexGrow: 1,
     overflow: "auto",
@@ -20,6 +20,9 @@ export const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  buttonStyle: {
+    marginLeft: "5px",
+  },
   messageInput: {
     justifyContent: "flex-end",
   },
@@ -28,5 +31,9 @@ export const useStyles = makeStyles((theme) => ({
       height: "45vh",
     },
   },
+  [`@media (max-width:510px)`]: {
+    root: {
+      padding: "0 0 10px 0",
+    },
+  },
 }));
-

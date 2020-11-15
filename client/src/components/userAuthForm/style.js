@@ -12,7 +12,7 @@ export const useStyles = makeStyles((theme) => ({
     width: "80%",
     marginBottom: "40px",
     "& .MuiInputBase-input": {
-      padding: "6px 0 20px",
+      padding: "18px 0 18px",
     },
   },
   textField: {
