@@ -9,7 +9,8 @@ jobs:
     working_directory: ~/team-peppermint/client
 
     steps:
-      - checkout
+      - checkout:
+          path: ~/team-peppermint
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
