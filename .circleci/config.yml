@@ -9,10 +9,10 @@ jobs:
     working_directory: ~/client
 
     steps:
-      - checkout:
-          path: ~/*
+      - checkout
       - restore_cache:
           keys:
+            - v1-dependencies-{{ checksum "package.json" }}
             - v1-dependencies-
       - run: npm install
       - save_cache:
@@ -24,7 +24,7 @@ jobs:
     machine:
       enabled: true
 
-    working_directory: ~/*
+    working_directory: ~/client
 
     steps:      
       - add_ssh_keys:
@@ -33,14 +33,15 @@ jobs:
       - checkout
       - run:
           name: Push Dev to Production
-          command: "git push https://github.com/hatchways/team-peppermint.git dev:production"
+          command: |
+          git push https://github.com/hatchways/team-peppermint.git dev:production
 
 workflows:
   test_and_deploy:
     jobs:
       - cypress/run:
           start: npm start          
-          working_directory: client
+          working_directory: ~/client
           filters:
             branches:
               only: dev
