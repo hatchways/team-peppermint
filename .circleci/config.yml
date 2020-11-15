@@ -32,8 +32,7 @@ jobs:
       - checkout
       - run:
           name: Push Dev to Production
-          command: |
-          git push https://github.com/hatchways/team-peppermint.git dev:production
+          command: git push https://github.com/hatchways/team-peppermint.git dev:production
 
 workflows:
   test_and_deploy:
