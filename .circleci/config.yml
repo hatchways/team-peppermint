@@ -23,7 +23,7 @@ jobs:
     machine:
       enabled: true
 
-    working_directory: ~/*
+    working_directory: ~/team-peppermint
 
     steps:      
       - add_ssh_keys:
