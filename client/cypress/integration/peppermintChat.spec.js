@@ -9,9 +9,9 @@ describe("authentication test", () => {
   });
 });
 
-describe("chating with a user named John", () => {
-  it("writes welcome message to John", () => {
-    cy.get('p').contains('John').click({ force: true })
+describe("chating with a user named Jenna", () => {
+  it("writes welcome message to Jenna", () => {
+    cy.contains('Jenna').click({ force: true })
 
     cy.get('input.MuiInputBase-input').type('Hi buddy, how are you {enter}')
   
