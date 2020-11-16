@@ -11,7 +11,7 @@ describe("authentication test", () => {
 
 describe("chating with a user named Benq", () => {
   it("writes welcome message to Benq", () => {
-    cy.get('p').contains('Benq').click({ force: true })
+    cy.get('p.MuiTypography-root').contains('Benq').click({ force: true })
 
     cy.get('input.MuiInputBase-input').type('Hi buddy, how are you? {enter}')
   
