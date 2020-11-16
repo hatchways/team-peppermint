@@ -11,7 +11,7 @@ describe("authentication test", () => {
 
 describe("chating with a user named John", () => {
   it("writes welcome message to John", () => {
-    cy.get('#simple-tabpanel-1 > div > ul > div.MuiButtonBase-root.MuiListItem-root.jss59.MuiListItem-gutters.MuiListItem-button.Mui-selected > div > p').contains('John').click({ force: true })
+    cy.get('p').contains('John').click({ force: true })
 
     cy.get('input.MuiInputBase-input').type('Hi buddy, how are you {enter}')
   

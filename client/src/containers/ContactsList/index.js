@@ -15,8 +15,9 @@ import { useUserState } from "../../context/user/userContext";
 import axios from "axios";
 import isEmail from "validator/lib/isEmail";
 import CreateGroupChat from "../../components/CreateGroupChat";
+let classNames = require("classnames");
 
-const ContactsList = () => {
+const ContactsList = ({ isOpen }) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [copied, setCopied] = useState(false);
 
@@ -85,9 +86,9 @@ const ContactsList = () => {
           })
           .catch(async (err) => {
             if (err.response.status === 400) {
-            res = await axios.post(`/mail/${email}/sendMail`);
-            res.status === 200 && alertSuccess();
-            }            
+              res = await axios.post(`/mail/${email}/sendMail`);
+              res.status === 200 && alertSuccess();
+            }
           });
       }
     } catch (err) {
@@ -108,11 +109,13 @@ const ContactsList = () => {
     }, 2000);
   };
 
+  const isVisible = isOpen ? "hidden" : "visible";
+
   return (
     <>
       <ButtonBase
         onClick={() => openInviteDialog()}
-        style={{ marginBottom: 10 }}
+        style={{ visibility: isVisible, marginBottom: 10 }}
       >
         <div className={classes.inviteFriendsContainer}>
           <AddIcon color="primary" />
@@ -126,7 +129,10 @@ const ContactsList = () => {
           </Typography>
         </div>
       </ButtonBase>
-      <ButtonBase onClick={() => openChatForm()} style={{ marginBottom: 10 }}>
+      <ButtonBase
+        onClick={() => openChatForm()}
+        style={{ visibility: isVisible, marginBottom: 10 }}
+      >
         <div className={classes.inviteFriendsContainer}>
           <GroupAddIcon color="primary" />
           <Typography

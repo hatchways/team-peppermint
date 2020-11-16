@@ -97,9 +97,9 @@ const SidebarInfo = () => {
     setTabNumber(newValue);
   };
 
-  const handleSearch = async (query) => {
-    setQuery(query);
-    const res = await findContacts(userEmail, query, dispatch);
+  const handleSearch = async (queryWord) => {
+    setQuery(queryWord);
+    const res = await findContacts(userEmail, queryWord, dispatch);
     setTabNumber(1);
     if (!res) {
       setIsOpen(true);
@@ -178,7 +178,7 @@ const SidebarInfo = () => {
         <ChatList usersData={usersData} />
       </TabPanel>
       <TabPanel value={tabNumber} index={1} className={classes.tabPanel}>
-        <ContactsList />
+        <ContactsList isOpen={isOpen} />
       </TabPanel>
       <TabPanel value={tabNumber} index={2} className={classes.tabPanel}>
         <InvitationsList />

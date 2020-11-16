@@ -58,7 +58,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   collapse: {
     textAlign: "center",
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(1),
     width: "100%",
   },
   alert: {
