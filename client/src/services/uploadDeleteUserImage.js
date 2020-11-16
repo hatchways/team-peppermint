@@ -54,7 +54,7 @@ export const uploadUserImage = async (newImage, oldImageData, userEmail) => {
   resizedImageNameArray.splice(
     resizedImageNameArray.length - 1,
     0,
-    "_200x200."
+    "_620x420."
   );
   resizedImageName = resizedImageNameArray.join("");
   let resizedImageStorageRef;
