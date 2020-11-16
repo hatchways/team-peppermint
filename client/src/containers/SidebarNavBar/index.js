@@ -104,7 +104,7 @@ const SidebarNavBar = () => {
           open={open}
           onSave={handleSave}
           showPreviews={true}
-          // maxFileSize={1500000}
+          maxFileSize={2000000}
           onClose={() => {
             setOpen(false);
             handleClose();

@@ -12,6 +12,7 @@ export const useStyles = makeStyles((theme) => ({
     "&::-webkit-scrollbar": {
       display: "none",
     },
+    paddingBottom: "90px",
   },
   inviteFriendsContainer: {
     display: "flex",
@@ -28,6 +29,9 @@ export const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
   },
   [`@media (max-width:400px)`]: {
+    root: {
+      paddingBottom: "250px",
+    },
     typography: {
       fontSize: "1.3rem",
     },

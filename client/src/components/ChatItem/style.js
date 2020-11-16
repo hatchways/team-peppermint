@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme) => ({
     // justifyContent: "space-between",
     alignItems: "center",
     padding: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
     width: "100%",
     borderRadius: theme.spacing(1),
     backgroundColor: "#f9fafc",
