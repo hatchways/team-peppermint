@@ -78,7 +78,11 @@ npm run start
 
 The project uses continuous integration through Github, Circle Ci, and Netlify.
 
-When any updates are pushed to dev branch, Circle Ci runs the app's Cypress tests, if they pass, Circle Ci then updates the production branch in Github. Listening for updates to the production branch, Netlify will update when Circle Ci completes the tests, giving the app continous tested integration.
+When any updates are pushed to dev branch, Circle Ci runs the app's Cypress and unit tests, if they pass, Circle Ci then updates the production branch in Github. Listening for updates to the production branch, Netlify will update when Circle Ci completes the tests, giving the app continous tested integration.
+
+!["CircleCI schema"](https://github.com/hatchways/team-peppermint/blob/dev/client/public/images/cicle.png?raw=true)
+
+!["CircleCI test results"](https://github.com/hatchways/team-peppermint/blob/dev/client/public/images/cirlceci-test.png?raw=true)
 
 ## Dependencies
 
