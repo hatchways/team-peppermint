@@ -1,3 +1,0 @@
-https://peppermint-chat-server.herokuapp.com/
-
-yarn test --coverage
