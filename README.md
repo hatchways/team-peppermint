@@ -74,6 +74,12 @@ npm run start
 
 !["Mobile friendly design"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/mobile-friendly-design.png?raw=true)
 
+## Fixit Development Pipeline
+
+The project uses continuous integration through Github, Circle Ci, and Netlify.
+
+When any updates are pushed to dev branch, Circle Ci runs the app's Cypress tests, if they pass, Circle Ci then updates the production branch in Github. Listening for updates to the production branch, Netlify will update when Circle Ci completes the tests, giving the app continous tested integration.
+
 ## Dependencies
 
 - react 16.13.1,
