@@ -74,7 +74,7 @@ npm run start
 
 !["Mobile friendly design"](https://github.com/hatchways/team-peppermint/blob/add-readme/client/public/images/mobile-friendly-design.png?raw=true)
 
-## Fixit Development Pipeline
+## Peppermint Development Pipeline
 
 The project uses continuous integration through Github, Circle Ci, and Netlify.
 
