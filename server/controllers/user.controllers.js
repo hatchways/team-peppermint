@@ -100,7 +100,7 @@ const getUserConversations = (req, res, next) => {
             try {
                 if (err)
                     throw new Error(err)
-                if (user?.conversations.length > 0)
+                if (user && user.conversations.length > 0)
                     return res.status(200).json({ message: "Conversations Found", error: false, conversations: user.conversations })
                 else
                     return res.status(404).json({ message: "Conversations not found", error: false })
