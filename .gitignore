@@ -20,4 +20,6 @@ yarn-error.log*
 
 .env
 /client/.env
+/client/build
 /server/.env
+/server/build
