@@ -22,4 +22,3 @@ yarn-error.log*
 /client/.env
 /client/build
 /server/.env
-/server/build
