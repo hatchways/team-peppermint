@@ -22,6 +22,7 @@ yarn-error.log*
 
 
 #TODO add .env to your gitignore
-
 .env
+/client/.env
 /client/build
+/server/.env
