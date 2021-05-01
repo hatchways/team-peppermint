@@ -2,7 +2,7 @@
 
 The app designed to exchange messages between two people who speak completely different languages. Think: FB Messenger with a built-in automatic translator. If we could more easily speak to others from around the world, we would be a more inclusive and connected world!
 
-To see the app on Netlify please click 👉 [Peppermint chat](https://peppermint-chat.netlify.app)
+To see the app please click 👉 [Peppermint chat](https://peppermint-chat.herokuapp.com/home) (Under development)
 
 You can use the following user credentials(or create new user accounts):
 
