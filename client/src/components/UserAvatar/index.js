@@ -1,11 +1,10 @@
-import React, { memo } from "react";
+import React from "react";
 import Avatar from "@material-ui/core/Avatar";
-import PropTypes from "prop-types";
 import avatar from "./avatar.png";
-import { useStyles, OfflineBadge, OnlineBadge } from "./style";
-
+import { useStyles } from "./style";
+import AvatarBadge from "components/AvatarBadge";
 const UserAvatar = ({ imageUrl, isOnline }) => {
-  const classes = useStyles();
+  const classes = useStyles({ isOnline });
   let userPicture = "";
 
   if (
@@ -20,54 +19,17 @@ const UserAvatar = ({ imageUrl, isOnline }) => {
 
   return (
     <div className={classes.root}>
-      {isOnline ? (
-        <OnlineBadge
-          overlap="circle"
-          anchororigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          variant="dot"
-        >
-          <Avatar
-            variant="circle"
-            alt="Online Badge"
-            data-testid='online'
-            src={userPicture}
-            className={classes.avatar}
-          />
-        </OnlineBadge>
-      ) : (
-        <OfflineBadge
-          overlap="circle"
-          anchororigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          variant="dot"
-        >
-          <Avatar
-            variant="circle"
-            alt="Offline Badge"
-            data-testid='offline'
-            src={userPicture}
-            className={classes.avatar}
-          />
-        </OfflineBadge>
-      )}
+      <AvatarBadge isOnline={isOnline}>
+        <Avatar
+          variant="circular"
+          alt="Badge"
+          src={userPicture}
+          className={classes.avatar}
+        />
+      </AvatarBadge>
     </div>
   );
 };
 
-export default memo(UserAvatar);
+export default UserAvatar;
 
-UserAvatar.propTypes = {
-  imageUrl: PropTypes.oneOfType([
-    PropTypes.shape({
-      url: PropTypes.string,
-      name: PropTypes.string,
-    }),
-    PropTypes.bool,
-  ]),
-  isOnline: PropTypes.bool,
-};

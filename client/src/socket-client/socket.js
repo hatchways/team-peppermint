@@ -1,4 +1,4 @@
-import openSocket from 'socket.io-client';
+import socketIOClient from 'socket.io-client';
 
-const socket = openSocket(`${process.env.REACT_APP_BACKEND_URL}`);
+const socket = socketIOClient();
 export default socket;

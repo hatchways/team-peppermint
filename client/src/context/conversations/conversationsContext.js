@@ -1,37 +1,36 @@
-import React, { useReducer, useContext } from "react";
-import conversationsReducer from "./conversationsReducer";
-import { fetchConversations, resetConversations } from "./helper";
+import React, { useReducer, useContext, createContext, useEffect } from "react";
+import ConversationsReducer from "./conversationsReducer";
 
-const ConversationsStateContext = React.createContext();
-const ConversationsDispatchContext = React.createContext();
+import UserServices from "services/apiCalls/user.services";
+import Action, { ActionTypes } from 'types'
+import { useUserStore } from "context/user/userContext";
 
-function ConversationsProvider({ children }) {
-  const [state, dispatch] = useReducer(conversationsReducer, {
+export const ConversationsStore = createContext();
+export const ConversationsDispatch = createContext();
+
+const initialState = {
     conversations: []
-  });
-
-  return (
-    <ConversationsStateContext.Provider value={state}>
-      <ConversationsDispatchContext.Provider value={dispatch}>
-        {children}
-      </ConversationsDispatchContext.Provider>
-    </ConversationsStateContext.Provider>
-  );
+}
+const ConversationsProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(ConversationsReducer, initialState);
+    const { isAuthenticated } = useUserStore()
+    useEffect(() => {
+        if (isAuthenticated)
+            UserServices.getUserConversations()
+                .then(response => {
+                    dispatch(Action(ActionTypes.SET_CONVERSATIONS, response.data.conversations))
+                })
+                .catch(err => console.log(err))
+    }, [isAuthenticated])
+    return (
+        <ConversationsStore.Provider value={state}>
+            <ConversationsDispatch.Provider value={dispatch}>
+                {children}
+            </ConversationsDispatch.Provider>
+        </ConversationsStore.Provider>
+    );
 }
 
-function useConversationsState() {
-  const context = useContext(ConversationsStateContext);
-  return context;
-}
-function useConversationsDispatch() {
-  const context = useContext(ConversationsDispatchContext);
-  return context;
-}
-
-export {
-  ConversationsProvider,
-  useConversationsState,
-  useConversationsDispatch,
-  fetchConversations,
-  resetConversations
-};
+export const useConversationsStore = () => useContext(ConversationsStore)
+export const useConversationsDispatch = () => useContext(ConversationsDispatch)
+export default ConversationsProvider

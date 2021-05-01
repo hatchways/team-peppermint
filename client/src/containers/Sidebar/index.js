@@ -1,16 +1,16 @@
 import React from "react";
 import { useStyles } from "./style";
-import SidebarNavBar from "../SidebarNavBar";
+import SidebarHeader from "../SidebarHeader";
 import SidebarInfo from "../SidebarInfo";
 
 const Sidebar = () => {
   const classes = useStyles();
 
   return (
-    <section className={classes.root}>
-      <SidebarNavBar />
+    <div className={classes.root}>
+      <SidebarHeader />
       <SidebarInfo />
-    </section>
+    </div>
   );
 };
 

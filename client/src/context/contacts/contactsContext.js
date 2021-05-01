@@ -1,58 +1,35 @@
-import React, { useReducer, useContext } from "react";
-import contactsInvitaitionsReducer from "./contactsInvitationsReducer";
-import {
-  fetchContactsAndInvitations,
-  deleteContact,
-  approveContact,
-  rejectContact,
-  userEmailFromLocalStorage,
-  createInvitation,
-  findContacts,
-  updateContacts,
-  resetContactsInvitationsLists,
-  addUknownUser,
-} from "./helper";
+import React, { useReducer, useContext, createContext, useEffect } from "react";
+import ContactsReducer from "./contactsReducer";
 
-const ContactsStateContext = React.createContext();
-const ContactsDispatchContext = React.createContext();
+import UserServices from "services/apiCalls/user.services";
+import Action, { ActionTypes } from 'types'
+import { useUserStore } from "context/user/userContext";
 
-function ContactsProvider({ children }) {
-  const [state, dispatch] = useReducer(contactsInvitaitionsReducer, {
-    contacts: {},
-    invitations: [],
-    unknownUsers: [],
-  });
+export const ContactsStore = createContext();
+export const ContactsDispatch = createContext();
 
-  return (
-    <ContactsStateContext.Provider value={state}>
-      <ContactsDispatchContext.Provider value={dispatch}>
-        {children}
-      </ContactsDispatchContext.Provider>
-    </ContactsStateContext.Provider>
-  );
+const initialState = {
+    contacts: []
+}
+const ContactsProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(ContactsReducer, initialState);
+    const { isAuthenticated } = useUserStore()
+    useEffect(() => {
+        if (isAuthenticated)
+            UserServices.getUserContacts()
+                .then(response => dispatch(Action(ActionTypes.SET_CONTACTS, response.data.contacts)))
+                .catch(err => console.error(err))
+
+    }, [isAuthenticated])
+    return (
+        <ContactsStore.Provider value={state}>
+            <ContactsDispatch.Provider value={dispatch}>
+                {children}
+            </ContactsDispatch.Provider>
+        </ContactsStore.Provider>
+    );
 }
 
-function useContactsState() {
-  const context = useContext(ContactsStateContext);
-  return context;
-}
-function useContactsDispatch() {
-  const context = useContext(ContactsDispatchContext);
-  return context;
-}
-
-export {
-  ContactsProvider,
-  useContactsState,
-  useContactsDispatch,
-  fetchContactsAndInvitations,
-  deleteContact,
-  approveContact,
-  rejectContact,
-  userEmailFromLocalStorage,
-  createInvitation,
-  findContacts,
-  updateContacts,
-  resetContactsInvitationsLists,
-  addUknownUser,
-};
+export const useContactsStore = () => useContext(ContactsStore)
+export const useContactsDispatch = () => useContext(ContactsDispatch)
+export default ContactsProvider

@@ -2,34 +2,26 @@ const {
   addUser,
   removeUser,
 } = require("./socket-helper");
-const { addOnlineUsers, removeOnlineUser } = require("./socket-online-users");
+const { addOnlineUsers, removeOnlineUser, onlineUsers } = require("./socket-online-users");
 
 module.exports = function (io) {
   io.on("connection", (socket) => {
-    socket.on("login", (email) => {
-      socket.broadcast.emit("onlineUsers", addOnlineUsers(socket.id, email));
-    });
-    socket.on("join", ({ email, room }, callback) => {
-      console.log(`${email} connected to ${room}`);
-      const { error, connection } = addUser({ id: socket.id, email, room });
-      if (error) return callback(error);
-      socket.join(connection.room);
-      callback();
-    });
-
-    socket.on("message", (message, room, callback) => {
-      // const user = getUser(socket.id);
-      io.to(room).emit("message", message);
-      callback();
-    });
+    const userID = socket.handshake.query.userID
+    addOnlineUsers(socket.id, userID)
+    io.emit(`${userID}-login`, { isOnline: true })
+    socket.on('new-message', messageData => {
+      console.log(messageData)
+      io.emit(`${messageData.conversationID}-message`, messageData)
+    })
     socket.on("disconnect", () => {
+      io.emit(`${userID}-logout`, { isOnline: false })
+      removeOnlineUser(socket.id, userID)
+      io.emit()
+    })
 
-    });
-    socket.on("logout", (email) => {
-      removeUser(socket.id);
-      socket.broadcast.emit("onlineUsers", removeOnlineUser(socket.id, email));
-    });
   });
+
+
 
   return io;
 };

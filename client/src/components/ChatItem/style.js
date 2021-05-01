@@ -8,7 +8,6 @@ export const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     marginBottom: theme.spacing(1),
     width: "100%",
-    borderRadius: theme.spacing(1),
     backgroundColor: "#f9fafc",
     boxShadow: "0 0 1px 0 grey",
   },

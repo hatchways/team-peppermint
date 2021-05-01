@@ -3,53 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
-    "ajv": "^6.8.1",
-    "axios": "^0.19.2",
-    "capitalize": "^2.0.3",
-    "classnames": "^2.2.6",
-    "core-js": "^3.6.5",
-    "crypto-random-string": "^3.2.0",
+    "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
-    "emoji-mart": "^3.0.0",
-    "firebase": "^7.19.0",
-    "iso-639-1": "^2.1.4",
-    "jwt-decode": "^2.2.0",
+    "emoji-picker-react": "^3.4.4",
+    "firebase": "^8.4.2",
+    "formik": "^2.2.6",
+    "iso-639-1": "^2.1.9",
     "language-icons": "^0.3.0",
-    "material-ui-dropzone": "^3.3.1",
-    "parse-url": "^5.0.2",
-    "react": "^16.13.1",
-    "react-cookie": "^4.0.3",
-    "react-copy-to-clipboard": "^5.0.2",
-    "react-debounce-input": "^3.2.2",
-    "react-dom": "^16.13.1",
+    "material-ui-dropzone": "^3.5.0",
+    "moment": "^2.29.1",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-copy-to-clipboard": "^5.0.3",
+    "react-dom": "^17.0.2",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.4.0",
-    "socket.io-client": "^2.3.0",
-    "validator": "^13.1.1",
-    "cypress": "^5.2.0"
+    "react-scripts": "^4.0.3",
+    "socket.io-client": "^4.0.1",
+    "string-hash": "^1.1.3",
+    "unescape": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "cypress:open": "cypress open -P .",
-    "cy:run": "cypress run --spec 'cypress/integration/peppermintChat.spec.js'",
-    "eject": "react-scripts eject"
-  },
-  "jest": {
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
-    "moduleNameMapper": {
-      "^.+\\.(css|scss)$": "identity-obj-proxy"
-    },
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/index.js"
-    ]
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -66,22 +45,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/plugin-transform-react-jsx": "^7.10.4",
-    "@babel/preset-env": "^7.11.0",
-    "@babel/preset-react": "^7.10.4",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "babel-jest": "^24.9.0",
-    "babel-plugin-add-module-exports": "^1.0.2",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.3",
-    "enzyme-to-json": "^3.5.0",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^24.9.0",
-    "jest-enzyme": "^7.1.2"
-  },
-  "proxy": "https://peppermint-chat-server.herokuapp.com"
+  "proxy": "http://localhost:3001"
 }

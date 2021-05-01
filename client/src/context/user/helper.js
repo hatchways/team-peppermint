@@ -1,34 +1,19 @@
-import { FETCH_USER_DATA, SET_USER_DATA, UPDATE_USER_IMAGE } from "../../types";
+import { ActionTypes } from 'types';
 import axios from "axios";
-
+import UserServices from 'services/apiCalls/user.services'
 export const fetchUserData = async (dispatch) => {
-  let token = localStorage.getItem("auth-token");
 
-  const userRes = await axios.get("/api/user/", {
-    headers: { "x-auth-token": token },
-  });  
+  const userRes = UserServices.isAuthenticated()
   dispatch({
-    type: FETCH_USER_DATA,
-    payload: {
-      token: token,
-      user: userRes.data,
-    },
+    type: ActionTypes.SET_USER_DATA,
+    payload: userRes.data,
   });
 };
 
-export const setUserData = (token, user, dispatch) => {
-  dispatch({
-    type: SET_USER_DATA,
-    payload: {
-      token,
-      user,
-    },
-  });
-};
 
 export const updateUserImage = (imageUrl, dispatch) => {
   dispatch({
-    type: UPDATE_USER_IMAGE,
+    type: ActionTypes.UPDATE_USER_IMAGE,
     payload: imageUrl,
   });
 };

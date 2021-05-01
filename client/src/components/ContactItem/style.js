@@ -3,15 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingLeft: theme.spacing(2),
-    paddingTop: 0,
-    paddingBottom: 0,
-    marginBottom: theme.spacing(1),
-    width: "100%",
-    borderRadius: theme.spacing(1),
-    backgroundColor: "transparent",
+    alignItems: 'center',
+    width: '100%'
+  },
+  contactButton: {
+    width: '100%',
+    justifyContent: 'start',
+    '&:focus': {
+      outline: 'none'
+    }
   },
   avatarNameContainer: {
     display: "flex",

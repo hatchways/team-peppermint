@@ -1,45 +1,59 @@
-import React, { useReducer, useContext } from "react";
-import userReducer from "./userReducer";
-import { fetchUserData, setUserData, updateUserImage } from "./helper";
+import React, { useReducer, useContext, createContext, useEffect } from "react";
+import UserReducer from "./userReducer";
 
-const UserStateContext = React.createContext();
-const UserDispatchContext = React.createContext();
+import UserServices from "services/apiCalls/user.services";
+import Action, { ActionTypes } from 'types'
+import socketIOClient from 'socket.io-client';
 
-function UserProvider({ children }) {
-  const [state, dispatch] = useReducer(userReducer, {
-    token: "",
-    user: {
-      id: "",
-      name: "",
-      email: "",
-      language: "",
-      pictureURL: { url: "" },
-    },
-  });
+const UserStore = createContext();
+const UserDispatch = createContext();
+
+const initialState = {
+  isAuthenticated: false,
+  isLoaded: false,
+  user: {
+    _id: "",
+    name: "",
+    email: "",
+    language: "",
+    pictureURL: { url: "" },
+
+  },
+  socket: null,
+}
+const UserProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(UserReducer, initialState);
+  useEffect(() => {
+    UserServices.isAuthenticated()
+      .then(res => {
+        dispatch(Action(ActionTypes.SET_USER_DATA, res.data))
+      })
+      .catch(err => console.error(err.message))
+  }, [])
+
+  useEffect(() => {
+    if (state.isAuthenticated && !state.socket) {
+      dispatch(Action(ActionTypes.SET_SOCKET, socketIOClient({
+        query: {
+          userID: state.user._id
+        }
+      })))
+    }
+    return () => state.socket?.disconnect
+  }, [state])
   return (
-    <UserStateContext.Provider value={state}>
-      <UserDispatchContext.Provider value={dispatch}>
+    <UserStore.Provider value={state}>
+      <UserDispatch.Provider value={dispatch}>
         {children}
-      </UserDispatchContext.Provider>{" "}
-    </UserStateContext.Provider>
+      </UserDispatch.Provider>{" "}
+    </UserStore.Provider>
   );
 }
 
-function useUserState() {
-  const context = useContext(UserStateContext);
-  return context;
-}
-
-function useUserDispatch() {
-  const context = useContext(UserDispatchContext);
-  return context;
-}
-
+const useUserStore = () => useContext(UserStore)
+const useUserDispatch = () => useContext(UserDispatch)
 export {
-  UserProvider,
-  useUserState,
+  useUserStore,
   useUserDispatch,
-  fetchUserData,
-  setUserData,
-  updateUserImage,
+  UserProvider,
 };

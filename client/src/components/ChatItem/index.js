@@ -1,138 +1,69 @@
-import React, { memo, useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useStyles } from "./style";
-import PropTypes from "prop-types";
 import UserAvatar from "../UserAvatar";
 import { Typography, ListItem } from "@material-ui/core";
-import SelectConversation from "../../context/SelectConversation";
-import { useUserState } from "../../context/user/userContext";
-import {
-  useContactsState,
-  useContactsDispatch,
-  fetchContactsAndInvitations,
-  addUknownUser,
-} from "../../context/contacts/contactsContext";
-import ToggleLanguage from "../../context/ToggleLanguage";
-const ChatItem = (props) => {
-  const classes = useStyles();
-  const { user } = useUserState();
-  // const user = {};
-  const dispatch = useContactsDispatch();
-  const { contacts, unknownUsers } = useContactsState();
-  // const contacts = [];
-  // const unknownUsers = [];
-  const {
-    conversation,
-    index,
-    select,
-    selected,
-    lastMessage,
-    usersData,
-  } = props;
-  const users = conversation.users.filter((cUser) => cUser !== user.email);
-  const ToggleLanguageContext = useContext(ToggleLanguage);
-  const context = useContext(SelectConversation);
-  const [chatTitle, setChatTitle] = useState();
-  const [message, setMessage] = useState("");
+import { useUserStore } from "../../context/user/userContext";
+import { useLanguageContext, getMessageTextVersion } from "context/language/languageContext";
+import { useCurrentConversationDispatch, useCurrentConversationStore } from "context/currentConversation/currentConversationContext";
+import Action, { ActionTypes } from "types";
 
-  const onChatClick = (event) => {
-    select(event, index);
-    context.setConversation(conversation.conversationID);
+
+const ChatItem = ({ conversation, index, selected }) => {
+  const classes = useStyles()
+  const { user, socket } = useUserStore()
+  const { _id, users, conversationTitle, lastMessage } = conversation
+  const { isOriginalLanguage } = useLanguageContext()
+  const [lastMessageObject, setLastMessageObject] = useState(lastMessage)
+  const currentConversation = useCurrentConversationStore()
+  const currentConversationDispatch = useCurrentConversationDispatch()
+  const isGroupConversation = users.length > 2
+  const otherUsers = users.filter(u => u._id !== user._id)
+  const chatItemTitle = isGroupConversation ? conversationTitle || 'Group Chat' : otherUsers[0].name
+
+
+  const onChatClick = () => {
+    currentConversationDispatch(Action(ActionTypes.SET_CURRENT_CONVERSATION, conversation));
   };
   useEffect(() => {
-    if (lastMessage)
-      setMessage(
-        lastMessage[
-          ToggleLanguageContext.original
-            ? Object.keys(lastMessage)[0]
-            : user.language
-        ]
-      );
-  }, [ToggleLanguageContext, lastMessage, user.language]);
-  useEffect(() => {
-    let fetch = false;
-    if (Object.keys(contacts).length) {
-      users.forEach((cUser) => {
-        if (!contacts[cUser] && cUser !== user.email && !unknownUsers[cUser]) {
-          addUknownUser(cUser, unknownUsers, dispatch);
-          fetch = true;
-        }
-      });
-    }
-    if (fetch) {
-      fetchContactsAndInvitations(user.email, dispatch);
-    }
-  }, [
-    conversation,
-    users,
-    dispatch,
-    contacts,
-    unknownUsers,
-    user.email,    
-  ]);
-  useEffect(() => {
-    Object.keys(usersData).length &&
-      setChatTitle(
-        users
-          .reduce((arr, cUser) => {
-            if (usersData[cUser]) arr.push(usersData[cUser].name);
-            return arr;
-          }, [])
-          .join()
-      );
-  }, [usersData, users]);
+    socket.on(`${conversation._id}-message`, messageData => {
+      setLastMessageObject(messageData)
+      if (currentConversation._id === _id)
+        currentConversationDispatch(Action(ActionTypes.PUSH_MESSAGE, messageData))
+    })
+    return () => socket.off(`${conversation._id}-message`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <ListItem
       button
       className={classes.root}
       onClick={onChatClick}
-      selected={selected === index}
+      selected={currentConversation?._id === _id}
     >
       <div className={classes.avatarNameContainer}>
         {users.length === 1 && (
           <UserAvatar
-            imageUrl={
-              usersData[users[0]] !== undefined &&
-              usersData[users[0]].pictureUrl
-            }
-            isOnline={
-              usersData[users[0]] !== undefined && usersData[users[0]].isOnline
-            }
+            imageUrl={""}
           />
         )}
         <div className={classes.nameContainer}>
           <Typography
             variant="body1"
-            style={{ marginBottom: 0, fontWeight: 600 }}
             gutterBottom
           >
-            {chatTitle}
+            {chatItemTitle}
           </Typography>
           <Typography
             variant="body2"
-            style={{ marginBottom: 0, fontWeight: 600, fontSize: "0.8rem" }}
             gutterBottom
           >
-            {message}
+            {getMessageTextVersion(lastMessageObject, isOriginalLanguage, user.language)}
           </Typography>
         </div>
       </div>
-
-      {/* <Chip
-        label={messageCount}
-        color="primary"
-        size="small"
-        className={classes.chip}
-      /> */}
     </ListItem>
   );
 };
 
-export default memo(ChatItem);
+export default ChatItem
 
-ChatItem.propTypes = {
-  name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  messageCount: PropTypes.number,
-  select: PropTypes.func,
-  index: PropTypes.number,
-  selected: PropTypes.number,
-};

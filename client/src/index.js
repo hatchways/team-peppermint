@@ -3,22 +3,20 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { UserProvider } from "./context/user/userContext";
-import { ContactsProvider } from "./context/contacts/contactsContext";
-import { ConversationsProvider } from "./context/conversations/conversationsContext";
-import Axios from "axios";
-
-if (process.env.REACT_APP_BACKEND_URL) {
-  Axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
-}
+import { UserProvider } from "context/user/userContext";
+import ConversationsProvider from 'context/conversations/conversationsContext'
+import LanguageProvider from 'context/language/languageContext'
+import ContactsProvider from "context/contacts/contactsContext";
 
 ReactDOM.render(
   <UserProvider>
-    <ContactsProvider>
-      <ConversationsProvider>
-        <App />
-      </ConversationsProvider>
-    </ContactsProvider>
+    <ConversationsProvider>
+      <ContactsProvider>
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
+      </ContactsProvider>
+    </ConversationsProvider>
   </UserProvider>,
   document.getElementById("root")
 );

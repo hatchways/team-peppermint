@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Checkbox from "@material-ui/core/Checkbox";
 import Axios from "axios";
-import { useUserState } from "../../context/user/userContext";
+import { useUserStore } from "../../context/user/userContext";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {
@@ -14,7 +14,7 @@ import {
   fetchConversations,
 } from "../../context/conversations/conversationsContext";
 const CreateGroupChat = ({ open, onClose, contactsList }) => {
-  const { user } = useUserState();
+  const { user } = useUserStore();
   const [checkedBoxes, setCheckedBoxes] = useState({});
   const dispatch = useConversationsDispatch();
   const handleChange = (event) => {

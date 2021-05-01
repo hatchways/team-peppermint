@@ -1,22 +1,27 @@
-import { FETCH_USER_DATA, UPDATE_USER_IMAGE, SET_USER_DATA } from "../../types";
+import { ActionTypes } from "types";
 
-export default function userReducer(state, action) {
+const UserReducer = (state, action) => {
   switch (action.type) {
-    case SET_USER_DATA:
-    case FETCH_USER_DATA: {
+    case ActionTypes.SET_USER_DATA: {
+      return { ...state, ...action.payload }
+    }
+    case ActionTypes.UPDATE_USER_IMAGE: {
       return {
         ...state,
-        token: action.payload.token,
-        user: action.payload.user,
+        user: {
+          ...state.user,
+          pictureURL: { url: action.payload.imageUrl }
+        }
       };
     }
-    case UPDATE_USER_IMAGE: {
+    case ActionTypes.SET_SOCKET: {
       return {
         ...state,
-        user: { ...state.user, pictureURL: action.payload.imageUrl },
-      };
+        socket: action.payload
+      }
     }
     default:
       return state;
   }
 }
+export default UserReducer

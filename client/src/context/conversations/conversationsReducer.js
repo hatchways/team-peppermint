@@ -1,18 +1,15 @@
-import { FETCH_CONVERSATIONS, RESET_CONVERSATIONS } from "../../types";
+import { ActionTypes } from "types";
 
-export default function conversationsReducer(state, action) {
+const ConversationsReducer = (state, action) => {
     switch (action.type) {
-        case FETCH_CONVERSATIONS: {
-            return {
-                conversations: action.payload.conversations,
-            };
+        case ActionTypes.SET_CONVERSATIONS: {
+            return { ...state, conversations: action.payload }
         }
-        case RESET_CONVERSATIONS: {
-            return {
-                conversations: {}
-            }
+        case ActionTypes.ADD_CONVERSATION: {
+            return {...state, conversations: action.payload}
         }
         default:
             return state;
     }
 }
+export default ConversationsReducer
