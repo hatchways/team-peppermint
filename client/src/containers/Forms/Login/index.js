@@ -4,7 +4,8 @@ import { useUserDispatch } from 'context/user/userContext'
 import UserServices from 'services/apiCalls/user.services'
 import { Formik, Field, Form } from 'formik';
 import Action, { ActionTypes } from 'types';
-
+import { useStyles } from '../style'
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 const Login = ({ renderRegister }) => {
 
     const userDispatch = useUserDispatch()
@@ -14,6 +15,7 @@ const Login = ({ renderRegister }) => {
         email: '',
         password: ''
     }
+    const classes = useStyles()
     const handleLoginSubmit = (loginValues) => {
         UserServices.login(loginValues)
             .then(response => {
@@ -22,30 +24,39 @@ const Login = ({ renderRegister }) => {
             .catch(err => setMessage(err))
     }
     return (
-        <div>
+        <div className={classes.root}>
             <Formik
                 initialValues={loginValues}
                 onSubmit={handleLoginSubmit}
             >
                 {({ values }) => (
-                    <Form>
-                        <Typography variant="h1">LOGIN</Typography>
-                        <Field name="email" type="email" label="Email" as={TextField} />
-                        <Field name="password" type="password" label="Password" as={TextField} />
-                        <div>
-                            <Button>Forgot Password?</Button>
-                            <Button onClick={renderRegister}>Don't have an account yet?</Button>
-                        </div>
+                    <Form className={classes.form}>
+                        <Typography variant="h3">Login</Typography>
+                        <Field
+                            className={classes.formField}
+                            name="email"
+                            type="email"
+                            label="Email"
+                            variant='outlined'
+                            as={TextField}
+                        />
+                        <Field className={classes.formField} name="password" type="password" label="Password" variant='outlined' as={TextField} />
+
+                        <Button>Forgot Password?</Button>
+
+
                         <Button
+                            className={classes.submitButton}
                             type="submit"
                             variant="contained"
                             color="primary"
+
                         >
-                            <Typography variant="h3">
+                            <Typography variant="h5">
                                 Login
                             </Typography>
                         </Button>
-
+                        <Button onClick={renderRegister}>Create Account</Button>
                     </Form>
                 )}
 

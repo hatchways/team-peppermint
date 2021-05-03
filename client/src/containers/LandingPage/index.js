@@ -8,7 +8,7 @@ const LandingPage = ({ history }) => {
     const renderLogin = () => setIsLogin(true)
     const renderRegister = () => setIsLogin(false)
     return (
-        <Grid container  justify='space-between'>
+        <Grid container justify='center' alignItems='stretch'>
             <Grid item xs={6}>
                 <BackgroundImage />
             </Grid>
