@@ -52,12 +52,12 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));
 
-app.use("/", indexRouter);
+
 // app.use("/ping", pingRouter);
 // app.use("/user", invitationsRouter );
 app.use("/api/user", authRouter, userRouter);
 app.use("/api/conversations", conversationsRouter);
-
+app.use("/", indexRouter);
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
@@ -70,9 +70,6 @@ app.use(function (err, req, res, next) {
   handleErrors(err, req, res, next)
 });
 
-// Landing route
-app.get("/", (req, res) => {
-  res.send("Hello from Express!");
-});
+
 
 module.exports = app;
