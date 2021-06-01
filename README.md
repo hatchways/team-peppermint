@@ -6,11 +6,11 @@ To see the app please click 👉 [Peppermint chat](https://peppermint-chat.herok
 
 You can use the following user credentials(or create new user accounts):
 
-email: andrey@mail.com<br />
-password: qwerty123
+email: alex@mail.com<br />
+password: qwerty
 
-email: aziz@mail.com<br />
-password: qwerty123
+email: dima@mail.com<br />
+password: qwerty
 
 ## Synopsis
 
