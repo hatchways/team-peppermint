@@ -11,6 +11,7 @@ export const ActionTypes = {
     UPDATE_CONVERSATIONS: "UPDATE_CONVERSATIONS",
     ADD_CONVERSATION: "RESET_CONVERSATIONS",
     ADD_CONTACT: "ADD_CONTACT",
+    RESET_USER:"RESET_USER"
 
 }
 const Action = (type, payload) => ({ type, payload })

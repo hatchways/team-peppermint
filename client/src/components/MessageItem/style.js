@@ -15,10 +15,11 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     padding: 10,
     borderRadius: 10,
+    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px',
     borderBottomRightRadius: ({ isMyMessage }) => isMyMessage && 0,
-    borderTopLeftRadius: ({ isMyMessage }) => !isMyMessage && 0,
+    borderBottomLeftRadius: ({ isMyMessage }) => !isMyMessage && 0,
     color: ({ isMyMessage }) => isMyMessage ? 'black' : 'white',
-    background: ({ isMyMessage }) => isMyMessage ? 'lightgrey' : 'linear-gradient(130deg, rgba(39,31,208,1) 0%, rgba(32,167,253,1) 75%, rgba(106,194,255,1) 100%)'
+    background: ({ isMyMessage }) => isMyMessage ? theme.palette.background.default: '#4178BF'
   },
   messageDetails: {
     display: 'flex',

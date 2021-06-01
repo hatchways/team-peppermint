@@ -8,11 +8,11 @@ const LandingPage = ({ history }) => {
     const renderLogin = () => setIsLogin(true)
     const renderRegister = () => setIsLogin(false)
     return (
-        <Grid container justify='center' alignItems='stretch'>
-            <Grid item xs={6}>
+        <Grid container justify='center' alignContent='stretch'>
+            <Grid item md={6} xs={12}>
                 <BackgroundImage />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item md={6} xs={12}>
                 {isLogin ?
                     <Login history={history} renderRegister={renderRegister} /> :
                     <Register history={history} renderLogin={renderLogin} />

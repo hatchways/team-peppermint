@@ -27,7 +27,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <Container maxWidth="lg" style={{ margin: "auto" }}>
+        <Container maxWidth="lg" style={{ margin: "auto" }} disableGutters	>
           <Switch>
             <UnPrivateRoute exact path="/" component={LandingPage} />
             <PrivateRoute path="/home" component={Home} />

@@ -4,23 +4,11 @@ import UserReducer from "./userReducer";
 import UserServices from "services/apiCalls/user.services";
 import Action, { ActionTypes } from 'types'
 import socketIOClient from 'socket.io-client';
-
+import {initialState} from './userReducer'
 const UserStore = createContext();
 const UserDispatch = createContext();
 
-const initialState = {
-  isAuthenticated: false,
-  isLoaded: false,
-  user: {
-    _id: "",
-    name: "",
-    email: "",
-    language: "",
-    pictureURL: { url: "" },
 
-  },
-  socket: null,
-}
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(UserReducer, initialState);
   useEffect(() => {

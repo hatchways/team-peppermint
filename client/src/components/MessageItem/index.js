@@ -19,25 +19,10 @@ const MessageItem = (props) => {
       <div className={classes.root}>
         {!isMyMessage &&  <UserAvatar />}
         <div className={classes.messageContianer}>
-
-          <div className={classes.messageDetails}>
-            {!isMyMessage && 
-              <Typography variant='body2'>
-
-                <img
-                  className={classes.imageIcon}
-                  alt={sender.language}
-                  src={`https://unpkg.com/language-icons/icons/${ISO6391.getCode(sender.language)}.svg`}
-                />
-                {sender.name}
-              </Typography>
-
-            }
-            <Typography variant='caption'>{dateToString(createdAt)}</Typography>
-          </div>
           <div className={classes.messageBox}>
             {getMessageTextVersion({ textVersions }, isOriginalLanguage, user.language)}
           </div>
+          <Typography variant='caption'>{dateToString(createdAt)}</Typography>
         </div>
       </div>
     );

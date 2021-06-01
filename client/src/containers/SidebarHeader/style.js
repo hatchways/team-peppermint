@@ -5,14 +5,17 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+
     width: "100%",
     minHeight: "10vh",
+
     backgroundColor: "transparent",
   },
   leftRightSideStyle: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+
     padding: theme.spacing(2),
   },
   badge: { top: 63, right: 5 },
@@ -23,18 +26,5 @@ export const useStyles = makeStyles((theme) => ({
   logoutStyle: {
     color: "black",
     textDecoration: "none",
-  },
-  [`@media (max-width:400px)`]: {
-    root: {
-      padding: theme.spacing(2),
-    },
-    leftRightSideStyle: {
-      flexDirection: "column",
-      height: "10vh",
-      padding: 0,
-    },
-    typography: {
-      fontSize: "1.3rem",
-    },
   },
 }));

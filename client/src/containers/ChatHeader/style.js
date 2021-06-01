@@ -4,18 +4,29 @@ import Badge from "@material-ui/core/Badge";
 export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
     minHeight: "10%",
     backgroundColor: "#fff",
-    boxShadow: " 0 15px 15px #f5f7fb",
+    borderBottomStyle: 'solid',
+    borderBottomWidth:'1px',
+    borderBottomColor: theme.palette.grey[200],
   },
-  leftRightSideStyle: {
+  chatHeader: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
+    width: '100%',
+    padding: theme.spacing(0,4)
+  },
+  chatHeaderUserInfo:{
+    display:'flex',
+    alignItems: 'center'
+  },
+  chatHeaderOptions:{
+    display:'flex',
+    alignItems:'center',
+    justifySelf:'flex-end'
   },
   onOfflineStyle: {
     display: "flex",
@@ -28,19 +39,7 @@ export const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     color: "#3A8DFF",
   },
-  [`@media (max-width:510px)`]: {
-    root: {
-      flexDirection: "column",
-      justifyContent: "center",
-      padding: 10,
-    },
-    leftRightSideStyle: {
-      padding: 0,
-    },
-    typography: {
-      fontSize: "1.3rem",
-    },
-  },
+
 }));
 
 export const StyledBadge = withStyles((theme) => ({

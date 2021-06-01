@@ -10,13 +10,13 @@ const useStyles = makeStyles({
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     height: "100vh",
-    width: "40vw",
+    width: "100%",
     marginRight: 20,
   },
   gradientContainer: {
     backgroundImage: "linear-gradient(#3a8cffca, #86b8ffc9)",
-    height: "100vh",
-    width: "40vw",
+    height:'100%',
+    width: "100%",
     display: "grid",
     justifyItems: "center",
     alignItems: "center",
@@ -36,15 +36,7 @@ const useStyles = makeStyles({
   },
   [`@media (max-width:560px)`]: {
     imageContainer: {
-      height: "20vh",
-      width: "100vw",
-    },
-    gradientContainer: {
-      height: "20vh",
-      width: "100vw",
-    },
-    textStyle: {
-      fontSize: 25,
+     display:'none'
     },
   },
 });

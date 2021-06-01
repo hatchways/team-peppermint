@@ -1,37 +1,30 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    // justifyContent: "space-between",
-    alignItems: "center",
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-    width: "100%",
-    backgroundColor: "#f9fafc",
-    boxShadow: "0 0 1px 0 grey",
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(1, 4),
+    width: '100%',
+    margin: theme.spacing(0, 'auto'),
+  
+
   },
   avatarNameContainer: {
-    display: "flex",
-    alignItems: "center",
-    width: "75%",
-    height: "100%",
+    display: 'flex',
+    alignItems: 'center',
+    width: '75%',
+    height: '100%',
   },
   nameContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignContent: "center",
-    justifyContent: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   chip: {
-    display: "block",
+    display: 'block',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
-  [`@media (max-width:360px)`]: {
-    avatarNameContainer: {
-      flexDirection: "column",
-      justifyContent:'center'
-    },
-  },
-}));
+}))

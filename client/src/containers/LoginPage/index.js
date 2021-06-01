@@ -9,8 +9,8 @@ import FormPageHeader from '../../components/formPageHeader';
 function LoginPage() {
 
   return (
-    <div style={{flexGrow: 1}}>
-      <Grid container spacing={1}>
+ 
+      <Grid container>
         <Grid item xs>
           <BackgroundImage />
         </Grid>
@@ -24,7 +24,7 @@ function LoginPage() {
           />
         </Grid>
       </Grid>
-    </div>
+    
   )
 }
 

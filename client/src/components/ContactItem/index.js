@@ -56,13 +56,14 @@ const ContactItem = ({ contact, unknown, removeFromUknown }) => {
   }, [socket, unknown, contact, contactsDispatch])
   return (
     <ListItem
+    button
       className={classes.root}
       selected={currentConversation.conversationID === conversationID && currentConversation.conversationTitle === null}
     >
-      <ButtonBase className={classes.contactButton} disabled={unknown} onClick={handleContactItemClick}>
+      <div className={classes.contactButton} disabled={unknown} onClick={handleContactItemClick}>
         <UserAvatar isOnline={isOnline} />
         <Typography variant='h6'>{name}</Typography>
-      </ButtonBase>
+      </div>
       {unknown &&
         <IconButton onClick={handleAddIconClick}>
           <AddCircleRoundedIcon color='primary' />

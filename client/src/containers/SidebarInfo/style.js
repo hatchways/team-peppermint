@@ -11,51 +11,17 @@ export const useStyles = makeStyles((theme) => ({
     backgroundColor: "transparent",
     overflow: "hidden",
   },
+  tabsHeader:{
+    backgroundColor: '#FFFFFF'
+  },
   tabs: {
-    backgroundColor: "#f5f7fb",
     borderColor: "none",
   },
   tabPanel: {
     width: "100%",
     height: "100%",
   },
-  search: {
-    display: "flex",
-    justifyContent: "center",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: "#e9eef9",
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    minWidth: "100%",
-    height: theme.spacing(7),
-    [theme.breakpoints.up("sm")]: {
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  clearIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  debounceInput: {
-    border: "none",
-    height: "100%",
-    width: "70%",
-    backgroundColor: "transparent",
-    fontSize: "1.3rem",
-    right: 0,
-    outline: "none",
-  },
+ 
   collapse: {
     textAlign: "center",
     marginBottom: theme.spacing(1),

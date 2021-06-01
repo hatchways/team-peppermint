@@ -45,13 +45,14 @@ const MessageInput = () => {
                 onSubmit={handleMessageSubmit}
             >
                 {({ values, setFieldValue }) =>
-                    <Form>
+                    <Form className={classes.form}>
                         <Field
-                            className={classes.textField}
+                            classes={{root:classes.textField}}
                             name='message'
                             type='text'
                             placeholder='Send message...'
                             variant='outlined'
+                            fullWidth
                             InputProps={{
                                 endAdornment:
                                     <InputAdornment>

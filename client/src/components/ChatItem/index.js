@@ -8,7 +8,7 @@ import { useCurrentConversationDispatch, useCurrentConversationStore } from "con
 import Action, { ActionTypes } from "types";
 
 
-const ChatItem = ({ conversation, index, selected }) => {
+const ChatItem = ({ conversation }) => {
   const classes = useStyles()
   const { user, socket } = useUserStore()
   const { _id, users, conversationTitle, lastMessage } = conversation
@@ -41,14 +41,14 @@ const ChatItem = ({ conversation, index, selected }) => {
       selected={currentConversation?._id === _id}
     >
       <div className={classes.avatarNameContainer}>
-        {users.length === 1 && (
+        {otherUsers.length === 1 && (
           <UserAvatar
-            imageUrl={""}
+            imageUrl={otherUsers[0].profileImg}
           />
         )}
         <div className={classes.nameContainer}>
           <Typography
-            variant="body1"
+            variant="h5"
             gutterBottom
           >
             {chatItemTitle}

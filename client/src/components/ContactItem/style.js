@@ -1,17 +1,19 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { BorderBottom } from "@material-ui/icons";
 
 export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
+    padding: theme.spacing(1, 4),
+
   },
   contactButton: {
     width: '100%',
+    display:'flex',
+    alignItems:'center',
     justifyContent: 'start',
-    '&:focus': {
-      outline: 'none'
-    }
   },
   avatarNameContainer: {
     display: "flex",
